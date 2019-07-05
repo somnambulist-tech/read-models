@@ -36,7 +36,7 @@ class ClassHelpers
      *
      * @return string
      */
-    public static function getCallingClass()
+    public static function getCallingClass(): string
     {
         //get the trace
         $trace = debug_backtrace();
@@ -53,6 +53,20 @@ class ClassHelpers
                 }
             }
         }
+    }
+
+    /**
+     * Returns the function (method name) that called the function this is used in
+     *
+     * @link https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Concerns/HasRelationships.php#L310
+     *
+     * @return string
+     */
+    public static function getCallingMethod(): string
+    {
+        [$one, $two, $caller] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+
+        return $caller['function'];
     }
 
     /**

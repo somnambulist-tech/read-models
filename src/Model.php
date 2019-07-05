@@ -19,6 +19,7 @@ use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\Collection;
 use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\ReadModels\Relationships\BelongsTo;
 use Somnambulist\ReadModels\Relationships\BelongsToMany;
 use Somnambulist\ReadModels\Relationships\HasOne;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
@@ -621,6 +622,37 @@ abstract class Model implements JsonSerializable, Queryable
     }
 
     /**
+     * Define an inverse one-to-one or many relationship
+     *
+     * The table in this case will be the owning side of the relationship i.e. the originator
+     * of the foreign key on the specified class. For example: a User has many Addresses,
+     * the address table has a key: user_id linking the address to the user. This relationship
+     * finds the user from the users table where the users.id = user_addresses.user_id.
+     *
+     * This will only associate a single model as the inverse side, nor will it update the
+     * owner with this models association.
+     *
+     * @param string      $class
+     * @param string|null $foreignKey
+     * @param string|null $ownerKey
+     * @param string|null $relation
+     *
+     * @return BelongsTo
+     */
+    protected function belongsTo(
+        string $class, ?string $foreignKey = null, ?string $ownerKey = null, ?string $relation = null
+    ): BelongsTo
+    {
+        /** @var Model $instance */
+        $instance   = new $class();
+        $relation   = $relation ?: ClassHelpers::getCallingMethod();
+        $foreignKey = $foreignKey ?: sprintf('%s_%s', Str::snake($relation), $instance->getPrimaryKeyName());
+        $ownerKey   = $ownerKey ?: $instance->getPrimaryKeyName();
+
+        return new BelongsTo($instance->newQuery(), $this, $foreignKey, $ownerKey);
+    }
+
+    /**
      * Define a new many to many relationship
      *
      * The table is the joining table between the source and the target. The source is
@@ -655,15 +687,17 @@ abstract class Model implements JsonSerializable, Queryable
         $sourceKey      = $sourceKey ?: $this->getPrimaryKeyName();
         $targetKey      = $targetKey ?: $instance->getPrimaryKeyName();
 
-        return new BelongsToMany($instance->newQuery(), $this, $table, $tableSourceKey, $tableTargetKey, $sourceKey, $targetKey);
+        return new BelongsToMany(
+            $instance->newQuery(), $this, $table, $tableSourceKey, $tableTargetKey, $sourceKey, $targetKey
+        );
     }
 
     /**
      * Define a one to many relationship
      *
      * Here, the parent has many children, so a User can have many addresses.
-     * The foreign key is the name of the parents key in the childs table.
-     * local key is the childs primary key.
+     * The foreign key is the name of the parents key in the child's table.
+     * local key is the child's primary key.
      *
      * indexBy allows a column on the child to be used as the key in the returned
      * collection. Note: if this is specified, then there can be only a single
@@ -696,13 +730,13 @@ abstract class Model implements JsonSerializable, Queryable
      * Here the parent has only one child and the child only has that parent. If
      * multiple records end up being stored, then only the first will be loaded.
      *
-     * @param string $class
-     * @param string $foreignKey
-     * @param string $localKey
+     * @param string      $class
+     * @param string|null $foreignKey
+     * @param string|null $localKey
      *
      * @return HasOne
      */
-    protected function hasOne(string $class, string $foreignKey, string $localKey): HasOne
+    protected function hasOne(string $class, ?string $foreignKey = null, ?string $localKey = null): HasOne
     {
         /** @var Model $instance */
         $instance   = new $class();
