@@ -155,6 +155,25 @@ abstract class Model implements JsonSerializable, Queryable
     protected $embeds = [];
 
     /**
+     * Set what can be exported, or not by attribute and relationship name
+     *
+     * By default ALL attributes are exported; to export specific attributes, set
+     * them in the attributes array.
+     *
+     * Contrary: by default NO relationships are exported. You must explicitly set
+     * which ones to export.
+     *
+     * These can be overridden before calling toArray/toJson on the exporter but will
+     * be used when calling jsonSerialize().
+     *
+     * @var array
+     */
+    protected $exports = [
+        'attributes'    => [],
+        'relationships' => [],
+    ];
+
+    /**
      * The various loaded relationships this model has
      *
      * @var array
@@ -233,7 +252,7 @@ abstract class Model implements JsonSerializable, Queryable
 
     public function __toString()
     {
-        return $this->exporter->toJson();
+        return $this->export()->toJson();
     }
 
     /**
@@ -375,7 +394,10 @@ abstract class Model implements JsonSerializable, Queryable
 
     public function newQuery(): Builder
     {
-        return new Builder($this, static::connection(static::class)->createQueryBuilder());
+        return
+            (new Builder($this, static::connection(static::class)->createQueryBuilder()))
+                ->with($this->with)
+        ;
     }
 
     /**
@@ -443,10 +465,12 @@ abstract class Model implements JsonSerializable, Queryable
         return stripos($key, '.') !== false ? Arr::last(explode('.', $key)) : $key;
     }
 
-    public function getExporter(): ModelExporter
+    public function export(): ModelExporter
     {
         if (!$this->exporter instanceof ModelExporter) {
-            $this->exporter = new ModelExporter($this);
+            $this->exporter = new ModelExporter(
+                $this, $this->exports['attributes'] ?? [], $this->exports['relationships'] ?? []
+            );
         }
 
         return $this->exporter;
@@ -492,7 +516,7 @@ abstract class Model implements JsonSerializable, Queryable
 
     public function jsonSerialize(): array
     {
-        return $this->getExporter()->toArray();
+        return $this->export()->toArray();
     }
 
     /**

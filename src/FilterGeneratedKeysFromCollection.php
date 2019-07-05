@@ -28,11 +28,15 @@ class FilterGeneratedKeysFromCollection
         return
             Collection::collect($attributes)
                 ->filter(function ($value, $key) {
-                    return
-                        !Str::contains($key, [Model::INTERNAL_KEY_PREFIX])
-                        &&
-                        !Str::contains($value, [Model::RELATIONSHIP_SOURCE_MODEL_REF, Model::RELATIONSHIP_TARGET_MODEL_REF])
+                    $ignorable =
+                        Str::contains($key, [Model::INTERNAL_KEY_PREFIX])
+                        ||
+                        (
+                            is_string($value) && Str::contains($value, [Model::RELATIONSHIP_SOURCE_MODEL_REF, Model::RELATIONSHIP_TARGET_MODEL_REF])
+                        )
                     ;
+
+                    return !$ignorable;
                 })
                 ->toArray()
             ;

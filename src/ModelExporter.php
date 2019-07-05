@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
+use Closure;
+use IlluminateAgnostic\Str\Support\Str;
+use Somnambulist\Collection\Collection;
 use Somnambulist\ReadModels\Contracts\CanExportToJSON;
 
 /**
@@ -23,30 +26,51 @@ class ModelExporter implements CanExportToJSON
     /**
      * @var array
      */
-    private $include = [];
+    private $attributes = [];
+
+    /**
+     * @var array
+     */
+    private $relationships = [];
 
     /**
      * Constructor.
      *
      * @param Model $model
-     * @param array $include
+     * @param array $attributes
+     * @param array $relationships
      */
-    public function __construct(Model $model, array $include = [])
+    public function __construct(Model $model, array $attributes = [], array $relationships = [])
     {
-        $this->model   = $model;
-        $this->include = $include;
+        $this->model         = $model;
+        $this->attributes    = $attributes;
+        $this->relationships = $relationships;
     }
 
-    public function with(...$relationship): self
+    /**
+     * Export only the specified attributes; if empty WILL export everything
+     *
+     * @param string ...$attributes
+     *
+     * @return ModelExporter
+     */
+    public function attributes(...$attributes): self
     {
-        $this->include = array_merge($this->include, $relationship);
+        $this->attributes = $attributes;
 
         return $this;
     }
 
-    public function only(...$relationship): self
+    /**
+     * Export with the specified relationships; if empty will NOT export any relationships
+     *
+     * @param string ...$relationship
+     *
+     * @return ModelExporter
+     */
+    public function with(...$relationship): self
     {
-        $this->include = $relationship;
+        $this->relationships = $relationship;
 
         return $this;
     }
@@ -72,12 +96,88 @@ class ModelExporter implements CanExportToJSON
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
-        $array = array_merge($this->model->getAttributes());
+        $array = $this->extractAttributes($this->model->getAttributes());
 
-        $this->include = [];
+        foreach ($this->relationships as $relationship) {
+            $nested = [];
+
+            if (Str::contains($relationship, '.')) {
+                [$relationship, $nested] = explode('.', $relationship, 1);
+            }
+
+            $arr   = [];
+            $items = $this->model->{$relationship};
+
+            if ($items instanceof Collection) {
+                $arr = $items->transform(function (Model $model) use ($nested) {
+                    return $model->export()->with(...(array)$nested)->toArray();
+                })->toArray();
+            } elseif ($items instanceof Model) {
+                $arr = $items->export()->with(...(array)$nested)->toArray();
+            }
+
+            $array[$relationship] = $arr;
+        }
 
         return $array;
+    }
+
+    private function extractAttributes(array $attributes): array
+    {
+        $attrs = [];
+
+        foreach ($attributes as $key => $value) {
+            if ($this->shouldExtractAttribute($key)) {
+                $key = Str::snake($this->getAttributeExtractionKey($key), '_');
+
+                if (is_object($value)) {
+                    $attrs[$key] = $this->extractPropertiesFrom($value);
+                } else {
+                    $attrs[$key] = $value;
+                }
+            }
+        }
+
+        return $attrs;
+    }
+
+    private function shouldExtractAttribute(string $key): bool
+    {
+        return
+            empty($this->attributes)
+            ||
+            in_array($key, $this->attributes)
+            ||
+            array_key_exists($key, $this->attributes)
+        ;
+    }
+
+    private function getAttributeExtractionKey(string $key): string
+    {
+        if (array_key_exists($key, $this->attributes)) {
+            return $this->attributes[$key];
+        }
+
+        return $key;
+    }
+
+    /**
+     * Extracts any object properties, or converts to a string if possible
+     *
+     * @param object $object
+     *
+     * @return array|string
+     */
+    private function extractPropertiesFrom(object $object)
+    {
+        if (method_exists($object, '__toString' )) {
+            return (string)$object;
+        }
+
+        return $this->extractAttributes(Closure::bind(function () {
+            return get_object_vars($this);
+        }, $object, $object)());
     }
 }
