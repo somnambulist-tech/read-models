@@ -23,6 +23,8 @@ class HasOneToMany extends HasOneOrMany
      */
     protected $indexBy;
 
+    protected $hasMany = true;
+
     /**
      * Constructor.
      *

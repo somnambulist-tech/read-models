@@ -8,8 +8,11 @@ use BadMethodCallException;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\Collection;
 use Somnambulist\Collection\Interfaces\ExportableInterface;
 use Somnambulist\ReadModels\Contracts\Queryable;
@@ -124,7 +127,7 @@ class Builder implements Queryable
             $this->select('*');
         }
 
-        if ($stmt = $this->getQueryBuilder()->execute()) {
+        if ($stmt = $this->query->execute()) {
             $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
 
             foreach ($stmt as $row) {
@@ -137,6 +140,61 @@ class Builder implements Queryable
         }
 
         return $models;
+    }
+
+    /**
+     * Executes the current query, returning a count of total matched records
+     *
+     * count operates on a copy of the current query.
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        $query   = clone $this->query;
+        $groupBy = $query->getQueryPart('groupBy');
+        $selects = $query->getQueryPart('select');
+        $new     = [];
+
+        foreach ($groupBy as $item) {
+            foreach ($selects as $select) {
+                if (Str::contains($select, $item)) {
+                    $new[] = $select;
+                }
+            }
+        }
+
+        $stmt = $query
+            ->select($new)
+            ->addSelect(sprintf('COUNT(DISTINCT %s) AS total_results', $this->model->getPrimaryKeyWithTableAlias()))
+            ->setMaxResults(1)
+            ->setFirstResult(0)
+            ->execute()
+        ;
+
+        if ($stmt) {
+            $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
+
+            return $stmt->fetchAll()[0]['total_results'] ?? 0;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Returns a paginator that can be iterated with results
+     *
+     * Note: the paginator may not cope with all types of select and group by. You
+     * may need to scale back the types of queries you run.
+     *
+     * @param int $page
+     * @param int $perPage
+     *
+     * @return Pagerfanta
+     */
+    public function paginate(int $page = 1, int $perPage = 30): Pagerfanta
+    {
+        return (new Pagerfanta(new PaginatorAdapter($this)))->setCurrentPage($page)->setMaxPerPage($perPage);
     }
 
     /**

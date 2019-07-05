@@ -6,6 +6,7 @@ namespace Somnambulist\ReadModels\Relationships;
 
 use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\Collection;
 use Somnambulist\ReadModels\Builder;
 use Somnambulist\ReadModels\Contracts\Queryable;
@@ -20,7 +21,6 @@ use Somnambulist\ReadModels\Utils\ProxyTo;
  *
  * Supports proxying calls to the Builder class
  *
- * @method AbstractRelationship andHaving(string $expression)
  * @method ExpressionBuilder expression()
  * @method Model find()
  * @method Model findOrFail()
@@ -30,6 +30,9 @@ use Somnambulist\ReadModels\Utils\ProxyTo;
  * @method mixed getParameterType(string $key)
  * @method array getParameterTypes()
  * @method QueryBuilder getQueryBuilder()
+ * @method int count()
+ * @method Pagerfanta paginate(int $page = 1, int $perPage = 30)
+ * @method AbstractRelationship andHaving(string $expression)
  * @method AbstractRelationship groupBy(string $column)
  * @method AbstractRelationship having(string $expression)
  * @method AbstractRelationship innerJoin(string $fromAlias, string $join, string $alias, string $condition)
@@ -86,21 +89,19 @@ abstract class AbstractRelationship implements Queryable
      *
      * @var bool
      */
-    protected $hasMany;
+    protected $hasMany = false;
 
     /**
      * Constructor.
      *
      * @param Builder $builder
      * @param Model   $parent
-     * @param bool    $hasMany
      */
-    public function __construct(Builder $builder, Model $parent, bool $hasMany = false)
+    public function __construct(Builder $builder, Model $parent)
     {
         $this->parent  = $parent;
         $this->related = $builder->getModel();
         $this->query   = $builder;
-        $this->hasMany = $hasMany;
 
         $this->initialiseRelationship();
     }

@@ -43,6 +43,8 @@ class BelongsToMany extends AbstractRelationship
      */
     private $targetKey;
 
+    protected $hasMany = true;
+
     /**
      * Constructor.
      *

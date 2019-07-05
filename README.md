@@ -54,7 +54,7 @@ class User extends Model
     protected $tableAlias = 'u'
     protected $table = 'tbl_users',
     protected $primaryKey = 'uuid';
-    protected $primaryKeyType = 'string';
+
 }
 ```
 
@@ -79,7 +79,7 @@ $model->createdAt();
 
 You cannot set, unset, or change the returned models.
 
-You can defined get mutators in the same way as Laravels Eloquent:
+You can define attribute mutators in the same way as Laravels Eloquent:
 
 ```php
 class User extends Model
@@ -96,10 +96,9 @@ class User extends Model
 User::find(1)->username();
 ```
 
-
 ### Casting Data
 
-To cast to a known (registered) DBAL type, and key/value pairs to the casts array:
+To cast to a known (registered) DBAL type, add key/value pairs to the casts array:
 
 ```php
 class User extends Model
@@ -118,3 +117,30 @@ class User extends Model
 Certain DBAL types expect a resource to work with (e.g. Creof GeoSpatial Postgres types).
 Prefix the type with `resource:` and the string will be converted to a resource and passed
 through.
+
+### Relationships
+
+Define a relationship between models by adding a method named for that relationship.
+For example: A User has many Roles:
+
+```php
+class User extends Models
+{
+
+    public function roles()
+    {
+        return $this->>hasMany(Role:class);
+    }
+}
+```
+
+If you leave the method public, the relationship can be directly accessed for method chaining,
+however you can make it protected and still access the relationship using: getRelationship().
+The benefit of a protected relationship, is fewer exposed methods.
+
+Currently read-models supports:
+
+ * one-to-one (hasOne)
+ * one-to-many (hasMany)
+ * many-to-many (belongsToMany)
+
