@@ -118,6 +118,48 @@ Certain DBAL types expect a resource to work with (e.g. Creof GeoSpatial Postgre
 Prefix the type with `resource:` and the string will be converted to a resource and passed
 through.
 
+### Embeddables
+
+Just like Doctrine ORM, you can embed and hydrate value-objects into the read models.
+These can be the exact same VOs used in the main domain (this is safe, VOs are immutable).
+Like with Doctrine, this is mapped out but as an array:
+
+```php
+class UserContact extends Model
+{
+
+    protected $embeds = [
+        'contact' => [
+            Contact::class, [
+                'contact_name',
+                [PhoneNumber::class, ['contact_phone_number']],
+                [EmailAddress::class, ['contact_email']],
+            ]
+        ]
+    ];
+}
+```
+
+The Contact class has the following signature:
+
+```php
+class Contact
+{
+
+    public function __construct($name, ?PhoneNumber $phone, ?EmailAddress $email)
+    {
+    }
+}
+```
+
+During hydration, contact_name, contact_phone_number and contact_email will be converted
+to constructor parameters for the Contact class. If this fails i.e. the count of the
+params does not match the defined args; null will be returned. Otherwise, the Contact
+class will be instantiated with the mapped objects / string.
+
+The definition must match the constructor args. Only constructor injection is supported
+at this time. 
+
 ### Relationships
 
 Define a relationship between models by adding a method named for that relationship.

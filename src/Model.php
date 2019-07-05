@@ -145,6 +145,16 @@ abstract class Model implements JsonSerializable, Queryable
     protected $casts = [];
 
     /**
+     * Convert sets of attributes into embedded value-objects
+     *
+     * The object will be assigned to the attribute key given. Parameters must
+     * be set in the constructor order.
+     *
+     * @var array
+     */
+    protected $embeds = [];
+
+    /**
      * The various loaded relationships this model has
      *
      * @var array
@@ -296,6 +306,10 @@ abstract class Model implements JsonSerializable, Queryable
      * types, it will be run against the value from the database. If the type requires
      * a resource, the cast type should be prefixed with: "resource:"
      *
+     * If any embeds have been defined and if the attributes match, additional objects
+     * will be hydrated into the attributes for each mapped set. This allows embedded
+     * value-objects to be re-used in the read-models.
+     *
      * @param array $attributes
      */
     private function mapAttributes(array $attributes): void
@@ -316,6 +330,31 @@ abstract class Model implements JsonSerializable, Queryable
 
             $this->attributes[$key] = $value;
         }
+
+        if (count($this->attributes) > 0) {
+            foreach ($this->embeds as $key => [$class, $args]) {
+                $this->attributes[$key] = $this->makeEmbeddableObject($class, $args);
+            }
+        }
+    }
+
+    private function makeEmbeddableObject($class, $args): ?object
+    {
+        $params = [];
+
+        foreach ($args as $arg) {
+            if (is_array($arg)) {
+                $params[] = $this->makeEmbeddableObject($arg[0], $arg[1]);
+            } elseif (null !== $value = ($this->attributes[$arg] ?? null)) {
+                $params[] = $value;
+            }
+        }
+
+        if (empty($params) || count($params) !== count($args)) {
+            return null;
+        }
+
+        return new $class(...$params);
     }
 
     /**
