@@ -29,6 +29,7 @@ use Somnambulist\ReadModels\Utils\ProxyTo;
  * @method array getParameters()
  * @method mixed getParameterType(string $key)
  * @method array getParameterTypes()
+ * @method bool hasSelectExpression(string $expression)
  * @method QueryBuilder getQueryBuilder()
  * @method int count()
  * @method Pagerfanta paginate(int $page = 1, int $perPage = 30)

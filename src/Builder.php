@@ -8,10 +8,8 @@ use BadMethodCallException;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\Collection;
 use Somnambulist\Collection\Interfaces\ExportableInterface;
@@ -297,6 +295,31 @@ class Builder implements Queryable
         $this->query->select(array_unique(array_merge($this->query->getQueryPart('select'), $columns)));
 
         return $this;
+    }
+
+    /**
+     * Returns true if the expression has been bound to the select clause
+     *
+     * Search is performed using "contains" and could match similar strings. For example:
+     * a check for contains "user_id" would return true for any select clause that contains
+     * the string user_id (user.id AS user_id, related_user_id etc).
+     *
+     * For better results, be sure to check for a specific expression. Selects should be
+     * relatively unique, unless extremely complex.
+     *
+     * @param string $expression
+     *
+     * @return bool
+     */
+    public function hasSelectExpression(string $expression): bool
+    {
+        foreach ($this->query->getQueryPart('select') as $select) {
+            if (Str::contains($select, $expression)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

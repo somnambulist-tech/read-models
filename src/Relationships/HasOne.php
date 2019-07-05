@@ -21,6 +21,10 @@ class HasOne extends HasOneOrMany
     {
         $relationships = [];
 
+        if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->foreignKey)) {
+            $this->query->select($this->foreignKey);
+        }
+
         $this->fetch()->each(function (Model $model) use (&$relationships) {
             $relationships[$model->{$model->removeTableAliasFrom($this->foreignKey)}] = $model;
         });

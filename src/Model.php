@@ -354,6 +354,10 @@ abstract class Model implements JsonSerializable, Queryable
             return null;
         }
 
+        if (Str::contains($class, '::')) {
+            return call_user_func_array($class, $params);
+        }
+
         return new $class(...$params);
     }
 

@@ -157,8 +157,39 @@ to constructor parameters for the Contact class. If this fails i.e. the count of
 params does not match the defined args; null will be returned. Otherwise, the Contact
 class will be instantiated with the mapped objects / string.
 
-The definition must match the constructor args. Only constructor injection is supported
-at this time. 
+The definition must match the constructor argument order and the parameters will be built
+in that order and passed as-is to the constructor.
+
+In addition to calling a new instance, a factory method can be used:
+
+```php
+class UserAddress extends Model
+{
+    protected $embeds = [
+        'country' => ['Somnambulist\ValueObjects\Types\Geography\Country::create', ['country']]
+    ];
+}
+```
+
+A `Country` enumerable will be created from country field and re-assigned to the same property.
+
+The result is something like:
+
+```text
+...
+  #attributes: array:14 [
+    "id" => 1
+    "user_id" => 1
+    "country" => Somnambulist\ValueObjects\Types\Geography\Country^ {#54
+      -name: "United Kingdom"
+      -code: Somnambulist\ValueObjects\Types\Geography\CountryCode^ {#138
+        -value: "GBR"
+        -key: "GBR"
+      }
+    }
+  }
+...
+```
 
 ### Relationships
 

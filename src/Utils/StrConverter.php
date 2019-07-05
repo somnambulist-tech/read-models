@@ -17,6 +17,8 @@ class StrConverter
     /**
      * Converts a string to a stream resource by passing it through a memory file
      *
+     * @link https://logansbailey.com/converting-strings-to-streams
+     *
      * @param string $string
      *
      * @return bool|resource
