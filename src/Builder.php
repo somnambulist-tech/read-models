@@ -9,18 +9,37 @@ use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use IlluminateAgnostic\Str\Support\Str;
+use InvalidArgumentException;
 use Somnambulist\Collection\Collection;
 use Somnambulist\Collection\Interfaces\ExportableInterface;
+use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\ReadModels\Utils\ProxyTo;
 
 /**
  * Class Builder
  *
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\Builder
+ *
+ * These methods pass through to the underlying QueryBuilder instance.
+ *
+ * @method Builder join(string $fromAlias, string $join, string $alias, $conditions)
+ * @method Builder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method Builder leftJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method Builder rightJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method Builder setParameter(string|int $key, mixed $value, $type = null)
+ * @method Builder setParameters(array $parameters)
+ * @method Builder getParameter(string|int $key)
+ * @method Builder getParameters()
+ * @method Builder getParameterType(string $key)
+ * @method Builder getParameterTypes()
+ * @method Builder having(string $expression)
+ * @method Builder andHaving(string $expression)
+ * @method Builder orHaving(string $expression)
  */
-class Builder
+class Builder implements Queryable
 {
 
     /**
@@ -34,11 +53,9 @@ class Builder
     private $query;
 
     /**
-     * The relationships that should be eager loaded.
-     *
      * @var array
      */
-    protected $eagerLoad = [];
+    private $eagerLoad = [];
 
     /**
      * Constructor.
@@ -49,109 +66,21 @@ class Builder
     public function __construct(Model $model, QueryBuilder $query)
     {
         $this->model = $model;
-        $this->query = $query->select('*')->from($model->getTable(), $model->getTableAlias());
+        $this->query = $query->from($model->getTable(), $model->getTableAlias());
     }
 
     /**
-     * Set the relationships that should be eager loaded.
+     * Returns a new query builder instance for the set Model
      *
-     * @param mixed $relations
-     *
-     * @return $this
+     * @return Builder
      */
-    public function with(...$relations)
+    public function newQuery(): self
     {
-        $eagerLoad = $this->parseWithRelations($relations);
-
-        $this->eagerLoad = array_merge($this->eagerLoad, $eagerLoad);
-
-        return $this;
+        return new static($this->model, Model::connection(get_class($this->model))->createQueryBuilder());
     }
 
     /**
-     * Parse a list of relations into individuals.
-     *
-     * @param array $relations
-     *
-     * @return array
-     */
-    protected function parseWithRelations(array $relations)
-    {
-        $results = [];
-
-        foreach ($relations as $name => $constraints) {
-            // If the "name" value is a numeric key, we can assume that no
-            // constraints have been specified. We'll just put an empty
-            // Closure there, so that we can treat them all the same.
-            if (is_numeric($name)) {
-                $name = $constraints;
-
-                [$name, $constraints] = Str::contains($name, ':')
-                    ? $this->createSelectWithConstraint($name)
-                    : [
-                        $name, function () {
-                            //
-                        },
-                    ];
-            }
-
-            // We need to separate out any nested includes, which allows the developers
-            // to load deep relationships using "dots" without stating each level of
-            // the relationship with its own key in the array of eager-load names.
-            $results = $this->addNestedWiths($name, $results);
-
-            $results[$name] = $constraints;
-        }
-
-        return $results;
-    }
-
-    /**
-     * Create a constraint to select the given columns for the relation.
-     *
-     * @param string $name
-     *
-     * @return array
-     */
-    protected function createSelectWithConstraint($name)
-    {
-        return [
-            explode(':', $name)[0], function ($query) use ($name) {
-                $query->select(explode(',', explode(':', $name)[1]));
-            },
-        ];
-    }
-
-    /**
-     * Parse the nested relationships in a relation.
-     *
-     * @param string $name
-     * @param array  $results
-     *
-     * @return array
-     */
-    protected function addNestedWiths($name, $results)
-    {
-        $progress = [];
-
-        // If the relation has already been set on the result array, we will not set it
-        // again, since that would override any constraints that were already placed
-        // on the relationships. We will only set the ones that are not specified.
-        foreach (explode('.', $name) as $segment) {
-            $progress[] = $segment;
-
-            if (!isset($results[$last = implode('.', $progress)])) {
-                $results[$last] = function () {
-                    //
-                };
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     * Find the model by primary key, optionally returning the columns
+     * Find the model by primary key, optionally returning just the specified columns
      *
      * @param string $id
      * @param string ...$columns
@@ -164,6 +93,8 @@ class Builder
     }
 
     /**
+     * Find the model by the primary key, but raise an exception if not found
+     *
      * @param string $id
      * @param string ...$columns
      *
@@ -180,13 +111,20 @@ class Builder
     }
 
     /**
+     * Executes the current query, returning a Collection of results
+     *
      * @return Collection
      */
     public function fetch(): Collection
     {
-        $models = new Collection();
+        $models  = new Collection();
+        $selects = (new FilterGeneratedKeysFromCollection())($this->query->getQueryPart('select'));
 
-        if ($stmt = $this->getQuery()->execute()) {
+        if (count($selects) < 1) {
+            $this->select('*');
+        }
+
+        if ($stmt = $this->getQueryBuilder()->execute()) {
             $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
 
             foreach ($stmt as $row) {
@@ -201,19 +139,62 @@ class Builder
         return $models;
     }
 
-    public function eagerLoadRelationships(Collection $models)
+    /**
+     * Set the relationships that should be eager loaded
+     *
+     * @param mixed $relations Strings of relationship names, or an array
+     *
+     * @return $this
+     */
+    public function with(...$relations): self
     {
-        $ids = $models->extract($this->model->getPrimaryKey())->toArray();
+        $this->eagerLoad = (new GenerateRelationshipsToEagerLoad())($this->eagerLoad, ...$relations);
 
+        return $this;
+    }
+
+    /**
+     * Eager load related models to our set of model results
+     *
+     * @param Collection $models
+     */
+    private function eagerLoadRelationships(Collection $models): void
+    {
         foreach ($this->eagerLoad as $name => $constraints) {
-            /** @var AbstractRelationship $load */
-            //$load = $this->model->newModel()->{$name}();
-
-            //dump($load);
-            $models->each(function ($model) use ($name) {
-                $model->{$name};
-            });
+            if (false === strpos($name, '.')) {
+                /** @var AbstractRelationship $load */
+                $rel = $this->model->newModel()->getRelationship($name);
+                $rel
+                    ->addEagerLoadingConstraints($models)
+                    ->addEagerLoadingRelationships($this->findNestedRelationshipsFor($name))
+                    ->addConstraintCallbackToQuery($constraints)
+                    ->addEagerLoadingResults($models, $name);
+                ;
+            }
         }
+    }
+
+    /**
+     * Get the deeply nested relations for a given top-level relation.
+     *
+     * @param string $relation
+     *
+     * @return array
+     */
+    private function findNestedRelationshipsFor(string $relation): array
+    {
+        $nested = [];
+
+        // We are basically looking for any relationships that are nested deeper than
+        // the given top-level relationship. We will just check for any relations
+        // that start with the given top relations and adds them to our arrays.
+        foreach ($this->eagerLoad as $name => $constraints) {
+            if (Str::contains($name, '.') && Str::startsWith($name, $relation . '.')) {
+                $nested[substr($name, strlen($relation . '.'))] = $constraints;
+            }
+        }
+
+        return $nested;
     }
 
     /**
@@ -221,16 +202,26 @@ class Builder
      *
      * @return string
      */
-    public function prefixTableAlias(string $column): string
+    private function prefixColumnWithTableAlias(string $column): string
     {
-        if (false !== stripos($column, '.')) {
-            return $column;
-        }
-
-        return sprintf('%s.%s', ($this->model->getTableAlias() ?: $this->model->getTable()), $column);
+        return $this->model->prefixColumnWithTableAlias($column);
     }
 
     /**
+     * The DBAL Expression builder object for creating where clauses
+     *
+     * @return ExpressionBuilder
+     */
+    public function expression(): ExpressionBuilder
+    {
+        return $this->query->expr();
+    }
+
+    /**
+     * Select specific columns from the current model
+     *
+     * Use multiple arguments: ->select('id', 'name', 'created_at')...
+     *
      * @param string ...$columns
      *
      * @return Builder
@@ -242,10 +233,10 @@ class Builder
         }
 
         $columns = array_map(function ($column) {
-            return $this->prefixTableAlias($column);
+            return $this->prefixColumnWithTableAlias($column);
         }, $columns);
 
-        $this->query->addSelect($columns);
+        $this->query->select(array_unique(array_merge($this->query->getQueryPart('select'), $columns)));
 
         return $this;
     }
@@ -259,53 +250,40 @@ class Builder
      */
     public function wherePrimaryKey($id): self
     {
-        return $this->whereColumn($this->model->getAliasedPrimaryKey(), '=', $id);
+        return $this->whereColumn($this->model->getPrimaryKeyWithTableAlias(), '=', $id);
     }
 
-    /**
-     * @return ExpressionBuilder
-     */
-    public function expression(): ExpressionBuilder
-    {
-        return $this->query->expr();
-    }
-
-    /**
-     * @param string $andOr
-     *
-     * @return string
-     */
-    private function whereMethod(string $andOr): string
+    private function getAndOrWhereMethodName(string $andOr): string
     {
         return (in_array($andOr, ['and', 'or']) ? $andOr : 'and') . 'Where';
     }
 
-    /**
-     * Generate a placeholder key to bind to the query
-     *
-     * @param string $column
-     *
-     * @return string
-     */
-    private function createPlaceholderKey(string $column): string
+    private function createParameterPlaceholderKey(string $column): string
     {
         // ensure that any bound parameter will always have a unique number
         static $index = 0;
 
-        return sprintf(':bind_%s_%s', Str::slug(Str::replaceArray('.', ['_'], $this->prefixTableAlias($column)), '_'), ++$index);
+        // placeholder name can only be ascii with underscores, hyphens and dots are not allowed
+        return sprintf(
+            ':bind_%s_%s',
+            Str::slug(Str::replaceArray('.', ['_'], $this->prefixColumnWithTableAlias($column)), '_'),
+            ++$index
+        );
     }
 
     /**
-     * @param string $column
-     * @param        $values
-     * @param string $andOr
-     * @param bool   $not
+     * Create a WHERE column IN () clause with support for and or or and NOT IN ()
+     *
+     * @param string                    $column
+     * @param array|ExportableInterface $values
+     * @param string                    $andOr
+     * @param bool                      $not
      *
      * @return $this
      */
     public function whereIn(string $column, $values, string $andOr = 'and', bool $not = false): self
     {
-        $method = $this->whereMethod($andOr);
+        $method = $this->getAndOrWhereMethodName($andOr);
         $expr   = $not ? 'notIn' : 'in';
 
         if ($values instanceof ExportableInterface) {
@@ -314,21 +292,21 @@ class Builder
 
         $placeholders = Collection::collect($values)
             ->transform(function ($value) use ($column) {
-                $this->query->setParameter($key = $this->createPlaceholderKey($column), $value);
+                $this->query->setParameter($key = $this->createParameterPlaceholderKey($column), $value);
 
                 return $key;
             })
             ->toArray()
         ;
 
-        $this->query->{$method}($this->expression()->{$expr}($this->prefixTableAlias($column), $placeholders));
+        $this->query->{$method}($this->expression()->{$expr}($this->prefixColumnWithTableAlias($column), $placeholders));
 
         return $this;
     }
 
-    public function whereNotIn(string $column, $values, string $andOr = 'and'): self
+    public function whereNotIn(string $column, $values): self
     {
-        return $this->whereIn($column, $values, $andOr, true);
+        return $this->whereIn($column, $values, 'and', true);
     }
 
     public function orWhereIn(string $column, $values): self
@@ -342,6 +320,62 @@ class Builder
     }
 
     /**
+     * Add an arbitrarily complex AND expression to the query
+     *
+     * This method allows raw SQL, SELECT ... and basically anything you can put in a where.
+     * Values _must_ be passed as key -> value where the key is the NAMED placeholder. ?
+     * placeholders are not supported in this builder.
+     *
+     * If the parameter is already bound, it will be overwritten with the value in the values
+     * array.
+     *
+     * @param string $expression
+     * @param array  $values
+     *
+     * @return Builder
+     */
+    public function where(string $expression, array $values): self
+    {
+        $this->query->andWhere($expression);
+
+        foreach ($values as $key => $value) {
+            if ('?' === $key) {
+                throw new InvalidArgumentException(sprintf('WHERE condition must use named placeholders not ?'));
+            }
+
+            $this->query->setParameter($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add an arbitrarily complex OR expression to the query
+     *
+     * The same rules apply as for the AND version. Values must use named placeholders.
+     *
+     * @param string $expression
+     * @param array  $values
+     *
+     * @return Builder
+     */
+    public function orWhere(string $expression, array $values): self
+    {
+        $this->query->orWhere($expression);
+
+        foreach ($values as $key => $value) {
+            $this->query->setParameter($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a WHERE <column> condition to the query
+     *
+     * Specifically works with the column. Operator can be any valid SQL operator that
+     * can accept a value including like, ilike.
+     *
      * @param string $column
      * @param string $operator Equality operator e.g. <, >, =, !=, <>, LIKE, ILIKE etc
      * @param mixed  $value
@@ -351,11 +385,11 @@ class Builder
      */
     public function whereColumn(string $column, string $operator, $value, string $andOr = 'and'): self
     {
-        $key    = $this->createPlaceholderKey($column);
-        $method = $this->whereMethod($andOr);
+        $key    = $this->createParameterPlaceholderKey($column);
+        $method = $this->getAndOrWhereMethodName($andOr);
 
         $this->query
-            ->{$method}($this->query->expr()->comparison($this->prefixTableAlias($column), $operator, $key))
+            ->{$method}($this->expression()->comparison($this->prefixColumnWithTableAlias($column), $operator, $key))
             ->setParameter($key, $value)
         ;
 
@@ -363,7 +397,7 @@ class Builder
     }
 
     /**
-     * Add an or to the where
+     * Add an or column to the where clause
      *
      * @param string $column
      * @param string $operator
@@ -385,45 +419,37 @@ class Builder
      */
     public function whereNull(string $column, string $andOr = 'and', bool $not = false): self
     {
-        $method = $this->whereMethod($andOr);
+        $method = $this->getAndOrWhereMethodName($andOr);
         $expr   = $not ? 'isNotNull' : 'isNull';
 
-        $this->query->{$method}($this->query->expr()->{$expr}($this->prefixTableAlias($column)));
+        $this->query->{$method}($this->expression()->{$expr}($this->prefixColumnWithTableAlias($column)));
 
         return $this;
     }
 
-    /**
-     * @param string $column
-     *
-     * @return Builder
-     */
     public function whereNotNull(string $column): self
     {
         return $this->whereNull($column, 'and', true);
     }
 
-    /**
-     * @param string $column
-     *
-     * @return Builder
-     */
     public function orWhereNull(string $column): self
     {
         return $this->whereNull($column, 'or');
     }
 
-    /**
-     * @param string $column
-     *
-     * @return Builder
-     */
     public function orWhereNotNull(string $column): self
     {
         return $this->whereNull($column, 'or', true);
     }
 
     /**
+     * Adds a <column> BETWEEN <start> AND <end> to the query
+     *
+     * Start and end can be any valid value supported by the DB for BETWEEN. e.g. dates, ints, floats
+     * If using a date on a datetime field, note that it is usually treated as midnight to midnight so
+     * may not include all results, in those instances either go 1 day higher or set the time to
+     * 23:59:59.
+     *
      * @param string $column
      * @param mixed  $start
      * @param mixed  $end
@@ -434,12 +460,12 @@ class Builder
      */
     public function whereBetween(string $column, $start, $end, string $andOr = 'and', bool $not = false): self
     {
-        $method = $this->whereMethod($andOr);
+        $method = $this->getAndOrWhereMethodName($andOr);
         $expr   = ($not ? 'NOT' : '') . ' BETWEEN';
-        $key1   = $this->createPlaceholderKey($column);
-        $key2   = $this->createPlaceholderKey($column);
+        $key1   = $this->createParameterPlaceholderKey($column);
+        $key2   = $this->createParameterPlaceholderKey($column);
 
-        $this->query->{$method}(sprintf('%s %s %s AND %s', $this->prefixTableAlias($column), $expr, $key1, $key2));
+        $this->query->{$method}(sprintf('%s %s %s AND %s', $this->prefixColumnWithTableAlias($column), $expr, $key1, $key2));
         $this->query->setParameter($key1, $start);
         $this->query->setParameter($key2, $end);
 
@@ -462,35 +488,29 @@ class Builder
     }
 
     /**
+     * Group by a column in the select clause
+     *
+     * Note: if you add a group by, any non-aggregate selected column must also
+     * appear in the group by.
+     *
      * @param string $column
      *
      * @return Builder
      */
     public function groupBy(string $column): self
     {
-        $this->query->addGroupBy($this->prefixTableAlias($column));
+        $this->query->addGroupBy($this->prefixColumnWithTableAlias($column));
 
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param string $dir
-     *
-     * @return Builder
-     */
     public function orderBy(string $column, string $dir = 'ASC'): self
     {
-        $this->query->addOrderBy($this->prefixTableAlias($column), $dir);
+        $this->query->addOrderBy($this->prefixColumnWithTableAlias($column), $dir);
 
         return $this;
     }
 
-    /**
-     * @param int $limit
-     *
-     * @return Builder
-     */
     public function limit(int $limit): self
     {
         $this->query->setMaxResults($limit);
@@ -498,11 +518,6 @@ class Builder
         return $this;
     }
 
-    /**
-     * @param int $offset
-     *
-     * @return Builder
-     */
     public function offset(int $offset): self
     {
         $this->query->setFirstResult($offset);
@@ -513,16 +528,17 @@ class Builder
     /**
      * Gets the underlying DBAL query builder
      *
+     * Note: this provides total access to all bound data include query parts.
+     * Use with caution.
+     *
      * @return QueryBuilder
+     * @internal
      */
-    public function getQuery(): QueryBuilder
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->query;
     }
 
-    /**
-     * @return Model
-     */
     public function getModel(): Model
     {
         return $this->model;
@@ -548,16 +564,14 @@ class Builder
 
         if (!in_array($name, $allowed)) {
             throw new BadMethodCallException(
-                sprintf('Method "%s" is not supported for pass through (%s)', $name, implode(', ', $allowed))
-            );
-        }
-        if (!method_exists($this->query, $name)) {
-            throw new BadMethodCallException(
-                sprintf('Unable to route "%s" to %s or %s', $name, get_class($this), get_class($this->query))
+                sprintf(
+                    'Method "%s" is not supported for pass through on "%s"; expected one of (%s)',
+                    $name, static::class, implode(', ', $allowed)
+                )
             );
         }
 
-        $this->query->{$name}(...$arguments);
+        (new ProxyTo())($this->query, $name, $arguments);
 
         return $this;
     }

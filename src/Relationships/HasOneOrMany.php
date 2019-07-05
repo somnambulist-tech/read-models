@@ -14,7 +14,7 @@ use Somnambulist\ReadModels\Model;
  * @package    Somnambulist\ReadModels\Relationships
  * @subpackage Somnambulist\ReadModels\Relationships\HasOneOrMany
  */
-class HasOneOrMany extends AbstractRelationship
+abstract class HasOneOrMany extends AbstractRelationship
 {
 
     /**
@@ -49,18 +49,12 @@ class HasOneOrMany extends AbstractRelationship
         $this->query->whereNotNull($this->foreignKey);
     }
 
-    public function addEagerLoadingConstraints(Collection $models): void
+    public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
     {
-        $this->query->whereIn(
+        $this->query = $this->query->newQuery()->whereIn(
             $this->foreignKey, $models->extract($this->localKey)->unique()->toArray()
         );
-    }
 
-    /**
-     * @return Collection|Model[]
-     */
-    public function getResults()
-    {
-        return $this->query->fetch();
+        return $this;
     }
 }
