@@ -48,7 +48,9 @@ class ModelExporter implements CanExportToJSON
     }
 
     /**
-     * Export only the specified attributes; if empty WILL export everything
+     * Export only the specified attributes; if empty will export all attributes
+     *
+     * {@see Model::$exports} for example.
      *
      * @param string ...$attributes
      *

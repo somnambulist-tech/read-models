@@ -29,6 +29,11 @@ use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use Somnambulist\ReadModels\Utils\ProxyTo;
 use function array_key_exists;
+use function count;
+use function explode;
+use function is_null;
+use function stripos;
+use function sprintf;
 
 /**
  * Class Model
@@ -154,6 +159,15 @@ abstract class Model implements JsonSerializable, Queryable
     /**
      * Convert to a PHP type based on the registered Doctrine Types
      *
+     * <code>
+     * [
+     *     'uuid' => 'uuid',
+     *     'location' => 'resource:geometry',
+     *     'created_at' => 'datetime',
+     *     'updated_at' => 'datetime',
+     * ]
+     * </code>
+     *
      * @var array
      */
     protected $casts = [];
@@ -162,7 +176,35 @@ abstract class Model implements JsonSerializable, Queryable
      * Convert sets of attributes into embedded value-objects
      *
      * The object will be assigned to the attribute key given. Parameters must
-     * be set in the constructor order.
+     * be set in the constructor order. The attributes used to make the embed
+     * can be removed by providing `true` after the argument array:
+     *
+     * <code>
+     * [
+     *     'address' => [
+     *         App\Models\Address::class, ['address_line_1', 'address_line_2', 'town'], true
+     *     ]
+     * ]
+     * </code>
+     *
+     * Embeddables can be nested:
+     *
+     * <code>
+     * [
+     *     'address' => [
+     *         App\Models\Address::class, [
+     *             'address_line_1', 'address_line_2', 'town',
+     *             ['App\Models\Country::create', ['country',], true
+     *         ], true
+     *     ]
+     * ]
+     * </code>
+     *
+     * If an element is optional, prefix it with a ? - note that this will only work if the
+     * value is `null`. `false`, 0 and empty string are not considered to be optional. For
+     * example: parts of the address might be optional but an address should still be created.
+     * The arguments must be defined in the order of the object constructor or static factory
+     * method.
      *
      * @var array
      */
@@ -173,6 +215,13 @@ abstract class Model implements JsonSerializable, Queryable
      *
      * By default ALL attributes are exported; to export specific attributes, set
      * them in the attributes array.
+     *
+     * <code>
+     * [
+     *     'attributes' => ['uuid' => 'id', 'name', 'slug', 'url'],
+     *     'relationships' => ['addresses', 'contacts'],
+     * ]
+     * </code
      *
      * Contrary: by default NO relationships are exported. You must explicitly set
      * which ones to export.
