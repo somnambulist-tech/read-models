@@ -67,6 +67,7 @@ class ModelExporter implements CanExportToJSON
      * @param string ...$relationship
      *
      * @return ModelExporter
+     * @todo allow field config using <relationship>:field,field2,field3 like the builder?
      */
     public function with(...$relationship): self
     {

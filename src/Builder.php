@@ -129,7 +129,7 @@ class Builder implements Queryable
             $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
 
             foreach ($stmt as $row) {
-                $models->add($this->model->newModel($row));
+                $models->add($this->model->new($row));
             }
 
             if ($models->count() > 0) {
@@ -219,7 +219,7 @@ class Builder implements Queryable
         foreach ($this->eagerLoad as $name => $constraints) {
             if (false === strpos($name, '.')) {
                 /** @var AbstractRelationship $load */
-                $rel = $this->model->newModel()->getRelationship($name);
+                $rel = $this->model->new()->getRelationship($name);
                 $rel
                     ->addEagerLoadingConstraints($models)
                     ->addEagerLoadingRelationships($this->findNestedRelationshipsFor($name))

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
-use function array_key_exists;
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Types\Type;
 use DomainException;
 use IlluminateAgnostic\Str\Support\Arr;
 use IlluminateAgnostic\Str\Support\Str;
@@ -18,7 +16,11 @@ use JsonSerializable;
 use LogicException;
 use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\Collection;
+use Somnambulist\ReadModels\Contracts\AttributeCaster;
+use Somnambulist\ReadModels\Contracts\EmbeddableFactory;
 use Somnambulist\ReadModels\Contracts\Queryable;
+use Somnambulist\ReadModels\Hydrators\DoctrineTypeCaster;
+use Somnambulist\ReadModels\Hydrators\SimpleObjectFactory;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Relationships\BelongsTo;
 use Somnambulist\ReadModels\Relationships\BelongsToMany;
@@ -26,7 +28,7 @@ use Somnambulist\ReadModels\Relationships\HasOne;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use Somnambulist\ReadModels\Utils\ProxyTo;
-use Somnambulist\ReadModels\Utils\StrConverter;
+use function array_key_exists;
 
 /**
  * Class Model
@@ -103,6 +105,16 @@ abstract class Model implements JsonSerializable, Queryable
      * @var array|Connection[]
      */
     protected static $connections = [];
+
+    /**
+     * @var AttributeCaster
+     */
+    protected static $attributeCaster;
+
+    /**
+     * @var EmbeddableFactory
+     */
+    protected static $embeddableFactory;
 
     /**
      * The table associated with the model, will be guessed if not set
@@ -297,6 +309,48 @@ abstract class Model implements JsonSerializable, Queryable
     }
 
     /**
+     * Change the primary attribute hydrator to another implementation
+     *
+     * Affects all models; should not be changed once objects have been loaded.
+     *
+     * @param AttributeCaster $hydrator
+     */
+    public static function bindAttributeCaster(AttributeCaster $hydrator)
+    {
+        static::$attributeCaster = $hydrator;
+    }
+
+    /**
+     * Change the embeddable objects hydrator to another implementation
+     *
+     * Affects all models; should not be changed once objects have been loaded.
+     *
+     * @param EmbeddableFactory $hydrator
+     */
+    public static function bindEmbeddableFactory(EmbeddableFactory $hydrator)
+    {
+        static::$embeddableFactory = $hydrator;
+    }
+
+    private function getAttributeCaster(): AttributeCaster
+    {
+        if (static::$attributeCaster instanceof AttributeCaster) {
+            return static::$attributeCaster;
+        }
+
+        return static::$attributeCaster = new DoctrineTypeCaster();
+    }
+
+    private function getEmbeddableFactory(): EmbeddableFactory
+    {
+        if (static::$embeddableFactory instanceof EmbeddableFactory) {
+            return static::$embeddableFactory;
+        }
+
+        return static::$embeddableFactory = new SimpleObjectFactory();
+    }
+
+    /**
      * Eager load the specified relationships on this model
      *
      * Allows dot notation to load related.related objects.
@@ -323,99 +377,37 @@ abstract class Model implements JsonSerializable, Queryable
     /**
      * Hydrates the model and maps the results to the object
      *
-     * If any casts have been defined and if a type exists for that cast in the DBAL
-     * types, it will be run against the value from the database. If the type requires
-     * a resource, the cast type should be prefixed with: "resource:"
-     *
-     * If any embeds have been defined and if the attributes match, additional objects
-     * will be hydrated into the attributes for each mapped set. This allows embedded
-     * value-objects to be re-used in the read-models.
+     * Uses the configured hydrators to convert the attributes to types. The hydrators
+     * can be swapped for alternative implementations. The default will use Doctrine
+     * Types and convert embeddable's to objects.
      *
      * @param array $attributes
      */
     private function mapAttributes(array $attributes): void
     {
-        foreach ($attributes as $key => $value) {
-            $key = $this->removeTableAliasFrom($key);
+        $this->attributes = $this->getAttributeCaster()->cast($this, $attributes, $this->casts);
 
-            if (null !== $type = $this->getCastType($key)) {
-                if (Str::startsWith($type, 'resource:')) {
-                    $value = is_null($value) ? null : StrConverter::toResource($value);
-                    $type  = Str::replaceFirst('resource:', '', $type);
-                }
+        if (count($this->attributes) > 0 && count($this->embeds) > 0) {
+            $factory = $this->getEmbeddableFactory();
 
-                $value = Type::getType($type)->convertToPHPValue(
-                    $value, static::connection(static::class)->getDatabasePlatform()
-                );
-            }
-
-            $this->attributes[$key] = $value;
-        }
-
-        if (count($this->attributes) > 0) {
-            foreach ($this->embeds as $key => [$class, $args]) {
-                $this->attributes[$key] = $this->makeEmbeddableObject($class, $args);
+            foreach ($this->embeds as $key => $options) {
+                $this->attributes[$key] = $factory->make($this->attributes, $options[0], $options[1], $options[2] ?? false);
             }
         }
-    }
-
-    private function makeEmbeddableObject($class, $args): ?object
-    {
-        $params = [];
-
-        foreach ($args as $arg) {
-            if (is_array($arg)) {
-                $params[] = $this->makeEmbeddableObject($arg[0], $arg[1]);
-            } elseif (array_key_exists($arg, $this->attributes)) {
-                $params[] = $this->attributes[$arg];
-            }
-        }
-
-        if (empty($params) || count($params) !== count($args)) {
-            return null;
-        }
-
-        if (Str::contains($class, '::')) {
-            return call_user_func_array($class, $params);
-        }
-
-        return new $class(...$params);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     */
-    private function getCastType(string $key): ?string
-    {
-        $cast = $this->casts[$key] ?? null;
-
-        return $cast ? trim(strtolower($cast)) : $cast;
     }
 
     public function newQuery(): Builder
     {
-        return
-            (new Builder($this, static::connection(static::class)->createQueryBuilder()))
-                ->with($this->with)
-        ;
+        return (new Builder($this, static::connection(static::class)->createQueryBuilder()))->with($this->with);
     }
 
-    /**
-     * Creates a new instance from the (optional) attributes
-     *
-     * @param array $attributes
-     *
-     * @return Model
-     */
-    public function newModel(array $attributes = []): Model
+    public function new(array $attributes = []): Model
     {
         return new static($attributes);
     }
 
     /**
-     * Returns all attributes, excluding the internal attributes
+     * Returns all attributes, excluding the internally allocated attributes
      *
      * @return array
      */
