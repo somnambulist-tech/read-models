@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
+use function array_key_exists;
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
@@ -365,8 +366,8 @@ abstract class Model implements JsonSerializable, Queryable
         foreach ($args as $arg) {
             if (is_array($arg)) {
                 $params[] = $this->makeEmbeddableObject($arg[0], $arg[1]);
-            } elseif (null !== $value = ($this->attributes[$arg] ?? null)) {
-                $params[] = $value;
+            } elseif (array_key_exists($arg, $this->attributes)) {
+                $params[] = $this->attributes[$arg];
             }
         }
 
