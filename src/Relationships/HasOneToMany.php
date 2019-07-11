@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
-use Somnambulist\Collection\Collection;
+use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Builder;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Utils\ClassHelpers;

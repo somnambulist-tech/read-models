@@ -7,7 +7,7 @@ namespace Somnambulist\ReadModels\Relationships;
 use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Pagerfanta;
-use Somnambulist\Collection\Collection;
+use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Builder;
 use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Model;

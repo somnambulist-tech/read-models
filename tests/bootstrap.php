@@ -45,7 +45,7 @@ $connection->getConfiguration()->setSQLLogger(new EchoSQLLogger());
 
 \Somnambulist\ReadModels\Model::bindConnection($connection);
 
-\Somnambulist\Doctrine\Bootstrapper::registerTypes();
+\Somnambulist\Domain\Doctrine\Bootstrapper::registerTypes();
 
-Doctrine\DBAL\Types\Type::addType('uuid', \Somnambulist\Doctrine\Types\UuidType::class);
+Doctrine\DBAL\Types\Type::addType('uuid', \Somnambulist\Domain\Doctrine\Types\Identity\UuidType::class);
 Doctrine\DBAL\Types\Type::addType('geometry', \CrEOF\Spatial\DBAL\Types\GeometryType::class);

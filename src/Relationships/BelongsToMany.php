@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
-use Somnambulist\Collection\Collection;
+use function get_class;
+use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Builder;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
@@ -100,15 +101,15 @@ class BelongsToMany extends AbstractRelationship
 
     public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
     {
-        $relationships = [];
+        $related = $this->fetch()->first();
 
-        $this->fetch()->each(function (Model $model) use (&$relationships) {
-            $relationships[$model->{$this->getRelationshipSourceModelReferenceKeyName()}][] = $model;
-        });
+        $models->each(function (Model $model) use ($relationship, $related) {
+            $ids = $model->getIdentityMap()->relatedFor($model, $class = get_class($related));
 
-        $models->each(function (Model $model) use ($relationship, $relationships) {
+            $entities = $model->getIdentityMap()->all($class, $ids);
+
             ClassHelpers::setPropertyArrayKey(
-                $model, 'relationships', $relationship, new Collection($relationships[$model->getPrimaryKey()] ?? []), Model::class
+                $model, 'relationships', $relationship, new Collection($entities), Model::class
             );
         });
 
@@ -117,7 +118,7 @@ class BelongsToMany extends AbstractRelationship
 
     protected function getRelationshipSourceModelReferenceKeyName(): string
     {
-        return sprintf('%s_%s_%s', Model::RELATIONSHIP_SOURCE_MODEL_REF, $this->joinTable, $this->joinTableSourceKey);
+        return sprintf('%s__%s__%s', Model::RELATIONSHIP_SOURCE_MODEL_REF, $this->joinTable, $this->joinTableSourceKey);
     }
 
     protected function getQualifiedSourceKeyName(): string

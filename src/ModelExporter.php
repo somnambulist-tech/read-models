@@ -6,7 +6,7 @@ namespace Somnambulist\ReadModels;
 
 use Closure;
 use IlluminateAgnostic\Str\Support\Str;
-use Somnambulist\Collection\Collection;
+use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Contracts\CanExportToJSON;
 
 /**
@@ -114,7 +114,7 @@ class ModelExporter implements CanExportToJSON
             $items = $this->model->{$relationship};
 
             if ($items instanceof Collection) {
-                $arr = $items->transform(function (Model $model) use ($nested) {
+                $arr = $items->map(function (Model $model) use ($nested) {
                     return $model->export()->with(...(array)$nested)->toArray();
                 })->toArray();
             } elseif ($items instanceof Model) {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels;
 
 use IlluminateAgnostic\Str\Support\Str;
-use Somnambulist\Collection\Collection;
+use Somnambulist\Collection\MutableCollection as Collection;
 
 /**
  * Class FilterGeneratedAttributesAndKeysFromCollection

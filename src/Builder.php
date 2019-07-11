@@ -11,8 +11,8 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
-use Somnambulist\Collection\Collection;
-use Somnambulist\Collection\Interfaces\ExportableInterface;
+use Somnambulist\Collection\Contracts\Arrayable;
+use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
@@ -355,10 +355,10 @@ class Builder implements Queryable
     /**
      * Create a WHERE column IN () clause with support for and or or and NOT IN ()
      *
-     * @param string                    $column
-     * @param array|ExportableInterface $values
-     * @param string                    $andOr
-     * @param bool                      $not
+     * @param string          $column
+     * @param array|Arrayable $values
+     * @param string          $andOr
+     * @param bool            $not
      *
      * @return $this
      */
@@ -367,12 +367,12 @@ class Builder implements Queryable
         $method = $this->getAndOrWhereMethodName($andOr);
         $expr   = $not ? 'notIn' : 'in';
 
-        if ($values instanceof ExportableInterface) {
+        if ($values instanceof Arrayable) {
             $values = $values->toArray();
         }
 
         $placeholders = Collection::collect($values)
-            ->transform(function ($value) use ($column) {
+            ->map(function ($value) use ($column) {
                 $this->query->setParameter($key = $this->createParameterPlaceholderKey($column), $value);
 
                 return $key;
