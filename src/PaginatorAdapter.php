@@ -15,8 +15,8 @@ use Pagerfanta\Adapter\AdapterInterface;
 class PaginatorAdapter implements AdapterInterface
 {
 
-    private $queryBuilder;
-    private $countQueryBuilderModifier;
+    private $builder;
+    private $countBuilder;
 
     /**
      * Constructor.
@@ -25,8 +25,8 @@ class PaginatorAdapter implements AdapterInterface
      */
     public function __construct(Builder $queryBuilder)
     {
-        $this->queryBuilder = clone $queryBuilder;
-        $this->countQueryBuilderModifier = function (Builder $query) {
+        $this->builder      = clone $queryBuilder;
+        $this->countBuilder = function (Builder $query) {
             $query
                 ->getQueryBuilder()
                 ->select(sprintf('COUNT(DISTINCT %s) AS total_results', $query->getModel()->getPrimaryKeyWithTableAlias()))
@@ -45,8 +45,8 @@ class PaginatorAdapter implements AdapterInterface
 
     private function prepareCountQueryBuilder()
     {
-        $qb = clone $this->queryBuilder;
-        call_user_func($this->countQueryBuilderModifier, $qb);
+        $qb = clone $this->builder;
+        call_user_func($this->countBuilder, $qb);
 
         return $qb;
     }
@@ -56,7 +56,7 @@ class PaginatorAdapter implements AdapterInterface
      */
     public function getSlice($offset, $length)
     {
-        $qb = clone $this->queryBuilder;
+        $qb = clone $this->builder;
 
         return $qb->limit($length)->offset($offset)->fetch();
     }

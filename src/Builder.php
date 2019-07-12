@@ -625,6 +625,11 @@ class Builder implements Queryable
         return $this->model;
     }
 
+    public function getIdentityMap(): ModelIdentityMap
+    {
+        return $this->model->getIdentityMap();
+    }
+
     /**
      * Allow pass through to QueryBuilder but return this Builder
      *

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
+use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Builder;
 use Somnambulist\ReadModels\Model;
@@ -64,19 +65,21 @@ class BelongsTo extends AbstractRelationship
 
     public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
     {
-        $relationships = [];
-
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->ownerKey)) {
             $this->query->select($this->ownerKey);
         }
 
-        $this->fetch()->each(function (Model $model) use (&$relationships) {
-            $relationships[$model->{$model->removeTableAliasFrom($this->ownerKey)}] = $model;
-        });
+        $this->fetch();
 
-        $models->each(function (Model $model) use ($relationship, $relationships) {
+        $models->each(function (Model $child) use ($relationship) {
+            $map = $this->getIdentityMap();
+
+            $parent = $map->get($parentClass = get_class($this->related), $child->{$this->foreignKey});
+
+            $map->registerRelationship($parentClass, $parent->getPrimaryKey(), get_class($child), $child->getPrimaryKey());
+
             ClassHelpers::setPropertyArrayKey(
-                $model, 'relationships', $relationship, $relationships[$model->{$this->foreignKey}] ?? null, Model::class
+                $child, 'relationships', $relationship, $parent, Model::class
             );
         });
 

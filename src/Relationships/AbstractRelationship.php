@@ -11,6 +11,7 @@ use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Builder;
 use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ProxyTo;
 
 /**
@@ -21,6 +22,7 @@ use Somnambulist\ReadModels\Utils\ProxyTo;
  *
  * Supports proxying calls to the Builder class
  *
+ * @method ModelIdentityMap getIdentityMap()
  * @method ExpressionBuilder expression()
  * @method Model find()
  * @method Model findOrFail()

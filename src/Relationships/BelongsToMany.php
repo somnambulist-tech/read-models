@@ -101,12 +101,12 @@ class BelongsToMany extends AbstractRelationship
 
     public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
     {
-        $related = $this->fetch()->first();
+        $this->fetch();
 
-        $models->each(function (Model $model) use ($relationship, $related) {
-            $ids = $model->getIdentityMap()->relatedFor($model, $class = get_class($related));
+        $models->each(function (Model $model) use ($relationship) {
+            $ids = $this->getIdentityMap()->getRelatedIdentitiesFor($model, $class = get_class($this->related));
 
-            $entities = $model->getIdentityMap()->all($class, $ids);
+            $entities = $this->getIdentityMap()->all($class, $ids);
 
             ClassHelpers::setPropertyArrayKey(
                 $model, 'relationships', $relationship, new Collection($entities), Model::class

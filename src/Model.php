@@ -15,6 +15,8 @@ use InvalidArgumentException;
 use JsonSerializable;
 use LogicException;
 use Pagerfanta\Pagerfanta;
+use Somnambulist\Collection\Contracts\Arrayable;
+use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Contracts\AttributeCaster;
 use Somnambulist\ReadModels\Contracts\EmbeddableFactory;
@@ -84,7 +86,7 @@ use function stripos;
  * @method Builder whereNull(string $column)
  * @method Builder wherePrimaryKey(int|string $id)
  */
-abstract class Model implements JsonSerializable, Queryable
+abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
 {
 
     /**
@@ -254,13 +256,21 @@ abstract class Model implements JsonSerializable, Queryable
     private $exporter;
 
     /**
+     * The field name that flags the owner record; used by identity map
+     *
+     * @var string
+     * @internal
+     */
+    private $owningKey;
+
+    /**
      * Constructor.
      *
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
-        $this->getIdentityMap()->register($this);
+        $this->getIdentityMap()->registerAlias($this);
 
         $this->mapAttributes($attributes);
     }
@@ -469,8 +479,7 @@ abstract class Model implements JsonSerializable, Queryable
     public function new(array $attributes = []): Model
     {
         if (!empty($attributes)) {
-            $this->getIdentityMap()->registerRelationships($this, $attributes);
-
+            $this->getIdentityMap()->inferRelationshipFromAttributes($this, $attributes);
 
             if (null === $model = $this->getIdentityMap()->get(static::class, $attributes[$this->getPrimaryKeyName()])) {
                 $model = new static($attributes);
@@ -586,9 +595,30 @@ abstract class Model implements JsonSerializable, Queryable
         return Str::snake(ClassHelpers::getObjectShortClassName($this), '_')     . '_' . $this->getPrimaryKeyName();
     }
 
+    /**
+     * Gets the owning side of the relationships key name
+     *
+     * @return string|null
+     * @internal
+     */
+    public function getOwningKey(): ?string
+    {
+        return $this->owningKey;
+    }
+
     public function jsonSerialize(): array
     {
         return $this->export()->toArray();
+    }
+
+    public function toArray(): array
+    {
+        return $this->export()->toArray();
+    }
+
+    public function toJson(int $options = 0): string
+    {
+        return $this->export()->toJson($options);
     }
 
     /**
@@ -758,6 +788,9 @@ abstract class Model implements JsonSerializable, Queryable
         $sourceKey      = $sourceKey ?: $this->getPrimaryKeyName();
         $targetKey      = $targetKey ?: $instance->getPrimaryKeyName();
 
+        $this->getIdentityMap()->registerAlias($this, $tableSourceKey);
+        $this->getIdentityMap()->registerAlias($instance, $tableTargetKey);
+
         return new BelongsToMany(
             $instance->newQuery(), $this, $table, $tableSourceKey, $tableTargetKey, $sourceKey, $targetKey
         );
@@ -785,10 +818,12 @@ abstract class Model implements JsonSerializable, Queryable
      */
     protected function hasMany(string $class, string $foreignKey, string $localKey, ?string $indexBy = null): HasOneToMany
     {
-        /** @var Model $instance */
-        $instance   = new $class();
         $foreignKey = $foreignKey ?: $this->getForeignKey();
         $localKey   = $localKey ?: $this->getPrimaryKeyName();
+
+        /** @var Model $instance */
+        $instance = new $class();
+        $instance->owningKey = $foreignKey;
 
         return new HasOneToMany(
             $instance->newQuery(), $this, $instance->getTable() . '.' . $foreignKey, $localKey, $indexBy
@@ -809,10 +844,12 @@ abstract class Model implements JsonSerializable, Queryable
      */
     protected function hasOne(string $class, ?string $foreignKey = null, ?string $localKey = null): HasOne
     {
-        /** @var Model $instance */
-        $instance   = new $class();
         $foreignKey = $foreignKey ?: $this->getForeignKey();
         $localKey   = $localKey ?: $this->getPrimaryKeyName();
+
+        /** @var Model $instance */
+        $instance = new $class();
+        $instance->owningKey = $foreignKey;
 
         return new HasOne(
             $instance->newQuery(), $this, $instance->getTable() . '.' . $foreignKey, $localKey
