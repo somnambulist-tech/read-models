@@ -23,11 +23,14 @@ class User extends Model
     ];
 
     protected $exports = [
-        'uuid' => 'id',
-        'name',
-        'email',
-        'is_active',
-        'created_at',
+        'attributes' => [
+            'uuid' => 'id',
+            'name',
+            'email',
+            'is_active',
+            'created_at',
+        ],
+        'relationships' => [],
     ];
 
     protected function addresses()

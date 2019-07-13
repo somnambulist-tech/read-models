@@ -17,7 +17,7 @@ use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\ModelBuilderTest
- * @group model
+ * @group model-builder
  */
 class ModelBuilderTest extends TestCase
 {

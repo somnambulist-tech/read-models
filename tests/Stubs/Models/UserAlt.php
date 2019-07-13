@@ -25,11 +25,14 @@ class UserAlt extends Model
     ];
 
     protected $exports = [
-        'uuid' => 'id',
-        'name',
-        'email',
-        'is_active',
-        'created_at',
+        'attributes' => [
+            'uuid' => 'id',
+            'name',
+            'email',
+            'is_active',
+            'created_at',
+        ],
+        'relationships' => [],
     ];
 
     protected function address()
