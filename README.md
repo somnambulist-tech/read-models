@@ -14,20 +14,21 @@ nor will this be added. This package is purely focused on reading and querying d
 with objects / query builders for use in the presentation layer.
 
 A lot of the internal arrangement is heavily inspired by Laravels Eloquent and other
-active-record projects including GranadaORM, PHP ActiveRecord and others.
+active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and others.
 
-### Features
+### Current Features
 
  * active-record query model
  * read-only - no ability to change your db through the built-in methods
  * support for attribute casting
  * support for embeddables
- * support for exporting as JSON / Array data
- * relationships
+ * support for exporting as JSON / Array data (configurable)
+ * relationships (1:1, 1:m, m:m, 1:m:reversed)
  * identity map
  * pluggable attribute / embeddable hydrators
 
-__Note:__ this library is at a **very** early stage of development.
+__Note:__ this library is at an early stage of development and there may be large API
+changes between releases.
 
 ### Thinking About Adding...
 
@@ -51,6 +52,38 @@ Install using composer, or checkout / pull the files from github.com.
 
  * composer require somnambulist/read-models
  * bind a DBAL Connection instance to `Model` or a specific connection per model type
+
+### Symfony Setup
+
+There are several ways to setup Read-Models in Symfony:
+
+#### Dynamically
+
+In a Symfony project create a bundle that implements the BundleInterface. In the
+`boot` method, bind the connections you need to the Model or Model types. At this
+stage you can additionally replace the AttributeCaster or EmbeddableFactory.
+
+#### Service Setup
+
+Use the service definition to operate on the factory methods, or create a Factory
+that injects the connection or builders.
+
+```yaml
+services:
+    read_models.configuration.hidden:
+        factory: Somnambulist\ReadModels\ModelConfigurator::configure
+        public: false
+        arguments:
+            $connections:
+                -
+                    default: '@doctrine.dbal.default_connection'
+                    App\ViewModels\User: '@doctrine.dbal.read_user_connection'
+            $factory: '@App\Services\ViewModels\EmbeddableFactory'
+
+    read_models.event_subscriber:
+        class: Somnambulist\ReadModels\EventSubscriber\IdentityMapClearerSubscriber
+        public: false
+```
 
 ## Usage
 

@@ -14,6 +14,7 @@ use Symfony\Component\Dotenv\Dotenv;
 $connection = DriverManager::getConnection([
     'url' => getenv('TEST_CONNECTION'),
 ]);
+// this doesn't seem to be working at all :confused:
 $connection->exec('PRAGMA foreign_keys=on');
 
 /**

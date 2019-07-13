@@ -428,7 +428,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
         return static::$embeddableFactory = new SimpleObjectFactory();
     }
 
-    public function getIdentityMap(): ModelIdentityMap
+    public static function getIdentityMap(): ModelIdentityMap
     {
         if (self::$identityMap instanceof ModelIdentityMap) {
             return self::$identityMap;
