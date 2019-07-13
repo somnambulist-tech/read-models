@@ -23,7 +23,7 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
  * support for attribute casting
  * support for embeddables
  * support for exporting as JSON / Array data (configurable)
- * relationships (1:1, 1:m, m:m, 1:m:reversed)
+ * relationships (1:1, 1:m, m:m, 1:m reversed)
  * identity map
  * pluggable attribute / embeddable hydrators
 
