@@ -4,33 +4,52 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\Tests\Stubs\DataGenerator;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Permission;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
+use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\ReadModels\ModelIdentityMap;
+use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Class HasManyTest
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\HasManyTest
+ * @package relationships
+ * @package relationships-has-many
  */
 class HasManyTest extends TestCase
 {
 
-
-    public function testFind()
+    public function testHasMany()
     {
-        $timer = new Stopwatch();
-        $timer->start('load');
-//        $ent = User::with('addresses', 'contacts', 'roles.permissions', 'relatedTo')->limit(5)->fetch();
+        $user = new User();
+        $rel = $user->getRelationship('contacts');
 
+        $this->assertInstanceOf(HasOneToMany::class, $rel);
 
-        $ent = User::with('addresses', 'contacts', 'roles.permissions', 'relatedTo')->find(23);
+        $this->assertTrue($rel->hasMany());
+    }
 
+    public function testObjectCalls()
+    {
+        $user = new User();
+        $rel = $user->getRelationship('contacts');
 
+        $this->assertInstanceOf(ModelBuilder::class, $rel->getQuery());
+        $this->assertInstanceOf(Model::class, $rel->getRelated());
+        $this->assertInstanceOf(Model::class, $rel->getParent());
+    }
+
+    public function testPassThroughMethods()
+    {
+        $user = new User();
+        $rel = $user->getRelationship('contacts');
+
+        $this->assertInstanceOf(Model::class, $rel->getModel());
+        $this->assertInstanceOf(ModelIdentityMap::class, $rel->getIdentityMap());
+        $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
     }
 }

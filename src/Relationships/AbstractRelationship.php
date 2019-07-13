@@ -122,6 +122,7 @@ abstract class AbstractRelationship implements Queryable
      * @param Collection $models
      *
      * @return AbstractRelationship
+     * @internal
      */
     abstract public function addEagerLoadingConstraints(Collection $models): self;
 
@@ -131,6 +132,7 @@ abstract class AbstractRelationship implements Queryable
      * @param string ...$relationships
      *
      * @return AbstractRelationship
+     * @internal
      */
     public function addEagerLoadingRelationships(...$relationships): self
     {
@@ -149,6 +151,7 @@ abstract class AbstractRelationship implements Queryable
      * @param string     $relationship
      *
      * @return AbstractRelationship
+     * @internal
      */
     abstract public function addEagerLoadingResults(Collection $models, string $relationship): self;
 
@@ -158,6 +161,7 @@ abstract class AbstractRelationship implements Queryable
      * @param callable $constraint
      *
      * @return AbstractRelationship
+     * @internal
      */
     public function addConstraintCallbackToQuery(callable $constraint): self
     {
@@ -201,6 +205,11 @@ abstract class AbstractRelationship implements Queryable
         return $this->related;
     }
 
+    /**
+     * True if there can be many results from this relationship
+     *
+     * @return bool
+     */
     public function hasMany(): bool
     {
         return $this->hasMany;
@@ -212,7 +221,7 @@ abstract class AbstractRelationship implements Queryable
      * @param string $name
      * @param array  $arguments
      *
-     * @return HasOne|mixed
+     * @return AbstractRelationship|ModelBuilder|mixed
      */
     public function __call($name, $arguments)
     {

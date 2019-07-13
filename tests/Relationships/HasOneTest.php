@@ -4,33 +4,61 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\Tests\Stubs\DataGenerator;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Permission;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
-use Symfony\Component\Stopwatch\Stopwatch;
+use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\ReadModels\ModelIdentityMap;
+use Somnambulist\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\ReadModels\Relationships\HasOne;
+use Somnambulist\ReadModels\Tests\Stubs\Models\UserAlt;
 
 /**
  * Class HasOneTest
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\HasOneTest
+ * @group relationships
+ * @group relationships-has-one
  */
 class HasOneTest extends TestCase
 {
 
-
-    public function testFind()
+    public function testHasOne()
     {
-        $timer = new Stopwatch();
-        $timer->start('load');
-//        $ent = User::with('addresses', 'contacts', 'roles.permissions', 'relatedTo')->limit(5)->fetch();
+        $user = new UserAlt();
+        $rel = $user->getRelationship('address');
 
+        $this->assertInstanceOf(HasOne::class, $rel);
 
-        $ent = User::with('addresses', 'contacts', 'roles.permissions', 'relatedTo')->find(23);
+        $this->assertFalse($rel->hasMany());
+    }
 
+    public function testObjectCalls()
+    {
+        $user = new UserAlt();
+        $rel = $user->getRelationship('address');
 
+        $this->assertInstanceOf(ModelBuilder::class, $rel->getQuery());
+        $this->assertInstanceOf(Model::class, $rel->getRelated());
+        $this->assertInstanceOf(Model::class, $rel->getParent());
+    }
+
+    public function testPassThroughMethods()
+    {
+        $user = new UserAlt();
+        $rel = $user->getRelationship('address');
+
+        $this->assertInstanceOf(Model::class, $rel->getModel());
+        $this->assertInstanceOf(ModelIdentityMap::class, $rel->getIdentityMap());
+        $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
+    }
+
+    public function testMethodCallOnBuilder()
+    {
+        $user = new UserAlt();
+        $rel = $user->getRelationship('address');
+
+        $this->assertInstanceOf(AbstractRelationship::class, $rel->whereNull('town'));
     }
 }

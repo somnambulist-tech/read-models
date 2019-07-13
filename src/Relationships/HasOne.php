@@ -18,6 +18,13 @@ use Somnambulist\ReadModels\Utils\ClassHelpers;
 class HasOne extends HasOneOrMany
 {
 
+    /**
+     * @param Collection $models
+     * @param string     $relationship
+     *
+     * @return AbstractRelationship
+     * @internal
+     */
     public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
     {
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->foreignKey)) {

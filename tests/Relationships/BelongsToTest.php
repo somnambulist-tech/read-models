@@ -4,33 +4,40 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\Tests\Stubs\DataGenerator;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Permission;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
-use Symfony\Component\Stopwatch\Stopwatch;
+use Somnambulist\ReadModels\ModelIdentityMap;
+use Somnambulist\ReadModels\Relationships\BelongsTo;
+use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
 
 /**
  * Class BelongsToTest
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\BelongsToTest
+ * @group relationships
+ * @group relationships-belongs-to
  */
 class BelongsToTest extends TestCase
 {
 
-
-    public function testFind()
+    public function testBelongsTo()
     {
-        $timer = new Stopwatch();
-        $timer->start('load');
-//        $ent = User::with('addresses', 'contacts', 'roles.permissions', 'relatedTo')->limit(5)->fetch();
+        $model = new UserAddress();
+        $rel = $model->getRelationship('user');
 
+        $this->assertInstanceOf(BelongsTo::class, $rel);
 
-        $ent = User::with('addresses', 'contacts', 'roles.permissions', 'relatedTo')->find(23);
+    }
 
+    public function testPassThroughMethods()
+    {
+        $user = new UserAddress();
+        $rel = $user->getRelationship('user');
 
+        $this->assertInstanceOf(Model::class, $rel->getModel());
+        $this->assertInstanceOf(ModelIdentityMap::class, $rel->getIdentityMap());
+        $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
     }
 }
