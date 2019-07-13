@@ -6,11 +6,10 @@ namespace Somnambulist\ReadModels\Hydrators;
 
 use Doctrine\DBAL\Types\Type;
 use IlluminateAgnostic\Str\Support\Str;
-use function is_null;
 use Somnambulist\ReadModels\Contracts\AttributeCaster;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Utils\StrConverter;
-use function strtolower;
+use function is_null;
 use function trim;
 
 /**
@@ -30,7 +29,9 @@ class DoctrineTypeCaster implements AttributeCaster
      * should be prefixed on the attribute name. This will trigger a conversion of the
      * stream to a resource stream. e.g. for Creof Postgres geo-spatial types.
      *
-     * The attributes array is modified directly, nothing is returned.
+     * The modified attributes are returned to the caller.
+     *
+     * Note: Doctrine Types are case-sensitive.
      *
      * @param Model $model
      * @param array $attributes
@@ -70,6 +71,6 @@ class DoctrineTypeCaster implements AttributeCaster
     {
         $cast = $casts[$key] ?? null;
 
-        return $cast ? trim(strtolower($cast)) : $cast;
+        return $cast ? trim($cast) : $cast;
     }
 }

@@ -3,29 +3,49 @@
 Read-Models are a companion resource to a Doctrine ORM entity based project. They
 provide an active-record style data access layer, designed for presentational
 purposes only. This allows your domain objects to remain completely focused on
-managing your data.
+managing your data and not getting sidelined with presentational concerns.
 
 To further highlight this tight integration, read-models uses DBAL and the DBAL
 type system under-the-hood. Any registered types will be used during model hydration
-(embeddable support is planned).
+and even embeddables can be reused.
 
 Note that unlike standard active-record packages, there is no write support at all
 nor will this be added. This package is purely focused on reading and querying data
-with objects / query builders.
+with objects / query builders for use in the presentation layer.
 
 A lot of the internal arrangement is heavily inspired by Laravels Eloquent and other
 active-record projects including GranadaORM, PHP ActiveRecord and others.
 
+### Features
+
+ * active-record query model
+ * read-only - no ability to change your db through the built-in methods
+ * support for attribute casting
+ * support for embeddables
+ * support for exporting as JSON / Array data
+ * relationships
+ * identity map
+ * pluggable attribute / embeddable hydrators
+
 __Note:__ this library is at a **very** early stage of development.
 
-### Requirements
+### Thinking About Adding...
+
+ * using relationship `with` syntax for the export component
+ * doctrine metadata component to use the already available metadata
+ * better way of handling relationship mapping
+ * refactor integration of identity map
+ * consider reducing the scope of the builder component
+ * prevent running / building insert, update, delete queries
+
+## Requirements
 
  * PHP 7.2+
  * mb_string
  * doctrine/dbal
  * somnambulist/collection
 
-### Installation
+## Installation
 
 Install using composer, or checkout / pull the files from github.com.
 
@@ -58,7 +78,7 @@ class User extends Model
 }
 ```
 
-Then to load a record:
+To load a record:
 
 ```php
 $model = User::find(1);
@@ -95,6 +115,25 @@ class User extends Model
 
 User::find(1)->username();
 ```
+
+### Identity Map
+
+Read-Models uses an identity map to ensure that you only ever have one instance, and the same
+instance of the object. Right now this is a very simple implementation that does not deal with
+updating the shared instance, so once loaded it is whatever the original data is. A future
+update may change this.
+
+The identity map is used to resolve and track relationships between models and provides an
+aliasing system to match foreign key names to a class name.
+
+Because of the identity map, it means you can perform object comparisons without needing to use
+an equality method; User object with id 1 will be the same as a reloaded User object with id 1.
+
+There is a slight penalty during hydration for the lookups, however this does result in far
+fewer objects in memory at any one time (for example a User with permissions).
+
+The identity map does need clearing at the end of a request and if running in a long running
+process be sure to periodically call `->clear()`.
 
 ### Casting Data
 
@@ -191,6 +230,45 @@ The result is something like:
 ...
 ```
 
+For optional values e.g.: an `Address` may have optional properties, prefix the property name
+with a `?`. For example: a contact may need one of email or phone:
+
+```php
+class UserContact extends Model
+{
+
+    protected $embeds = [
+        'contact' => [
+            Contact::class, [
+                'contact_name',
+                [PhoneNumber::class, ['?contact_phone_number']],
+                [EmailAddress::class, ['?contact_email']],
+            ]
+        ]
+    ];
+}
+```
+The `Contact` class accepts nulls for both value-objects so if there is no value (it must be
+a null value - false, empty string or 0 are considered to be values) null will be passed and
+the contact can still be created.
+
+To keep the model clean, you can specify a third parameter in the array: `true`. This will
+remove the elements from the attributes after successful conversion to an embeddable. The
+default is always false - you have to explicitly opt-in.
+
+### Custom Hydrators
+
+Both the attribute casting and the embeddable building can be switched for another implementation.
+They are injected via an interface. This can be done per model via the static calls to:
+
+ * `User::bindAttributeCaster($myCaster)`
+ * `User::bindEmbeddableFactory($myFactory)`
+ 
+Or to switch all, use the `Model::bind....()` and all instances will use that version.
+
+Note: the identity map cannot be switched out and is global across all Models - otherwise it
+won't work.
+
 ### Relationships
 
 Define a relationship between models by adding a method named for that relationship.
@@ -211,11 +289,52 @@ If you leave the method public, the relationship can be directly accessed for me
 however you can make it protected and still access the relationship using: getRelationship().
 The benefit of a protected relationship, is fewer exposed methods.
 
+To access the related models:
+
+```php
+User::find(1)->roles->first();
+```
+
+The relationship will return a `Collection` object where there are many or the object itself
+for 1:1 and belongsTo.
+
+#### Eager Load Relationships
+
+As read-models is based on Eloquent and how that operates, you can eager load models in the
+same way! Either define the property to always load data, or start with a `with` call.
+
+```php
+$users = User::with('roles.permissions')->whereColumn('name', 'LIKE', '%bob')->limit(3)->fetch();
+```
+
+Will fetch the users, the roles and the permissions for the roles. And just like Eloquent you
+can also specify specific fields:
+
+```php
+$users = User::with('roles:name.permissions:name')->whereColumn('name', 'LIKE', '%bob')->limit(3)->fetch();
+```
+
+Will only load the name of the role and the permission... except! Read-Models will ensure that
+the keys are also loaded so that the models can be attached to the user.
+
 Currently read-models supports:
 
  * one-to-one (hasOne)
  * one-to-many (hasMany)
  * many-to-many (belongsToMany)
+ * one-to-many inverse (belongsTo)
+ 
+The table and foreign field names can be customised or leave the library to attempt to guess
+at them.
+
+As Doctrine does not support `through` type relationships, these are not implemented. An
+additional note: there is no notion of a `pivot` table. An un-typed intermediary table like
+this is a sign your data domain is missing an object participant and this should be
+implemented. Again, Doctrine does not allow this type of table structure.
+
+__Note:__ for join tables on many-to-many; these are always presumed to be named as singular
+source table name `_` and plural target table name. For example: a User has many Roles, the
+join table is auto-generated as `user_roles`.
 
 ### Exporting
 
@@ -243,9 +362,9 @@ This will export the UUID field as `id` along with the name and date_of_birth. A
 and contacts will be exported, using whatever rules are defined on those.
 
 Note: the export rules can be overridden, but it is on a per object basis. If you wish to
-apply the same rules to a collection of objects using the collection methods to apply the
-rules to all items.
+apply the same rules to a collection of objects, use the collection methods to foreach over
+the models and apply the rules to all items.
 
 The exporter will only touch attributes and relationships; no other properties. For attributes
-it will convert objects to arrays / strings if possible, however it cannot access private
-inherited properties.
+it will convert objects to arrays / strings if possible, however it currently cannot access
+private inherited properties.

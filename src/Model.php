@@ -111,7 +111,12 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      *
      * @var array|Connection[]
      */
-    protected static $connections = [];
+    private static $connections = [];
+
+    /**
+     * @var ModelIdentityMap
+     */
+    private static $identityMap;
 
     /**
      * @var AttributeCaster
@@ -122,11 +127,6 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      * @var EmbeddableFactory
      */
     protected static $embeddableFactory;
-
-    /**
-     * @var ModelIdentityMap
-     */
-    protected static $identityMap;
 
     /**
      * The table associated with the model, will be guessed if not set
@@ -346,7 +346,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      */
     public static function bindConnection(Connection $connection, string $model = 'default'): void
     {
-        static::$connections[$model] = $connection;
+        self::$connections[$model] = $connection;
     }
 
     /**
@@ -361,11 +361,11 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     {
         $try = $model ?? 'default';
 
-        if ('default' !== $model && !isset(static::$connections[$try])) {
+        if ('default' !== $model && !isset(self::$connections[$try])) {
             $try = 'default';
         }
 
-        if (null === $connection = (static::$connections[$try] ?? null)) {
+        if (null === $connection = (self::$connections[$try] ?? null)) {
             throw new InvalidArgumentException(
                 sprintf('A connection for "%s" or "%s" has not been defined', $model, $try)
             );
@@ -418,11 +418,11 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
 
     public function getIdentityMap(): ModelIdentityMap
     {
-        if (static::$identityMap instanceof ModelIdentityMap) {
-            return static::$identityMap;
+        if (self::$identityMap instanceof ModelIdentityMap) {
+            return self::$identityMap;
         }
 
-        return static::$identityMap = new ModelIdentityMap();
+        return self::$identityMap = new ModelIdentityMap();
     }
 
     /**
@@ -504,7 +504,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     }
 
     /**
-     * Get the requests attribute or relationship
+     * Get the requested attribute or relationship
      *
      * If a mutator is defined (getXxxxAttribute method), the attribute will be passed through that first.
      * If the relationship has not been loaded, it will be at this point.
@@ -810,13 +810,15 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      * has a "type" field for: home, office, cell etc.
      *
      * @param string      $class
-     * @param string      $foreignKey
-     * @param string      $localKey
+     * @param string|null $foreignKey
+     * @param string|null $localKey
      * @param string|null $indexBy
      *
      * @return HasOneToMany
      */
-    protected function hasMany(string $class, string $foreignKey, string $localKey, ?string $indexBy = null): HasOneToMany
+    protected function hasMany(
+        string $class, ?string $foreignKey = null, ?string $localKey = null, ?string $indexBy = null
+    ): HasOneToMany
     {
         $foreignKey = $foreignKey ?: $this->getForeignKey();
         $localKey   = $localKey ?: $this->getPrimaryKeyName();
