@@ -55,35 +55,51 @@ Install using composer, or checkout / pull the files from github.com.
 
 ### Symfony Setup
 
-There are several ways to setup Read-Models in Symfony:
+In a Symfony project create a new Bundle class and register it in your `bundles.php`
+file or in your `Kernel` class. In the `boot` method, bind the connections you need
+to the Model or Model types. At this stage you can additionally replace the
+AttributeCaster or EmbeddableFactory. The caster and factory could be created as
+services if you wished to inject other dependencies into them.
 
-#### Dynamically
+The boot method of the bundle then needs:
 
-In a Symfony project create a bundle that implements the BundleInterface. In the
-`boot` method, bind the connections you need to the Model or Model types. At this
-stage you can additionally replace the AttributeCaster or EmbeddableFactory.
+```php
+class MyBundle extends Bundle
+{
 
-#### Service Setup
+    public function boot()
+    {
+        Model::bindConnection($this->container->get('doctrine.dbal.default_connection'));
+    }
+}
+```
 
-Use the service definition to operate on the factory methods, or create a Factory
-that injects the connection or builders.
+Add calls to `bindAttributeCaster` and `bindEmbeddableFactory` if needed or use the
+`ModelConfigurator::configure()` call instead that will setup multiple connections and
+optional the caster / factory if specified.
+
+__Note:__ as the Model uses static binding for the connections, it is not possible to
+perform this step in the services configuration. If you do attempt this and the
+connection is not setting, it is because the configurator or factory calls were compiled
+out of the container as there would be no service calls to it.
+
+#### Kernel Subscriber
+
+If running under PHP-PM or another app-server that keeps the kernel running, then the
+kernel subscriber should be registered to ensure the identity map is flushed between
+requests.
 
 ```yaml
 services:
-    read_models.configuration.hidden:
-        factory: Somnambulist\ReadModels\ModelConfigurator::configure
-        public: false
-        arguments:
-            $connections:
-                -
-                    default: '@doctrine.dbal.default_connection'
-                    App\ViewModels\User: '@doctrine.dbal.read_user_connection'
-            $factory: '@App\Services\ViewModels\EmbeddableFactory'
-
-    read_models.event_subscriber:
-        class: Somnambulist\ReadModels\EventSubscriber\IdentityMapClearerSubscriber
+    Somnambulist\ReadModels\EventSubscriber\IdentityMapClearerSubscriber:
         public: false
 ```
+
+This will run:
+
+ * onRequest (priority 255)
+ * onException (priority -255)
+ * onTerminate (priority -255)
 
 ## Usage
 

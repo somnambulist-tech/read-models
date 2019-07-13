@@ -11,6 +11,10 @@
         <ini name="error_reporting" value="-1" />
         <ini name="memory_limit" value="256M" />
         <env name="SHELL_VERBOSITY" value="-1" />
+
+        <server name="KERNEL_DIR" value="./Tests/Support" />
+        <server name="KERNEL_CLASS" value="Somnambulist\ReadModels\Tests\Support\Kernel" />
+        <server name="APP_ENV" value="test" />
     </php>
 
     <testsuites>

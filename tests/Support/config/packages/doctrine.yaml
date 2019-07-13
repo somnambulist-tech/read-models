@@ -1,0 +1,7 @@
+doctrine:
+    dbal:
+        connection:
+            name: default
+            url:       '%env(TEST_CONNECTION)%'
+            logging:   '%kernel.debug%'
+            profiling: '%kernel.debug%'
