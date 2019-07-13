@@ -165,6 +165,8 @@ class User extends Model
 User::find(1)->username();
 ```
 
+[Auto-generated API docs](docs/api-read-models.md) are avaiable in the docs folder.
+
 ### Identity Map
 
 Read-Models uses an identity map to ensure that you only ever have one instance, and the same
