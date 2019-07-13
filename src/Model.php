@@ -43,7 +43,7 @@ use function stripos;
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\Model
  *
- * @method static Model find(int|string $id)
+ * @method static null|Model find(int|string $id)
  * @method static Model findOrFail(int|string $id)
  * @method ExpressionBuilder expression()
  * @method Collection fetch()
@@ -64,7 +64,7 @@ use function stripos;
  * @method Builder offset(int $offset)
  * @method Builder orderBy(string $column, string $dir)
  * @method Builder orHaving(string $expression)
- * @method Builder orWhere(string $expression, array $values)
+ * @method Builder orWhere(string $expression, array $values = [])
  * @method Builder orWhereBetween(string $column, mixed $start, mixed $end)
  * @method Builder orWhereColumn(string $column, string $operator, mixed $value)
  * @method Builder orWhereIn(string $column, array $values)
@@ -76,7 +76,7 @@ use function stripos;
  * @method Builder select(string ...$columns)
  * @method Builder setParameter(string|int $key, mixed $value, $type = null)
  * @method Builder setParameters(array $parameters)
- * @method Builder where(string $expression, array $values)
+ * @method Builder where(string $expression, array $values = [])
  * @method Builder whereBetween(string $column, mixed $start, mixed $end)
  * @method Builder whereColumn(string $column, string $operator, mixed $value)
  * @method Builder whereIn(string $column, array $values)

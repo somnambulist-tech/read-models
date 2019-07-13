@@ -16,13 +16,13 @@ class EntityNotFoundException extends Exception
 {
 
     /**
-     * @param string $class
-     * @param string $key
-     * @param string $id
+     * @param string     $class
+     * @param string     $key
+     * @param string|int $id
      *
      * @return EntityNotFoundException
      */
-    public static function noMatchingRecordFor(string $class, string $key, string $id): self
+    public static function noMatchingRecordFor(string $class, string $key, $id): self
     {
         return new self(sprintf('Could not find a record for %s with %s and %s', $class, $key, $id));
     }

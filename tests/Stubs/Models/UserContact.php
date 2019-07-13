@@ -27,8 +27,8 @@ class UserContact extends Model
     protected $embeds = [
         'contact' => [
             Contact::class, [
-                'contact_name',
-                [PhoneNumber::class, ['?contact_phone_number'], true,],
+                'name',
+                [PhoneNumber::class, ['?contact_phone'], true,],
                 [EmailAddress::class, ['?contact_email'], true,],
             ], true
         ]

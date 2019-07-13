@@ -17,6 +17,7 @@ use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Utils\ProxyTo;
+use function sprintf;
 
 /**
  * Class Builder
@@ -415,7 +416,7 @@ class Builder implements Queryable
      *
      * @return Builder
      */
-    public function where(string $expression, array $values): self
+    public function where(string $expression, array $values = []): self
     {
         $this->query->andWhere($expression);
 
@@ -440,11 +441,15 @@ class Builder implements Queryable
      *
      * @return Builder
      */
-    public function orWhere(string $expression, array $values): self
+    public function orWhere(string $expression, array $values = []): self
     {
         $this->query->orWhere($expression);
 
         foreach ($values as $key => $value) {
+            if ('?' === $key) {
+                throw new InvalidArgumentException(sprintf('WHERE condition must use named placeholders not ?'));
+            }
+
             $this->query->setParameter($key, $value);
         }
 
@@ -620,6 +625,10 @@ class Builder implements Queryable
         return $this->query;
     }
 
+    /**
+     * @return Model
+     * @internal
+     */
     public function getModel(): Model
     {
         return $this->model;
@@ -631,12 +640,13 @@ class Builder implements Queryable
     }
 
     /**
-     * Allow pass through to QueryBuilder but return this Builder
+     * Allow pass through to certain QueryBuilder methods but return this Builder
      *
      * @param string $name
      * @param array  $arguments
      *
      * @return Builder
+     * @throws BadMethodCallException
      */
     public function __call($name, $arguments)
     {

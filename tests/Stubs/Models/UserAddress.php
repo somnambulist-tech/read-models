@@ -35,4 +35,9 @@ class UserAddress extends Model
             ], true
         ]
     ];
+
+    protected function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

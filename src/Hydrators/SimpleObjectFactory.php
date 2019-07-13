@@ -39,6 +39,7 @@ class SimpleObjectFactory implements EmbeddableFactory
     {
         $params   = [];
         $toRemove = [];
+        $optional = false;
 
         foreach ($args as $arg) {
             if (is_array($arg)) {
@@ -62,7 +63,13 @@ class SimpleObjectFactory implements EmbeddableFactory
             }
         }
 
-        if (empty($params) || count($params) !== count($args)) {
+        /*
+         * Don't attempt to hydrate objects with mis-matched parameter counts or in the case
+         * of a single arg that is null (e.g.: email, phone, uuid) since. It's a bit of an
+         * assumption but probably still safe to work on the basis that a VO should not
+         * generally contain a single "null" value.
+         */
+        if (empty($params) || count($params) !== count($args) || (count($args) === 1 && $optional && null === $params[0])) {
             return null;
         }
 

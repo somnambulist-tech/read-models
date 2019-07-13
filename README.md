@@ -368,3 +368,23 @@ the models and apply the rules to all items.
 The exporter will only touch attributes and relationships; no other properties. For attributes
 it will convert objects to arrays / strings if possible, however it currently cannot access
 private inherited properties.
+
+## Test Suite
+
+The test suite uses an SQlite database file named "users.db" that simulates a possible User
+setup with Roles, Permissions, Contacts and Addresses. Before running the test suite, be
+sure to generate some test data using: `tests/resources/seed.php`. This console app has a
+couple of commands:
+
+ * `db:create` - builds the table structure
+ * `db:seed` - generate base records and `--records=XX` random records
+ * `db:destroy` - deletes all test data and tables
+
+For the test suite to run and be able to test various relationships / eager loading etc a
+reasonable number of test records are needed. The suite was built against a random sample
+of 150 records.
+
+The `DataGenerator` attempts some amount of random allocation of addresses, contacts and
+roles to each user; however data integrity was not the goal, merely usable data. 
+
+To run the tests: `vendor/bin/phpunit`.

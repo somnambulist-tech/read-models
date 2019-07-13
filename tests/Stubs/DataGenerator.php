@@ -121,9 +121,9 @@ class DataGenerator
             $this->connection->insert('users', [
                 'uuid' => $uuid = $this->faker->uuid,
                 'name' => $this->faker->name,
-                'is_active' => $this->faker->boolean($chanceOfGettingTrue = 50),
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'is_active' => (int)$this->faker->boolean($chanceOfGettingTrue = 50),
+                'created_at' => $this->faker->dateTimeBetween('-12 months', '-1 week')->format('Y-m-d H:i:s'),
+                'updated_at' => $this->faker->dateTimeBetween('-2 weeks', 'now')->format('Y-m-d H:i:s'),
                 'email' => $this->faker->email,
                 'password' => password_hash($this->faker->sha1, PASSWORD_DEFAULT),
             ]);
@@ -170,7 +170,7 @@ class DataGenerator
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                     'contact_email' => $this->faker->boolean($chanceOfGettingTrue = 50) ? $this->faker->email : null,
-                    'contact_phone' => $this->faker->boolean($chanceOfGettingTrue = 50) ? $this->faker->phoneNumber : null,
+                    'contact_phone' => $this->faker->boolean($chanceOfGettingTrue = 50) ? $this->faker->e164PhoneNumber : null,
                 ]);
             }
 

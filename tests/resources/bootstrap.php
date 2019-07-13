@@ -27,7 +27,7 @@ class EchoSQLLogger implements SQLLogger
      */
     public function startQuery($sql, ?array $params = null, ?array $types = null)
     {
-        echo PHP_EOL . $sql;
+        echo PHP_EOL . $sql . PHP_EOL;
 
         if ($params) {
             var_dump($params);
@@ -50,7 +50,9 @@ class EchoSQLLogger implements SQLLogger
 }
 
 // for debugging executed SQL statements
-//$connection->getConfiguration()->setSQLLogger(new EchoSQLLogger());
+if (in_array('--debug', $_SERVER['argv'])) {
+    $connection->getConfiguration()->setSQLLogger(new EchoSQLLogger());
+}
 
 Bootstrapper::registerEnumerations();
 Bootstrapper::registerTypes();

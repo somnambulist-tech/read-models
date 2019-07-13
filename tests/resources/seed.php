@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env php
 <?php
 
 declare(strict_types=1);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
+use Somnambulist\Collection\MutableCollection;
 use Somnambulist\ReadModels\Model;
 
 /**
@@ -11,6 +12,8 @@ use Somnambulist\ReadModels\Model;
  *
  * @package    Somnambulist\ReadModels\Tests\Stubs\Models
  * @subpackage Somnambulist\ReadModels\Tests\Stubs\Models\Role
+ *
+ * @property-read MutableCollection permissions
  */
 class Role extends Model
 {
