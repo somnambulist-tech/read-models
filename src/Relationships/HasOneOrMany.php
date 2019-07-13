@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels\Relationships;
 
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Builder;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Model;
 
 /**
@@ -30,12 +30,12 @@ abstract class HasOneOrMany extends AbstractRelationship
     /**
      * Constructor.
      *
-     * @param Builder $builder
-     * @param Model   $parent
-     * @param string  $foreignKey
-     * @param string  $localKey
+     * @param ModelBuilder $builder
+     * @param Model        $parent
+     * @param string       $foreignKey
+     * @param string       $localKey
      */
-    public function __construct(Builder $builder, Model $parent, string $foreignKey, string $localKey)
+    public function __construct(ModelBuilder $builder, Model $parent, string $foreignKey, string $localKey)
     {
         $this->foreignKey = $foreignKey;
         $this->localKey   = $localKey;

@@ -6,7 +6,7 @@ namespace Somnambulist\ReadModels\Relationships;
 
 use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Builder;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 
@@ -49,15 +49,15 @@ class BelongsToMany extends AbstractRelationship
     /**
      * Constructor.
      *
-     * @param Builder $query
-     * @param Model   $parent
-     * @param string  $joinTable          The name of the table linking the models
-     * @param string  $joinTableSourceKey The name of the column on the join table for the source
-     * @param string  $joinTableTargetKey The name of the column
-     * @param string  $sourceKey          The name of the attribute on the source referenced in the join table
-     * @param string  $targetKey          The name of the attribute on the target referenced in the join table
+     * @param ModelBuilder $query
+     * @param Model        $parent
+     * @param string       $joinTable          The name of the table linking the models
+     * @param string       $joinTableSourceKey The name of the column on the join table for the source
+     * @param string       $joinTableTargetKey The name of the column
+     * @param string       $sourceKey          The name of the attribute on the source referenced in the join table
+     * @param string       $targetKey          The name of the attribute on the target referenced in the join table
      */
-    public function __construct(Builder $query, Model $parent, string $joinTable, string $joinTableSourceKey, string $joinTableTargetKey, string $sourceKey, string $targetKey)
+    public function __construct(ModelBuilder $query, Model $parent, string $joinTable, string $joinTableSourceKey, string $joinTableTargetKey, string $sourceKey, string $targetKey)
     {
         $this->joinTable          = $joinTable;
         $this->joinTableSourceKey = $joinTableSourceKey;

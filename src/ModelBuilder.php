@@ -20,28 +20,28 @@ use Somnambulist\ReadModels\Utils\ProxyTo;
 use function sprintf;
 
 /**
- * Class Builder
+ * Class ModelBuilder
  *
  * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\Builder
+ * @subpackage Somnambulist\ReadModels\ModelBuilder
  *
  * These methods pass through to the underlying QueryBuilder instance.
  *
- * @method Builder join(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder leftJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder rightJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder setParameter(string|int $key, mixed $value, $type = null)
- * @method Builder setParameters(array $parameters)
- * @method Builder getParameter(string|int $key)
- * @method Builder getParameters()
- * @method Builder getParameterType(string $key)
- * @method Builder getParameterTypes()
- * @method Builder having(string $expression)
- * @method Builder andHaving(string $expression)
- * @method Builder orHaving(string $expression)
+ * @method ModelBuilder join(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder leftJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder rightJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder setParameter(string|int $key, mixed $value, $type = null)
+ * @method ModelBuilder setParameters(array $parameters)
+ * @method ModelBuilder getParameter(string|int $key)
+ * @method ModelBuilder getParameters()
+ * @method ModelBuilder getParameterType(string $key)
+ * @method ModelBuilder getParameterTypes()
+ * @method ModelBuilder having(string $expression)
+ * @method ModelBuilder andHaving(string $expression)
+ * @method ModelBuilder orHaving(string $expression)
  */
-class Builder implements Queryable
+class ModelBuilder implements Queryable
 {
 
     /**
@@ -74,7 +74,7 @@ class Builder implements Queryable
     /**
      * Returns a new query builder instance for the set Model
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function newQuery(): self
     {
@@ -281,9 +281,9 @@ class Builder implements Queryable
      *
      * @param string ...$columns
      *
-     * @return Builder
+     * @return ModelBuilder
      */
-    public function select(...$columns): Builder
+    public function select(...$columns): ModelBuilder
     {
         if (empty($columns)) {
             $columns = ['*'];
@@ -414,7 +414,7 @@ class Builder implements Queryable
      * @param string $expression
      * @param array  $values
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function where(string $expression, array $values = []): self
     {
@@ -439,7 +439,7 @@ class Builder implements Queryable
      * @param string $expression
      * @param array  $values
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function orWhere(string $expression, array $values = []): self
     {
@@ -467,7 +467,7 @@ class Builder implements Queryable
      * @param mixed  $value
      * @param string $andOr    Should the where be AND (expression) or OR (expression)
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function whereColumn(string $column, string $operator, $value, string $andOr = 'and'): self
     {
@@ -489,7 +489,7 @@ class Builder implements Queryable
      * @param string $operator
      * @param mixed  $value
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function orWhereColumn(string $column, string $operator, $value): self
     {
@@ -501,7 +501,7 @@ class Builder implements Queryable
      * @param string $andOr Should the where be AND (expression) or OR (expression)
      * @param bool   $not
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function whereNull(string $column, string $andOr = 'and', bool $not = false): self
     {
@@ -542,7 +542,7 @@ class Builder implements Queryable
      * @param string $andOr
      * @param bool   $not
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function whereBetween(string $column, $start, $end, string $andOr = 'and', bool $not = false): self
     {
@@ -581,7 +581,7 @@ class Builder implements Queryable
      *
      * @param string $column
      *
-     * @return Builder
+     * @return ModelBuilder
      */
     public function groupBy(string $column): self
     {
@@ -645,7 +645,7 @@ class Builder implements Queryable
      * @param string $name
      * @param array  $arguments
      *
-     * @return Builder
+     * @return ModelBuilder
      * @throws BadMethodCallException
      */
     public function __call($name, $arguments)

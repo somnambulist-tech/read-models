@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Builder;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelIdentityMap;
@@ -73,7 +73,7 @@ abstract class AbstractRelationship implements Queryable
 {
 
     /**
-     * @var Builder
+     * @var ModelBuilder
      */
     protected $query;
 
@@ -97,10 +97,10 @@ abstract class AbstractRelationship implements Queryable
     /**
      * Constructor.
      *
-     * @param Builder $builder
-     * @param Model   $parent
+     * @param ModelBuilder $builder
+     * @param Model        $parent
      */
-    public function __construct(Builder $builder, Model $parent)
+    public function __construct(ModelBuilder $builder, Model $parent)
     {
         $this->parent  = $parent;
         $this->related = $builder->getModel();
@@ -176,7 +176,7 @@ abstract class AbstractRelationship implements Queryable
         return $this->query->fetch();
     }
 
-    public function getQuery(): Builder
+    public function getQuery(): ModelBuilder
     {
         return $this->query;
     }

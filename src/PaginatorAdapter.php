@@ -21,12 +21,12 @@ class PaginatorAdapter implements AdapterInterface
     /**
      * Constructor.
      *
-     * @param Builder $queryBuilder
+     * @param ModelBuilder $queryBuilder
      */
-    public function __construct(Builder $queryBuilder)
+    public function __construct(ModelBuilder $queryBuilder)
     {
         $this->builder      = clone $queryBuilder;
-        $this->countBuilder = function (Builder $query) {
+        $this->countBuilder = function (ModelBuilder $query) {
             $query
                 ->getQueryBuilder()
                 ->select(sprintf('COUNT(DISTINCT %s) AS total_results', $query->getModel()->getPrimaryKeyWithTableAlias()))

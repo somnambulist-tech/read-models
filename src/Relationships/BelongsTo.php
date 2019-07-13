@@ -6,7 +6,7 @@ namespace Somnambulist\ReadModels\Relationships;
 
 use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Builder;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 
@@ -36,12 +36,12 @@ class BelongsTo extends AbstractRelationship
     /**
      * Constructor.
      *
-     * @param Builder $query
-     * @param Model   $child
-     * @param string  $foreignKey
-     * @param string  $ownerKey
+     * @param ModelBuilder $query
+     * @param Model        $child
+     * @param string       $foreignKey
+     * @param string       $ownerKey
      */
-    public function __construct(Builder $query, Model $child, string $foreignKey, string $ownerKey)
+    public function __construct(ModelBuilder $query, Model $child, string $foreignKey, string $ownerKey)
     {
         $this->foreignKey = $foreignKey;
         $this->ownerKey   = $ownerKey;

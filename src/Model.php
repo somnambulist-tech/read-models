@@ -50,41 +50,41 @@ use function stripos;
  * @method int count()
  * @method Pagerfanta paginate(int $page = 1, int $perPage = 30)
  * @method QueryBuilder getQueryBuilder()
- * @method Builder andHaving(string $expression)
- * @method Builder getParameter(string|int $key)
- * @method Builder getParameters()
- * @method Builder getParameterType(string $key)
- * @method Builder getParameterTypes()
- * @method Builder groupBy(string $column)
- * @method Builder having(string $expression)
- * @method Builder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder join(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder leftJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder limit(int $limit)
- * @method Builder offset(int $offset)
- * @method Builder orderBy(string $column, string $dir)
- * @method Builder orHaving(string $expression)
- * @method Builder orWhere(string $expression, array $values = [])
- * @method Builder orWhereBetween(string $column, mixed $start, mixed $end)
- * @method Builder orWhereColumn(string $column, string $operator, mixed $value)
- * @method Builder orWhereIn(string $column, array $values)
- * @method Builder orWhereNotBetween(string $column, mixed $start, mixed $end)
- * @method Builder orWhereNotIn(string $column, array $values)
- * @method Builder orWhereNotNull(string $column)
- * @method Builder orWhereNull(string $column)
- * @method Builder rightJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method Builder select(string ...$columns)
- * @method Builder setParameter(string|int $key, mixed $value, $type = null)
- * @method Builder setParameters(array $parameters)
- * @method Builder where(string $expression, array $values = [])
- * @method Builder whereBetween(string $column, mixed $start, mixed $end)
- * @method Builder whereColumn(string $column, string $operator, mixed $value)
- * @method Builder whereIn(string $column, array $values)
- * @method Builder whereNotBetween(string $column, mixed $start, mixed $end)
- * @method Builder whereNotIn(string $column, array $values)
- * @method Builder whereNotNull(string $column)
- * @method Builder whereNull(string $column)
- * @method Builder wherePrimaryKey(int|string $id)
+ * @method ModelBuilder andHaving(string $expression)
+ * @method ModelBuilder getParameter(string|int $key)
+ * @method ModelBuilder getParameters()
+ * @method ModelBuilder getParameterType(string $key)
+ * @method ModelBuilder getParameterTypes()
+ * @method ModelBuilder groupBy(string $column)
+ * @method ModelBuilder having(string $expression)
+ * @method ModelBuilder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder join(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder leftJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder limit(int $limit)
+ * @method ModelBuilder offset(int $offset)
+ * @method ModelBuilder orderBy(string $column, string $dir)
+ * @method ModelBuilder orHaving(string $expression)
+ * @method ModelBuilder orWhere(string $expression, array $values = [])
+ * @method ModelBuilder orWhereBetween(string $column, mixed $start, mixed $end)
+ * @method ModelBuilder orWhereColumn(string $column, string $operator, mixed $value)
+ * @method ModelBuilder orWhereIn(string $column, array $values)
+ * @method ModelBuilder orWhereNotBetween(string $column, mixed $start, mixed $end)
+ * @method ModelBuilder orWhereNotIn(string $column, array $values)
+ * @method ModelBuilder orWhereNotNull(string $column)
+ * @method ModelBuilder orWhereNull(string $column)
+ * @method ModelBuilder rightJoin(string $fromAlias, string $join, string $alias, $conditions)
+ * @method ModelBuilder select(string ...$columns)
+ * @method ModelBuilder setParameter(string|int $key, mixed $value, $type = null)
+ * @method ModelBuilder setParameters(array $parameters)
+ * @method ModelBuilder where(string $expression, array $values = [])
+ * @method ModelBuilder whereBetween(string $column, mixed $start, mixed $end)
+ * @method ModelBuilder whereColumn(string $column, string $operator, mixed $value)
+ * @method ModelBuilder whereIn(string $column, array $values)
+ * @method ModelBuilder whereNotBetween(string $column, mixed $start, mixed $end)
+ * @method ModelBuilder whereNotIn(string $column, array $values)
+ * @method ModelBuilder whereNotNull(string $column)
+ * @method ModelBuilder whereNull(string $column)
+ * @method ModelBuilder wherePrimaryKey(int|string $id)
  */
 abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
 {
@@ -432,9 +432,9 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      *
      * @param string ...$relations
      *
-     * @return Builder
+     * @return ModelBuilder
      */
-    public static function with(...$relations): Builder
+    public static function with(...$relations): ModelBuilder
     {
         return static::query()->with(...$relations);
     }
@@ -442,9 +442,9 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     /**
      * Starts a new query builder process without any constraints
      *
-     * @return Builder
+     * @return ModelBuilder
      */
-    public static function query(): Builder
+    public static function query(): ModelBuilder
     {
         return (new static)->newQuery();
     }
@@ -471,9 +471,9 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
         }
     }
 
-    public function newQuery(): Builder
+    public function newQuery(): ModelBuilder
     {
-        return (new Builder($this, static::connection(static::class)->createQueryBuilder()))->with($this->with);
+        return (new ModelBuilder($this, static::connection(static::class)->createQueryBuilder()))->with($this->with);
     }
 
     public function new(array $attributes = []): Model

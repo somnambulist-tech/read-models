@@ -6,7 +6,7 @@ namespace Somnambulist\ReadModels\Relationships;
 
 use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Builder;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 
@@ -29,13 +29,13 @@ class HasOneToMany extends HasOneOrMany
     /**
      * Constructor.
      *
-     * @param Builder     $builder
-     * @param Model       $parent
-     * @param string      $foreignKey
-     * @param string      $localKey
-     * @param string|null $indexBy
+     * @param ModelBuilder $builder
+     * @param Model        $parent
+     * @param string       $foreignKey
+     * @param string       $localKey
+     * @param string|null  $indexBy
      */
-    public function __construct(Builder $builder, Model $parent, string $foreignKey, string $localKey, ?string $indexBy = null)
+    public function __construct(ModelBuilder $builder, Model $parent, string $foreignKey, string $localKey, ?string $indexBy = null)
     {
         $this->indexBy = $indexBy;
 
