@@ -132,6 +132,16 @@ class DataGenerator
 
             $this->connection->insert('user_roles', ['role_id' => $userRoleId, 'user_id' => $userId]);
 
+            if (rand(1, 5) == 5) {
+                $this->connection->insert('user_profiles', [
+                    'user_uuid' => $uuid,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'profile_name' => $this->faker->name,
+                    'profile_text' => $this->faker->realText(2000),
+                ]);
+            }
+
             if (rand(1, 5) == 1) {
                 $this->connection->insert('user_addresses', [
                     'user_id' => $userId,

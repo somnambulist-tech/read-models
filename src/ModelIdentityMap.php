@@ -96,8 +96,8 @@ class ModelIdentityMap
     public function registerRelationship(string $source, $sourceId, string $target, $targetId): void
     {
         // avoid needing to do array checks because the id can only be there once
-        $this->relationships[$source][$sourceId][$target][$targetId] = 1;
-        $this->relationships[$target][$targetId][$source][$sourceId] = 1;
+        $this->relationships[$source][(string)$sourceId][$target][(string)$targetId] = 1;
+        $this->relationships[$target][(string)$targetId][$source][(string)$sourceId] = 1;
     }
 
     /**
@@ -161,8 +161,12 @@ class ModelIdentityMap
     {
         $class = get_class($model);
 
-        if (!$this->has($class, $id = $model->getPrimaryKey())) {
+        if (!$this->has($class, (string)$id = $model->getPrimaryKey())) {
             $this->identityMap[$class][$id] = $model;
+
+            if (null !== $model->getExternalPrimaryKey()) {
+                $this->identityMap[$class][(string)$model->getExternalPrimaryKey()] = $model;
+            }
         }
     }
 
@@ -189,7 +193,7 @@ class ModelIdentityMap
     public function get(string $class, $id): ?object
     {
         if ($this->has($class, $id)) {
-            return $this->identityMap[$class][$id];
+            return $this->identityMap[$class][(string)$id];
         }
 
         return null;
@@ -197,7 +201,7 @@ class ModelIdentityMap
 
     public function has(string $class, $id): bool
     {
-        return isset($this->identityMap[$class][$id]);
+        return isset($this->identityMap[$class][(string)$id]);
     }
 
     /**

@@ -153,11 +153,41 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     protected $tableAlias;
 
     /**
-     * The primary key for the model.
+     * The primary key for the model
+     *
+     * This is the primary identifier used by the database; it is not necessarily what
+     * you would expose. For example: when using a relational database, it is more
+     * efficient to use auto-increment / sequence integers than UUIDs as keys; but you
+     * want the UUID as the external value. To support the database mappings though
+     * this needs to be set to the _internal_ identifier. This way related models can
+     * be set using the integer keys.
      *
      * @var string
      */
     protected $primaryKey = 'id';
+
+    /**
+     * The primary key used for external references
+     *
+     * Where the {@see Model::$primaryKey} is the internal database key, this is the
+     * key that is used outside of the scope of the database i.e. the actual entity
+     * key. Typically this will be a UUID or GUID - a globally unique identifier that
+     * can be used across databases, APIs etc.
+     *
+     * By default this is not set, however if a column name is used, then the model
+     * will be registered in the identity map with this key, along with the primary
+     * key, allowing reverse lookups by UUID as well as the table id key.
+     *
+     * This allows in-direct connections between aggregate roots that otherwise could
+     * not be linked. For example: using the Users UUID as the foreign key in a
+     * separate Blog table instead of the internal integer ID.
+     *
+     * Typically this would be used on a BelongsTo relationship. See the example in the
+     * tests of a User having a profile that is linked by UUID.
+     *
+     * @var string|null
+     */
+    protected $externalPrimaryKey = null;
 
     /**
      * The relationships to eager load on every query
@@ -592,6 +622,21 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     public function getPrimaryKeyWithTableAlias(): string
     {
         return $this->prefixColumnWithTableAlias($this->getPrimaryKeyName());
+    }
+
+    public function getExternalPrimaryKeyName(): ?string
+    {
+        return $this->externalPrimaryKey;
+    }
+
+    /**
+     * Could return an object e.g. Uuid or string, depending on casting
+     *
+     * @return mixed|null
+     */
+    public function getExternalPrimaryKey()
+    {
+        return $this->attributes[$this->getExternalPrimaryKeyName()] ?? null;
     }
 
     /**

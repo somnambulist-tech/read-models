@@ -15,6 +15,8 @@ use Somnambulist\ReadModels\Model;
 class User extends Model
 {
 
+    protected $externalPrimaryKey = 'uuid';
+
     protected $casts = [
         'uuid' => 'uuid',
         'is_active' => 'boolean',

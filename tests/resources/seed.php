@@ -91,6 +91,7 @@ $app->addCommands([
                 $this->conn->exec('delete from role_permissions');
                 $this->conn->exec('delete from user_addresses');
                 $this->conn->exec('delete from user_contacts');
+                $this->conn->exec('delete from user_profiles');
                 $this->conn->exec('delete from user_relations');
                 $this->conn->exec('delete from user_roles');
                 $this->conn->exec('vacuum');
@@ -213,6 +214,16 @@ $app->addCommands([
                         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
                         FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE,
                         PRIMARY KEY(user_id, role_id)
+                    )
+                ');
+                $this->conn->exec('
+                    CREATE TABLE IF NOT EXISTS user_profiles (
+                        id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        user_uuid varchar(36) NOT NULL,
+                        created_at datetime NOT NULL,
+                        updated_at datetime NOT NULL,
+                        profile_name varchar(100) NOT NULL,
+                        profile_text text DEFAULT NULL
                     )
                 ');
 
