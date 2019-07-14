@@ -190,6 +190,22 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     protected $externalPrimaryKey = null;
 
     /**
+     * How the primary key appears as a foreign key
+     *
+     * If not set, the short classname will be used, converted to snake_case and the
+     * primary key appended. For example: User -> user_id. As this library is intended
+     * to be used as a read-only view-model, the model class might be: UserReadModel or
+     * UserView that would lead to: user_read_model_id or user_view_id. This property
+     * can be set to override the builder logic to use: user_id or another variant.
+     *
+     * Note: this applies to 1:m and 1:1 and 1:m reversed relationships. m:m uses the
+     * keys defined on the relationship to build the relationship keys.
+     *
+     * @var string|null
+     */
+    protected $foreignKey = null;
+
+    /**
      * The relationships to eager load on every query
      *
      * @var array
@@ -649,7 +665,9 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      */
     public function getForeignKey(): string
     {
-        return Str::snake(ClassHelpers::getObjectShortClassName($this), '_')     . '_' . $this->getPrimaryKeyName();
+        return $this->foreignKey ?? sprintf(
+            '%s_%s', Str::snake(ClassHelpers::getObjectShortClassName($this), '_'), $this->getPrimaryKeyName()
+        );
     }
 
     /**
