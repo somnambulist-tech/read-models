@@ -9,12 +9,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use DomainException;
+use function get_class_methods;
 use IlluminateAgnostic\Str\Support\Arr;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use JsonSerializable;
 use LogicException;
 use Pagerfanta\Pagerfanta;
+use function preg_match;
 use Somnambulist\Collection\Contracts\Arrayable;
 use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
@@ -552,13 +554,25 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     }
 
     /**
-     * Returns all attributes, excluding the internally allocated attributes
+     * Returns all attributes including virtual, excluding the internally allocated attributes
      *
      * @return array
      */
     public function getAttributes(): array
     {
-        return (new FilterGeneratedKeysFromCollection())($this->attributes);
+        $attributes = $this->attributes;
+
+        foreach (get_class_methods($this) as $method) {
+            $matches = [];
+
+            if (preg_match('/^get(?<property>[\w\d]+)Attribute/', $method, $matches)) {
+                $prop = Str::snake($matches['property']);
+
+                $attributes[$prop] = $this->{$method}($this->attributes[$prop] ?? null);
+            }
+        }
+
+        return (new FilterGeneratedKeysFromCollection())($attributes);
     }
 
     /**

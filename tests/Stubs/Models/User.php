@@ -35,6 +35,21 @@ class User extends Model
         'relationships' => [],
     ];
 
+    protected function getRegistrationDayAttribute()
+    {
+        return $this->created_at->format('l');
+    }
+
+    protected function getRegistrationAnniversaryAttribute()
+    {
+        return $this->created_at->format('dS F Y');
+    }
+
+    protected function get1stRegistrationAnniversaryAttribute()
+    {
+        return $this->created_at->format('dS F Y');
+    }
+
     protected function addresses()
     {
         return $this->hasMany(UserAddress::class, null, null, 'type');

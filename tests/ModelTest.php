@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels\Tests;
 
 use BadMethodCallException;
+use function date;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use function password_hash;
@@ -117,5 +118,29 @@ class ModelTest extends TestCase
 
         $this->assertInstanceOf(HasOneToMany::class, $user->getRelationship('addresses'));
         $this->assertInstanceOf(HasOneToMany::class, $user->getRelationship('contacts'));
+    }
+
+    /**
+     * @group attributes
+     * @group virtual-attributes
+     */
+    public function testAccessingVirtualAttributes()
+    {
+        $user = new User([
+            'id' => 1,
+            'uuid' => '97c0c307-aac2-4486-ab22-45b5fed386c3',
+            'email' => 'bob@example.com',
+            'name' => 'bob',
+            'password' => password_hash('password', PASSWORD_DEFAULT),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $attrs = $user->getAttributes();
+
+        $this->assertArrayHasKey('id', $attrs);
+        $this->assertArrayHasKey('registration_day', $attrs);
+        $this->assertArrayHasKey('registration_anniversary', $attrs);
+        $this->assertArrayHasKey('1st_registration_anniversary', $attrs);
     }
 }
