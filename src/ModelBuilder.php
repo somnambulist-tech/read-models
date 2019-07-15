@@ -671,4 +671,9 @@ class ModelBuilder implements Queryable
 
         return $this;
     }
+
+    public function __clone()
+    {
+        $this->query = clone $this->query;
+    }
 }
