@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels;
 
 use Pagerfanta\Adapter\AdapterInterface;
+use function call_user_func;
+use function sprintf;
 
 /**
  * Class PaginatorAdapter
@@ -27,10 +29,12 @@ class PaginatorAdapter implements AdapterInterface
     {
         $this->builder      = clone $queryBuilder;
         $this->countBuilder = function (ModelBuilder $query) {
-            $query
-                ->getQueryBuilder()
+            $qb = $query->getQueryBuilder();
+            $qb
                 ->select(sprintf('COUNT(DISTINCT %s) AS total_results', $query->getModel()->getPrimaryKeyWithTableAlias()))
                 ->setMaxResults(1)
+                // @todo is this enough to work reliably?
+                ->resetQueryPart('orderBy')
             ;
         };
     }
@@ -46,6 +50,7 @@ class PaginatorAdapter implements AdapterInterface
     private function prepareCountQueryBuilder()
     {
         $qb = clone $this->builder;
+
         call_user_func($this->countBuilder, $qb);
 
         return $qb;
