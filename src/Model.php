@@ -344,10 +344,11 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      */
     public function __call($method, $parameters)
     {
-        $mutator = $this->getAttributeMutator($method);
+        $mutator   = $this->getAttributeMutator($method);
+        $attribute = Str::snake($method);
 
-        if (isset($this->attributes[$attr = Str::snake($method)]) || method_exists($this, $mutator)) {
-            return $this->getAttribute($attr);
+        if (array_key_exists($attribute, $this->attributes) || method_exists($this, $mutator)) {
+            return $this->getAttribute($attribute);
         }
 
         return (new ProxyTo())($this->newQuery(), $method, $parameters);
@@ -424,7 +425,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     {
         $try = $model ?? 'default';
 
-        if ('default' !== $model && !isset(self::$connections[$try])) {
+        if ('default' !== $model && !array_key_exists($try, self::$connections)) {
             $try = 'default';
         }
 
@@ -597,7 +598,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
         $mutator = $this->getAttributeMutator($name);
 
         // real attributes first
-        if (isset($this->attributes[$name])) {
+        if (array_key_exists($name, $this->attributes)) {
             if (method_exists($this, $mutator)) {
                 return $this->{$mutator}($this->attributes[$name]);
             }
