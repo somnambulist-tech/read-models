@@ -136,6 +136,9 @@ class ModelTest extends TestCase
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
+        $this->assertEquals(date('l'), $user->registration_day);
+        $this->assertEquals(date('l'), $user->registrationDay());
+
         $attrs = $user->getAttributes();
 
         $this->assertArrayHasKey('id', $attrs);

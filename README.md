@@ -37,7 +37,9 @@ changes between releases.
  * better way of handling relationship mapping
  * refactor integration of identity map
  * consider reducing the scope of the builder component
+ * consider not supporting __call pass through to reduce exposed methods (on Model)
  * prevent running / building insert, update, delete queries
+ * extract table data methods into a meta-data object
 
 ## Requirements
 
@@ -164,6 +166,49 @@ class User extends Model
 
 User::find(1)->username();
 ```
+
+__Note:__ these methods should be `protected` as they expect the current value to be passed
+from the loaded model attributes.
+
+Or create virtual properties, that exist at run time:
+
+```php
+class User extends Model
+{
+
+    protected function getAnniversayDayAttribute()
+    {
+        return $this->created_at->format('l');
+    }
+}
+
+// user:{created_at: '2019-07-15 14:23:21'} -> "Monday"
+
+User::find(1)->anniversay_day;
+User::find(1)->anniversayDay();
+```
+
+Or for micro-optimizations, add the method directly:
+
+```php
+class User extends Model
+{
+
+    public function anniversayDay()
+    {
+        return $this->created_at->format('l');
+    }
+}
+
+// user:{created_at: '2019-07-15 14:23:21'} -> "Monday"
+
+User::find(1)->anniversayDay();
+```
+
+__Note:__ to access properties via the magic __get/call the property name must be a valid PHP
+property/method name. Keys that start with numbers (for example), will not work. Any virtual
+methods / properties should be documented using `@property-read` tags on the class level
+docblock comment. Additionally: virtual methods can be tagged using `@method`. 
 
 [Auto-generated API docs](docs/api-read-models.md) are avaiable in the docs folder.
 

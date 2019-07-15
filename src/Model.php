@@ -15,6 +15,7 @@ use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use JsonSerializable;
 use LogicException;
+use function method_exists;
 use Pagerfanta\Pagerfanta;
 use function preg_match;
 use Somnambulist\Collection\Contracts\Arrayable;
@@ -343,7 +344,9 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      */
     public function __call($method, $parameters)
     {
-        if (isset($this->attributes[$attr = Str::snake($method)])) {
+        $mutator = $this->getAttributeMutator($method);
+
+        if (isset($this->attributes[$attr = Str::snake($method)]) || method_exists($this, $mutator)) {
             return $this->getAttribute($attr);
         }
 
@@ -578,8 +581,12 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     /**
      * Get the requested attribute or relationship
      *
-     * If a mutator is defined (getXxxxAttribute method), the attribute will be passed through that first.
-     * If the relationship has not been loaded, it will be at this point.
+     * If a mutator is defined (getXxxxAttribute method), the attribute will be passed
+     * through that first. If the attribute does not exist a virtual accessor will be
+     * checked and return if there is one.
+     *
+     * Finally, if the relationship exists and has not been loaded, it will be at this
+     * point.
      *
      * @param string $name
      *
@@ -587,9 +594,10 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
      */
     public function getAttribute(string $name)
     {
-        if (isset($this->attributes[$name])) {
-            $mutator = sprintf('get%sAttribute', Str::studly($name));
+        $mutator = $this->getAttributeMutator($name);
 
+        // real attributes first
+        if (isset($this->attributes[$name])) {
             if (method_exists($this, $mutator)) {
                 return $this->{$mutator}($this->attributes[$name]);
             }
@@ -597,11 +605,23 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
             return $this->attributes[$name];
         }
 
+        // virtual attributes accessed via the mutator
+        if (method_exists($this, $mutator)) {
+            return $this->{$mutator}();
+        }
+
+        // ignore anything on the base Model class
         if (method_exists(self::class, $name)) {
             return null;
         }
 
+        // fall into the relationship
         return $this->getRelationshipValue($name);
+    }
+
+    private function getAttributeMutator(string $name)
+    {
+        return sprintf('get%sAttribute', Str::studly($name));
     }
 
     public function prefixColumnWithTableAlias(string $column): string
