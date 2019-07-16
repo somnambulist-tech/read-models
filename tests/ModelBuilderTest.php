@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
+use Pagerfanta\Pagerfanta;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
+use Somnambulist\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserContact;
@@ -56,6 +58,54 @@ class ModelBuilderTest extends TestCase
         $this->expectExceptionMessage('Could not find a record for Somnambulist\ReadModels\Tests\Stubs\Models\User with users and 999999999999');
 
         User::findOrFail(999999999999);
+    }
+
+    /**
+     * @group fetch
+     */
+    public function testFetchOrFail()
+    {
+        $this->expectException(NoResultsException::class);
+
+        User::where('users.is_active = 5')->fetchFirstOrFail();
+    }
+
+    /**
+     * @group paginate
+     */
+    public function testPaginate()
+    {
+        $pager = User::where('users.is_active = 0')->paginate();
+
+        $this->assertInstanceOf(Pagerfanta::class, $pager);
+        $this->assertEquals(1, $pager->getCurrentPage());
+        $this->assertNotCount(0, $pager->getCurrentPageResults());
+    }
+
+    /**
+     * @group paginate
+     */
+    public function testPaginateFetchPages()
+    {
+        // expects at least 3 records in the test data
+        $pager = User::where('users.is_active = 0')->paginate(3, 1);
+
+        $this->assertInstanceOf(Pagerfanta::class, $pager);
+        $this->assertEquals(3, $pager->getCurrentPage());
+        $this->assertNotCount(0, $pager->getCurrentPageResults());
+    }
+
+    /**
+     * @group paginate
+     */
+    public function testPaginateWithOrderBy()
+    {
+        // expects at least 3 records in the test data
+        $pager = User::where('users.is_active = 0')->orderBy('users.name', 'ASC')->paginate(3, 1);
+
+        $this->assertInstanceOf(Pagerfanta::class, $pager);
+        $this->assertEquals(3, $pager->getCurrentPage());
+        $this->assertNotCount(0, $pager->getCurrentPageResults());
     }
 
     /**

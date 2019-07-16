@@ -8,6 +8,7 @@ use BadMethodCallException;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
+use function get_class;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
@@ -15,6 +16,7 @@ use Somnambulist\Collection\Contracts\Arrayable;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
+use Somnambulist\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Utils\ProxyTo;
 use function sprintf;
@@ -139,6 +141,21 @@ class ModelBuilder implements Queryable
         }
 
         return $models;
+    }
+
+    /**
+     * Returns the first matching result of the query, or raises an exception
+     *
+     * @return Model
+     * @throws NoResultsException
+     */
+    public function fetchFirstOrFail(): Model
+    {
+        if (!$model = $this->fetch()->first()) {
+            throw NoResultsException::noResultsForQuery(get_class($this->model), $this->query);
+        }
+
+        return $model;
     }
 
     /**
