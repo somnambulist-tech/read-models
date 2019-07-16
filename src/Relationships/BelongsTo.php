@@ -72,15 +72,15 @@ class BelongsTo extends AbstractRelationship
         $this->fetch();
 
         $models->each(function (Model $child) use ($relationship) {
-            $map = $this->getIdentityMap();
+            $map    = $this->getIdentityMap();
+            $parent = null;
 
-            $parent = $map->get($parentClass = get_class($this->related), $child->{$this->foreignKey});
+            // it is entirely possible that there is no inverse relationship if it's between non-foreign key fields
+            if (null !== $parent = $map->get($parentClass = get_class($this->related), $child->{$this->foreignKey})) {
+                $map->registerRelationship($parentClass, $parent->getPrimaryKey(), get_class($child), $child->getPrimaryKey());
+            }
 
-            $map->registerRelationship($parentClass, $parent->getPrimaryKey(), get_class($child), $child->getPrimaryKey());
-
-            ClassHelpers::setPropertyArrayKey(
-                $child, 'relationships', $relationship, $parent, Model::class
-            );
+            ClassHelpers::setPropertyArrayKey($child, 'relationships', $relationship, $parent, Model::class);
         });
 
         return $this;
