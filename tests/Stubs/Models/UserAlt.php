@@ -17,6 +17,8 @@ class UserAlt extends Model
 
     protected $table = 'users';
 
+    protected $foreignKey = 'user_id';
+
     protected $casts = [
         'uuid' => 'uuid',
         'is_active' => 'boolean',
@@ -37,11 +39,11 @@ class UserAlt extends Model
 
     protected function address()
     {
-        return $this->hasOne(UserAddress::class, 'user_id');
+        return $this->hasOne(UserAddress::class);
     }
 
     protected function contact()
     {
-        return $this->hasOne(UserContact::class, 'user_id');
+        return $this->hasOne(UserContact::class);
     }
 }

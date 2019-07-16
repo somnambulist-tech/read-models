@@ -231,6 +231,24 @@ fewer objects in memory at any one time (for example a User with permissions).
 The identity map does need clearing at the end of a request and if running in a long running
 process be sure to periodically call `->clear()`.
 
+#### IdentityMap Test Listener
+
+When working with PHPUnit the identity map will preserve loading entities across tests unless
+cleared. A listener is included that will clear the identity map before and after every test
+case for you.
+
+Add the following to your `phpunit.xml` config file to enable the automatic clearing:
+
+```xml
+<phpunit>
+    <!-- other unit config excluded -->
+    
+    <extensions>
+        <extension class="Somnambulist\ReadModels\PHPUnit\PHPUnitListener"/>
+    </extensions>
+</phpunit>
+```
+
 ### Casting Data
 
 To cast to a known (registered) DBAL type, add key/value pairs to the casts array:
