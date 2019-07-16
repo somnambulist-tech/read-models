@@ -17,13 +17,13 @@ use Somnambulist\ReadModels\Model;
  * If this is not used, then the identity map will persist across tests, giving false
  * results.
  *
- * Enable it be adding:
+ * Enable it by adding the following to your phpunit.xml file:
+ *
  * <code>
  *     <extensions>
  *         <extension class="Somnambulist\ReadModels\PHPUnit\PHPUnitListener" />
  *     </extensions>
  * </code>
- * to your phpunit.xml file.
  *
  * @package    Somnambulist\ReadModels\PHPUnit
  * @subpackage Somnambulist\ReadModels\PHPUnit\PHPUnitListener
