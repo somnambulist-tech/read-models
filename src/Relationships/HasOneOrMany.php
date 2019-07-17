@@ -45,7 +45,7 @@ abstract class HasOneOrMany extends AbstractRelationship
 
     protected function initialiseRelationship(): void
     {
-        $this->query->whereColumn($this->foreignKey, '=', $this->parent->{$this->localKey});
+        $this->query->whereColumn($this->foreignKey, '=', $this->parent->getRawAttribute($this->localKey));
         $this->query->whereNotNull($this->foreignKey);
     }
 

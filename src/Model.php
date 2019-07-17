@@ -565,11 +565,12 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     public function getAttributes(): array
     {
         $attributes = $this->attributes;
+        $ignore     = get_class_methods(self::class);
 
         foreach (get_class_methods($this) as $method) {
             $matches = [];
 
-            if (preg_match('/^get(?<property>[\w\d]+)Attribute/', $method, $matches)) {
+            if (!in_array($method, $ignore) && preg_match('/^get(?<property>[\w\d]+)Attribute/', $method, $matches)) {
                 $prop = Str::snake($matches['property']);
 
                 $attributes[$prop] = $this->{$method}($this->attributes[$prop] ?? null);
@@ -577,6 +578,18 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
         }
 
         return (new FilterGeneratedKeysFromCollection())($attributes);
+    }
+
+    /**
+     * Returns the raw attribute without passing through mutators or relationships
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getRawAttribute(string $name)
+    {
+        return $this->attributes[$name] ?? null;
     }
 
     /**

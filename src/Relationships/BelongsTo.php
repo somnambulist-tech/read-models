@@ -51,7 +51,7 @@ class BelongsTo extends AbstractRelationship
 
     protected function initialiseRelationship(): void
     {
-        $this->query->whereColumn($this->related->getPrimaryKeyWithTableAlias(), '=', $this->parent->{$this->foreignKey});
+        $this->query->whereColumn($this->related->getPrimaryKeyWithTableAlias(), '=', $this->parent->getRawAttribute($this->foreignKey));
     }
 
     public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
@@ -76,7 +76,7 @@ class BelongsTo extends AbstractRelationship
             $parent = null;
 
             // it is entirely possible that there is no inverse relationship if it's between non-foreign key fields
-            if (null !== $parent = $map->get($parentClass = get_class($this->related), $child->{$this->foreignKey})) {
+            if (null !== $parent = $map->get($parentClass = get_class($this->related), $child->getRawAttribute($this->foreignKey))) {
                 $map->registerRelationship($parentClass, $parent->getPrimaryKey(), get_class($child), $child->getPrimaryKey());
             }
 

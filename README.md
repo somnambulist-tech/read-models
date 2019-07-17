@@ -208,7 +208,10 @@ User::find(1)->anniversayDay();
 __Note:__ to access properties via the magic __get/call the property name must be a valid PHP
 property/method name. Keys that start with numbers (for example), will not work. Any virtual
 methods / properties should be documented using `@property-read` tags on the class level
-docblock comment. Additionally: virtual methods can be tagged using `@method`. 
+docblock comment. Additionally: virtual methods can be tagged using `@method`.
+
+__Note:__ to get a raw attribute value, use `->getRawAttribute()`. This will return null if
+the attribute is not found, but could also return null for the specified key.
 
 [Auto-generated API docs](docs/api-read-models.md) are avaiable in the docs folder.
 

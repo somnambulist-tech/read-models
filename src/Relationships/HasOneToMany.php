@@ -57,7 +57,8 @@ class HasOneToMany extends HasOneOrMany
 
             if ($this->indexBy) {
                 foreach ($entities as $key => $value) {
-                    $entities[$value->{$this->indexBy}] = $value;
+                    /** @var Model $value */
+                    $entities[$value->getRawAttribute($this->indexBy)] = $value;
                     unset($entities[$key]);
                 }
             }

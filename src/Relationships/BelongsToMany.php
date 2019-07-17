@@ -81,7 +81,7 @@ class BelongsToMany extends AbstractRelationship
     {
         $this
             ->appendJoinCondition()
-            ->whereColumn($this->getQualifiedSourceKeyName(), '=', $this->parent->{$this->sourceKey})
+            ->whereColumn($this->getQualifiedSourceKeyName(), '=', $this->parent->getRawAttribute($this->sourceKey))
         ;
     }
 
