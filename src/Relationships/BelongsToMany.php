@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
-use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
+use function get_class;
 
 /**
  * Class BelongsToMany
@@ -68,7 +68,7 @@ class BelongsToMany extends AbstractRelationship
         parent::__construct($query, $parent);
     }
 
-    protected function appendJoinCondition()
+    protected function appendJoinCondition(): ModelBuilder
     {
         $condition = $this->expression()->eq($this->getQualifiedTargetKeyName(), $this->related->getPrimaryKeyWithTableAlias());
 

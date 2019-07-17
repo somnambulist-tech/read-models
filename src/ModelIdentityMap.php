@@ -116,7 +116,7 @@ class ModelIdentityMap
      * @param Model $model
      * @param array $attributes
      */
-    public function inferRelationshipFromAttributes(Model $model, array &$attributes)
+    public function inferRelationshipFromAttributes(Model $model, array &$attributes): void
     {
         foreach ($attributes as $key => $value) {
             $ref = null;
@@ -216,7 +216,7 @@ class ModelIdentityMap
 
     public function count(): int
     {
-        return array_sum(array_map('count', $this->identityMap));
+        return (int)array_sum(array_map('count', $this->identityMap));
     }
 
     public function getMap(): array

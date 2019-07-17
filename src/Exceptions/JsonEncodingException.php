@@ -23,6 +23,11 @@ class JsonEncodingException extends RuntimeException
      */
     public static function failedToConvertModel(Model $model, string $error): JsonEncodingException
     {
-        return new self(sprintf('Model "%s:%s" could be not be converted to JSON: %s', get_class($model), $model->getId(), $error));
+        return new self(
+            sprintf(
+                'Model "%s:%s" could be not be converted to JSON: %s',
+                get_class($model), $model->getPrimaryKey(), $error
+            )
+        );
     }
 }

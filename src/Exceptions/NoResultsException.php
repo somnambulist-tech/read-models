@@ -6,6 +6,8 @@ namespace Somnambulist\ReadModels\Exceptions;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
+use function sprintf;
+use Throwable;
 
 /**
  * Class NoResultsException
@@ -22,6 +24,19 @@ class NoResultsException extends Exception
     private $query;
 
     /**
+     * Constructor.
+     *
+     * @param string       $class
+     * @param QueryBuilder $queryBuilder
+     */
+    public function __construct(string $class, QueryBuilder $queryBuilder)
+    {
+        parent::__construct(sprintf('Could not match any records for %s', $class));
+
+        $this->query = clone $queryBuilder;
+    }
+
+    /**
      * @param string       $class
      * @param QueryBuilder $queryBuilder
      *
@@ -29,10 +44,7 @@ class NoResultsException extends Exception
      */
     public static function noResultsForQuery(string $class, QueryBuilder $queryBuilder): self
     {
-        $exception = new self(sprintf('Could not match any records for %s', $class));
-        $exception->query = clone $queryBuilder;
-
-        return $exception;
+        return new self($class, $queryBuilder);
     }
 
     /**

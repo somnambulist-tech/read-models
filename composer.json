@@ -24,7 +24,8 @@
         "symfony/stopwatch": "^4.3",
         "symfony/var-dumper": "^4.3",
         "victorjonsson/markdowndocs": "^1.3",
-        "symfony/yaml": "^4.3"
+        "symfony/yaml": "^4.3",
+        "vimeo/psalm": "^3.4"
     },
     "autoload": {
         "psr-4": {

@@ -53,6 +53,8 @@ class ClassHelpers
                 }
             }
         }
+
+        return '';
     }
 
     /**

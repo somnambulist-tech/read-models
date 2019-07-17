@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels;
 
 use Closure;
-use function count;
 use IlluminateAgnostic\Str\Support\Str;
-use function is_array;
+use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Contracts\CanExportToJSON;
+use function count;
+use function is_array;
 
 /**
  * Class ModelExporter
@@ -17,7 +17,7 @@ use Somnambulist\ReadModels\Contracts\CanExportToJSON;
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\ModelExporter
  */
-class ModelExporter implements CanExportToJSON
+class ModelExporter implements Jsonable
 {
 
     /**
@@ -93,7 +93,7 @@ class ModelExporter implements CanExportToJSON
      *
      * @return string
      */
-    public function toJson($options = 0): string
+    public function toJson(int $options = 0): string
     {
         $json = json_encode($this->toArray(), $options);
 

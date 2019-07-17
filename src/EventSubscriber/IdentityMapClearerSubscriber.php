@@ -38,7 +38,7 @@ class IdentityMapClearerSubscriber implements EventSubscriberInterface
     /**
      * @param GetResponseEvent $event
      */
-    public function onRequest(GetResponseEvent $event)
+    public function onRequest(GetResponseEvent $event): void
     {
         Model::getIdentityMap()->clear();
     }
@@ -46,7 +46,7 @@ class IdentityMapClearerSubscriber implements EventSubscriberInterface
     /**
      * @param GetResponseForExceptionEvent $event
      */
-    public function onException(GetResponseForExceptionEvent $event)
+    public function onException(GetResponseForExceptionEvent $event): void
     {
         Model::getIdentityMap()->clear();
     }
@@ -54,7 +54,7 @@ class IdentityMapClearerSubscriber implements EventSubscriberInterface
     /**
      * @param PostResponseEvent $event
      */
-    public function onTerminate(PostResponseEvent $event)
+    public function onTerminate(PostResponseEvent $event): void
     {
         Model::getIdentityMap()->clear();
     }
