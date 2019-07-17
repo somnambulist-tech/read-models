@@ -57,7 +57,7 @@ class BelongsTo extends AbstractRelationship
     public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
     {
         $this->query = $this->query->newQuery()->whereIn(
-            $this->ownerKey, $models->extract($this->foreignKey)->unique()->toArray()
+            $this->ownerKey, $models->map->getRawAttribute($this->foreignKey)->removeNulls()->unique()->toArray()
         );
 
         return $this;
