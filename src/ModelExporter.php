@@ -63,7 +63,7 @@ class ModelExporter implements CanExportToJSON
         if (count($attributes) === 1 && is_array($attributes[0])) {
             $attributes = $attributes[0];
         }
-        
+
         $this->attributes = $attributes;
 
         return $this;
@@ -117,7 +117,7 @@ class ModelExporter implements CanExportToJSON
             $nested = [];
 
             if (Str::contains($relationship, '.')) {
-                [$relationship, $nested] = explode('.', $relationship, 1);
+                [$relationship, $nested] = explode('.', $relationship, 2);
             }
 
             $arr   = [];

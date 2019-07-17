@@ -95,6 +95,17 @@ class ModelExporterTest extends TestCase
         $this->assertArrayNotHasKey('updated_at', $array);
     }
 
+    public function testExportNestedRelationships()
+    {
+        $user = User::find($this->getRandomUserId());
+
+        $array = $user->export()->with('roles.permissions')->toArray();
+
+        $this->assertArrayHasKey('roles', $array);
+        $this->assertNotCount(0, $array['roles']);
+        $this->assertArrayHasKey('permissions', $array['roles'][0]);
+    }
+
     public function testExportToJson()
     {
         $user = User::find($this->getRandomUserId());
