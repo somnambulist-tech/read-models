@@ -63,6 +63,38 @@ class ModelExporterTest extends TestCase
         $this->assertArrayHasKey('updated_at', $array['addresses'][0]);
     }
 
+    public function testExportCustomAttributes()
+    {
+        $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
+
+        $array = $user->export()->attributes('id', 'name')->toArray();
+
+        $this->assertArrayHasKey('id', $array);
+        $this->assertArrayHasKey('name', $array);
+        $this->assertArrayNotHasKey('is_active', $array);
+        $this->assertArrayNotHasKey('created_at', $array);
+        $this->assertArrayNotHasKey('email', $array);
+        $this->assertArrayNotHasKey('uuid', $array);
+        $this->assertArrayNotHasKey('password', $array);
+        $this->assertArrayNotHasKey('updated_at', $array);
+    }
+
+    public function testExportCustomAttributesAsArray()
+    {
+        $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
+
+        $array = $user->export()->attributes(['id', 'name'])->toArray();
+
+        $this->assertArrayHasKey('id', $array);
+        $this->assertArrayHasKey('name', $array);
+        $this->assertArrayNotHasKey('is_active', $array);
+        $this->assertArrayNotHasKey('created_at', $array);
+        $this->assertArrayNotHasKey('email', $array);
+        $this->assertArrayNotHasKey('uuid', $array);
+        $this->assertArrayNotHasKey('password', $array);
+        $this->assertArrayNotHasKey('updated_at', $array);
+    }
+
     public function testExportToJson()
     {
         $user = User::find($this->getRandomUserId());

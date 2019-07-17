@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels;
 
 use Closure;
+use function count;
 use IlluminateAgnostic\Str\Support\Str;
+use function is_array;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Contracts\CanExportToJSON;
 
@@ -52,12 +54,16 @@ class ModelExporter implements CanExportToJSON
      *
      * {@see Model::$exports} for example.
      *
-     * @param string ...$attributes
+     * @param string ...$attributes Attributes individually or an array as the first arg
      *
      * @return ModelExporter
      */
     public function attributes(...$attributes): self
     {
+        if (count($attributes) === 1 && is_array($attributes[0])) {
+            $attributes = $attributes[0];
+        }
+        
         $this->attributes = $attributes;
 
         return $this;
@@ -73,6 +79,10 @@ class ModelExporter implements CanExportToJSON
      */
     public function with(...$relationship): self
     {
+        if (count($relationship) === 1 && is_array($relationship[0])) {
+            $relationship = $relationship[0];
+        }
+
         $this->relationships = $relationship;
 
         return $this;
