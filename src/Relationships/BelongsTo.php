@@ -51,7 +51,7 @@ class BelongsTo extends AbstractRelationship
 
     protected function initialiseRelationship(): void
     {
-        $this->query->whereColumn($this->related->getPrimaryKeyWithTableAlias(), '=', $this->parent->getRawAttribute($this->foreignKey));
+        $this->query->whereColumn($this->ownerKey, '=', $this->parent->getRawAttribute($this->foreignKey));
     }
 
     public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
