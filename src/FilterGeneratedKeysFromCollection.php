@@ -13,7 +13,7 @@ use Somnambulist\Collection\MutableCollection as Collection;
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\FilterGeneratedAttributesAndKeysFromCollection
  */
-class FilterGeneratedKeysFromCollection
+final class FilterGeneratedKeysFromCollection
 {
 
     /**

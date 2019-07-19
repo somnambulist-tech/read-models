@@ -17,7 +17,7 @@ use function is_array;
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\ModelExporter
  */
-class ModelExporter implements Jsonable
+final class ModelExporter implements Jsonable
 {
 
     /**

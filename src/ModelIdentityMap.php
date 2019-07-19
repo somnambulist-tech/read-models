@@ -16,7 +16,7 @@ use function get_class;
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\ModelIdentityMap
  */
-class ModelIdentityMap
+final class ModelIdentityMap
 {
 
     /**

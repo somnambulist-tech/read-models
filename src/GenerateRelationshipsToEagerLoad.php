@@ -18,7 +18,7 @@ use Somnambulist\ReadModels\Contracts\Queryable;
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\GenerateRelationshipsToEagerLoad
  */
-class GenerateRelationshipsToEagerLoad
+final class GenerateRelationshipsToEagerLoad
 {
 
     /**

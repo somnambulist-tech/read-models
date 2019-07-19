@@ -14,7 +14,7 @@ use function sprintf;
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\PaginatorAdapter
  */
-class PaginatorAdapter implements AdapterInterface
+final class PaginatorAdapter implements AdapterInterface
 {
 
     private $builder;
