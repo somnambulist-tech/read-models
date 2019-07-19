@@ -11,6 +11,7 @@ use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
 /**
@@ -62,5 +63,15 @@ class HasManyTest extends TestCase
         $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
 
         $this->assertRegExp('/[a-z]+/', $user->addresses->keys()->implode(','));
+    }
+
+    public function testAccessByRelationship()
+    {
+        /** @var User $user */
+        $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
+
+        $address = $user->addresses->first();
+
+        $this->assertInstanceOf(UserAddress::class, $address);
     }
 }

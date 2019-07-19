@@ -18,6 +18,8 @@ class UserAddress extends Model
 
     protected $table = 'user_addresses';
 
+    protected $tableAlias = 'ua';
+
     protected $casts = [
         'country' => Country::class,
         'created_at' => 'datetime',

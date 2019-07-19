@@ -951,7 +951,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
         $instance->owningKey = $foreignKey;
 
         return new HasOneToMany(
-            $instance->newQuery(), $this, $instance->getTable() . '.' . $foreignKey, $localKey, $indexBy
+            $instance->newQuery(), $this, $instance->getTableAlias() . '.' . $foreignKey, $localKey, $indexBy
         );
     }
 
@@ -977,7 +977,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
         $instance->owningKey = $foreignKey;
 
         return new HasOne(
-            $instance->newQuery(), $this, $instance->getTable() . '.' . $foreignKey, $localKey
+            $instance->newQuery(), $this, $instance->getTableAlias() . '.' . $foreignKey, $localKey
         );
     }
 }
