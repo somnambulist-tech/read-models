@@ -42,6 +42,21 @@ class HasOneToMany extends HasOneOrMany
         parent::__construct($builder, $parent, $foreignKey, $localKey);
     }
 
+    public function fetch(): Collection
+    {
+        $entities = parent::fetch();
+
+        if ($this->indexBy) {
+            foreach ($entities as $key => $value) {
+                /** @var Model $value */
+                $entities[$value->getRawAttribute($this->indexBy)] = $value;
+                unset($entities[$key]);
+            }
+        }
+
+        return $entities;
+    }
+
     public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
     {
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->foreignKey)) {
