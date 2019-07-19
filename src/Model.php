@@ -644,23 +644,12 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
             return $column;
         }
 
-        return sprintf('%s.%s', ($this->getTableAlias() ?: $this->getTable()), $column);
+        return sprintf('%s.%s', $this->getTableAlias(), $column);
     }
 
     public function removeTableAliasFrom(string $key): string
     {
         return stripos($key, '.') !== false ? Arr::last(explode('.', $key)) : $key;
-    }
-
-    public function export(): ModelExporter
-    {
-        if (!$this->exporter instanceof ModelExporter) {
-            $this->exporter = new ModelExporter(
-                $this, $this->exports['attributes'] ?? [], $this->exports['relationships'] ?? []
-            );
-        }
-
-        return $this->exporter;
     }
 
     public function getTable(): string
@@ -727,6 +716,17 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     public function getOwningKey(): ?string
     {
         return $this->owningKey;
+    }
+
+    public function export(): ModelExporter
+    {
+        if (!$this->exporter instanceof ModelExporter) {
+            $this->exporter = new ModelExporter(
+                $this, $this->exports['attributes'] ?? [], $this->exports['relationships'] ?? []
+            );
+        }
+
+        return $this->exporter;
     }
 
     public function jsonSerialize(): array
