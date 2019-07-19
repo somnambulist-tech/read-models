@@ -670,7 +670,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
 
     public function getTableAlias(): ?string
     {
-        return $this->tableAlias;
+        return $this->tableAlias ?? $this->getTable();
     }
 
     public function getPrimaryKey()

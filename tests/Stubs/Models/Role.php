@@ -18,6 +18,8 @@ use Somnambulist\ReadModels\Model;
 class Role extends Model
 {
 
+    protected $tableAlias = 'r';
+
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

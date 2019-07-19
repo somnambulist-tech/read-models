@@ -56,11 +56,12 @@ class ModelExporterTest extends TestCase
         $this->assertArrayHasKey('addresses', $array);
         $this->assertIsArray($array['addresses']);
 
-        $this->assertArrayHasKey('type', $array['addresses'][0]);
-        $this->assertArrayHasKey('address', $array['addresses'][0]);
-        $this->assertArrayHasKey('country', $array['addresses'][0]);
-        $this->assertArrayHasKey('created_at', $array['addresses'][0]);
-        $this->assertArrayHasKey('updated_at', $array['addresses'][0]);
+        $this->assertArrayHasKey('default', $array['addresses']);
+        $this->assertArrayHasKey('type', $array['addresses']['default']);
+        $this->assertArrayHasKey('address', $array['addresses']['default']);
+        $this->assertArrayHasKey('country', $array['addresses']['default']);
+        $this->assertArrayHasKey('created_at', $array['addresses']['default']);
+        $this->assertArrayHasKey('updated_at', $array['addresses']['default']);
     }
 
     public function testExportCustomAttributes()

@@ -72,7 +72,7 @@ class BelongsToMany extends AbstractRelationship
     {
         $condition = $this->expression()->eq($this->getQualifiedTargetKeyName(), $this->related->getPrimaryKeyWithTableAlias());
 
-        $this->query->innerJoin($this->related->getTable(), $this->joinTable, '', $condition);
+        $this->query->innerJoin($this->related->getTableAlias(), $this->joinTable, '', $condition);
 
         return $this->query;
     }
