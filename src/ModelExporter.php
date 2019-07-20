@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels;
 
 use Closure;
+use function explode;
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
@@ -75,7 +76,6 @@ final class ModelExporter implements Jsonable
      * @param string ...$relationship
      *
      * @return ModelExporter
-     * @todo allow field config using <relationship>:field,field2,field3 like the builder?
      */
     public function with(...$relationship): self
     {
@@ -114,21 +114,25 @@ final class ModelExporter implements Jsonable
         $array = $this->extractAttributes($this->model->getAttributes());
 
         foreach ($this->relationships as $relationship) {
-            $nested = [];
+            $nested = $attributes = [];
 
             if (Str::contains($relationship, '.')) {
                 [$relationship, $nested] = explode('.', $relationship, 2);
+            }
+            if (Str::contains($relationship, ':')) {
+                [$relationship, $attributes] = explode(':', $relationship, 2);
+                $attributes = explode(',', $attributes);
             }
 
             $arr   = [];
             $items = $this->model->{$relationship};
 
             if ($items instanceof Collection) {
-                $arr = $items->map(function (Model $model) use ($nested) {
-                    return $model->export()->with(...(array)$nested)->toArray();
+                $arr = $items->map(function (Model $model) use ($nested, $attributes) {
+                    return $model->export()->with(...(array)$nested)->attributes($attributes)->toArray();
                 })->toArray();
             } elseif ($items instanceof Model) {
-                $arr = $items->export()->with(...(array)$nested)->toArray();
+                $arr = $items->export()->with(...(array)$nested)->attributes($attributes)->toArray();
             }
 
             $array[$relationship] = $arr;

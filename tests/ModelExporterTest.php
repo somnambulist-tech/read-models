@@ -107,6 +107,39 @@ class ModelExporterTest extends TestCase
         $this->assertArrayHasKey('permissions', $array['roles'][0]);
     }
 
+    public function testExportNestedRelationshipsWithAttributes()
+    {
+        $user = User::find($this->getRandomUserId());
+
+        $array = $user->export()->with('roles.permissions:name')->toArray();
+
+        $this->assertArrayHasKey('roles', $array);
+        $this->assertNotCount(0, $array['roles']);
+        $this->assertArrayHasKey('permissions', $array['roles'][0]);
+        $this->assertArrayHasKey('name', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('id', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('created_at', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('updated_at', $array['roles'][0]['permissions'][0]);
+    }
+
+    public function testExportNestedRelationshipsWithAttributesOnEverything()
+    {
+        $user = User::find($this->getRandomUserId());
+
+        $array = $user->export()->with('roles:name.permissions:name')->toArray();
+
+        $this->assertArrayHasKey('roles', $array);
+        $this->assertNotCount(0, $array['roles']);
+        $this->assertArrayHasKey('permissions', $array['roles'][0]);
+        $this->assertArrayHasKey('name', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('id', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('created_at', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('updated_at', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('id', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('created_at', $array['roles'][0]['permissions'][0]);
+        $this->assertArrayNotHasKey('updated_at', $array['roles'][0]['permissions'][0]);
+    }
+
     public function testExportToJson()
     {
         $user = User::find($this->getRandomUserId());
