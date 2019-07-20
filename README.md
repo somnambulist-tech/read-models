@@ -210,6 +210,9 @@ docblock comment. Additionally: virtual methods can be tagged using `@method`.
 __Note:__ to get a raw attribute value, use `->getRawAttribute()`. This will return null if
 the attribute is not found, but could also return null for the specified key.
 
+__Note:__ the name `meta` is reserved and is used to access the underlying `ModelMetadata`
+object.
+
 [Auto-generated API docs](docs/api-read-models.md) are avaiable in the docs folder.
 
 ### Identity Map

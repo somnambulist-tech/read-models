@@ -28,7 +28,7 @@ class SimpleTypeCaster implements AttributeCaster
     public function cast(Model $model, array $attributes = [], array $casts = []): array
     {
         foreach ($attributes as $key => $value) {
-            $key = $model->meta()->removeAlias($key);
+            $key = $model->meta->removeAlias($key);
 
             $attributes[$key] = $value;
         }

@@ -101,7 +101,7 @@ abstract class AbstractRelationship implements Queryable
     public function __construct(ModelBuilder $builder, Model $parent)
     {
         $this->parent  = $parent;
-        $this->related = $builder->getModel();
+        $this->related = $builder->model;
         $this->query   = $builder;
 
         $this->initialiseRelationship();

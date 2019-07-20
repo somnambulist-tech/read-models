@@ -12,6 +12,7 @@ use function get_class;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
+use RuntimeException;
 use Somnambulist\Collection\Contracts\Arrayable;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Contracts\Queryable;
@@ -28,6 +29,10 @@ use function sprintf;
  * @subpackage Somnambulist\ReadModels\ModelBuilder
  *
  * These methods pass through to the underlying QueryBuilder instance.
+ *
+ * @property-read ModelMetadata $meta
+ * @property-read Model         $model
+ * @property-read QueryBuilder  $query
  *
  * @method ModelBuilder join(string $fromAlias, string $join, string $alias, $conditions)
  * @method ModelBuilder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
@@ -75,7 +80,7 @@ class ModelBuilder implements Queryable
     public function __construct(Model $model, QueryBuilder $query)
     {
         $this->model = $model;
-        $this->meta  = $model->meta();
+        $this->meta  = $model->metadata();
         $this->query = $query->from($this->meta->table(), $this->meta->tableAlias());
     }
 
@@ -688,6 +693,15 @@ class ModelBuilder implements Queryable
         (new ProxyTo())($this->query, $name, $arguments);
 
         return $this;
+    }
+
+    public function __get($name)
+    {
+        if (in_array($name, ['meta', 'model', 'query'])) {
+            return $this->{$name};
+        }
+
+        throw new RuntimeException(sprintf('Unknown property "%s" requested on "%s"', $name, static::class));
     }
 
     public function __clone()

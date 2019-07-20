@@ -28,10 +28,8 @@ final class ModelConfigurator
      * @param array                  $connections
      * @param AttributeCaster|null   $caster
      * @param EmbeddableFactory|null $factory
-     *
-     * @return bool
      */
-    public static function configure(array $connections, ?AttributeCaster $caster = null, ?EmbeddableFactory $factory = null): bool
+    public static function configure(array $connections, ?AttributeCaster $caster = null, ?EmbeddableFactory $factory = null): void
     {
         foreach ($connections as $model => $connection) {
             Model::bindConnection($connection, $model);
@@ -43,7 +41,5 @@ final class ModelConfigurator
         if (null !== $factory) {
             Model::bindEmbeddableFactory($factory);
         }
-
-        return true;
     }
 }

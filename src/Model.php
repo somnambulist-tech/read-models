@@ -39,6 +39,8 @@ use function sprintf;
  *
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\Model
+ *
+ * @property-read ModelMetadata $meta
  */
 abstract class Model implements Arrayable, Jsonable, JsonSerializable
 {
@@ -314,6 +316,10 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public function __get($name)
     {
+        if ('meta' == $name) {
+            return $this->metadata();
+        }
+
         return $this->getAttribute($name);
     }
 
@@ -496,7 +502,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
             $map = ModelIdentityMap::instance();
             $map->inferRelationshipFromAttributes($this, $attributes);
 
-            if (null === $model = $map->get(static::class, $attributes[$this->meta()->primaryKeyName()])) {
+            if (null === $model = $map->get(static::class, $attributes[$this->meta->primaryKeyName()])) {
                 $model = new static($attributes);
 
                 $map->add($model);
@@ -591,7 +597,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
 
     public function getPrimaryKey()
     {
-        return $this->attributes[$this->meta()->primaryKeyName()];
+        return $this->attributes[$this->meta->primaryKeyName()];
     }
 
     /**
@@ -601,10 +607,10 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public function getExternalPrimaryKey()
     {
-        return $this->attributes[$this->meta()->externalKeyName()] ?? null;
+        return $this->attributes[$this->meta->externalKeyName()] ?? null;
     }
 
-    public function meta(): ModelMetadata
+    public function metadata(): ModelMetadata
     {
         if (!$this->metadata instanceof ModelMetadata) {
             $this->metadata = new ModelMetadata(
@@ -780,8 +786,8 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         /** @var Model $instance */
         $instance   = new $class();
         $relation   = $relation ?: ClassHelpers::getCallingMethod();
-        $foreignKey = $foreignKey ?: sprintf('%s_%s', Str::snake($relation), $instance->meta()->primaryKeyName());
-        $ownerKey   = $ownerKey ?: $instance->meta()->primaryKeyName();
+        $foreignKey = $foreignKey ?: sprintf('%s_%s', Str::snake($relation), $instance->meta->primaryKeyName());
+        $ownerKey   = $ownerKey ?: $instance->meta->primaryKeyName();
 
         return new BelongsTo($instance->newQuery(), $this, $foreignKey, $ownerKey);
     }
@@ -815,11 +821,11 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
     {
         /** @var Model $instance */
         $instance       = new $class();
-        $table          = $table ?: sprintf('%s_%s', Inflector::singularize($this->meta()->table()), $instance->meta()->table());
-        $tableSourceKey = $tableSourceKey ?: $this->meta()->foreignKey();
-        $tableTargetKey = $tableTargetKey ?: $instance->meta()->foreignKey();
-        $sourceKey      = $sourceKey ?: $this->meta()->primaryKeyName();
-        $targetKey      = $targetKey ?: $instance->meta()->primaryKeyName();
+        $table          = $table ?: sprintf('%s_%s', Inflector::singularize($this->meta->table()), $instance->meta->table());
+        $tableSourceKey = $tableSourceKey ?: $this->meta->foreignKey();
+        $tableTargetKey = $tableTargetKey ?: $instance->meta->foreignKey();
+        $sourceKey      = $sourceKey ?: $this->meta->primaryKeyName();
+        $targetKey      = $targetKey ?: $instance->meta->primaryKeyName();
 
         ModelIdentityMap::instance()->registerAlias($this, $tableSourceKey);
         ModelIdentityMap::instance()->registerAlias($instance, $tableTargetKey);
@@ -853,15 +859,15 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         string $class, ?string $foreignKey = null, ?string $localKey = null, ?string $indexBy = null
     ): HasOneToMany
     {
-        $foreignKey = $foreignKey ?: $this->meta()->foreignKey();
-        $localKey   = $localKey ?: $this->meta()->primaryKeyName();
+        $foreignKey = $foreignKey ?: $this->meta->foreignKey();
+        $localKey   = $localKey ?: $this->meta->primaryKeyName();
 
         /** @var Model $instance */
         $instance = new $class();
         $instance->owningKey = $foreignKey;
 
         return new HasOneToMany(
-            $instance->newQuery(), $this, $instance->meta()->tableAlias() . '.' . $foreignKey, $localKey, $indexBy
+            $instance->newQuery(), $this, $instance->meta->tableAlias() . '.' . $foreignKey, $localKey, $indexBy
         );
     }
 
@@ -879,15 +885,15 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     protected function hasOne(string $class, ?string $foreignKey = null, ?string $localKey = null): HasOne
     {
-        $foreignKey = $foreignKey ?: $this->meta()->foreignKey();
-        $localKey   = $localKey ?: $this->meta()->primaryKeyName();
+        $foreignKey = $foreignKey ?: $this->meta->foreignKey();
+        $localKey   = $localKey ?: $this->meta->primaryKeyName();
 
         /** @var Model $instance */
         $instance = new $class();
         $instance->owningKey = $foreignKey;
 
         return new HasOne(
-            $instance->newQuery(), $this, $instance->meta()->tableAlias() . '.' . $foreignKey, $localKey
+            $instance->newQuery(), $this, $instance->meta->tableAlias() . '.' . $foreignKey, $localKey
         );
     }
 }

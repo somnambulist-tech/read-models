@@ -71,9 +71,9 @@ class BelongsToMany extends AbstractRelationship
 
     protected function appendJoinCondition(): ModelBuilder
     {
-        $condition = $this->expression()->eq($this->getQualifiedTargetKeyName(), $this->related->meta()->primaryKeyNameWithAlias());
+        $condition = $this->expression()->eq($this->getQualifiedTargetKeyName(), $this->related->meta->primaryKeyNameWithAlias());
 
-        $this->query->innerJoin($this->related->meta()->tableAlias(), $this->joinTable, '', $condition);
+        $this->query->innerJoin($this->related->meta->tableAlias(), $this->joinTable, '', $condition);
 
         return $this->query;
     }
