@@ -61,11 +61,11 @@ class ModelIdentityMapTest extends TestCase
      */
     public function testSameObjectOnBelongsTo()
     {
-        $obj1 = UserAddress::limit(1)->fetch()->first();
+        $obj1 = UserAddress::query()->limit(1)->fetch()->first();
 
         $this->assertNotNull($obj1);
 
-        $obj2 = UserAddress::limit(1)->fetch()->first();
+        $obj2 = UserAddress::query()->limit(1)->fetch()->first();
 
         $this->assertSame($obj1->user, $obj2->user);
     }

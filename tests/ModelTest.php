@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels\Tests;
 
 use BadMethodCallException;
-use function date;
-use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
-use Doctrine\DBAL\Query\QueryBuilder;
-use function password_hash;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
 use Somnambulist\ReadModels\ModelBuilder;
@@ -16,6 +12,8 @@ use Somnambulist\ReadModels\ModelExporter;
 use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
+use function date;
+use function password_hash;
 
 /**
  * Class ModelTest
@@ -34,14 +32,6 @@ class ModelTest extends TestCase
         $this->assertInstanceOf(ModelIdentityMap::class, $user->getIdentityMap());
         $this->assertInstanceOf(ModelExporter::class, $user->export());
         $this->assertInstanceOf(ModelBuilder::class, $user->newQuery());
-    }
-
-    public function testMethodPassThrough()
-    {
-        $user = new User();
-
-        $this->assertInstanceOf(QueryBuilder::class, $user->getQueryBuilder());
-        $this->assertInstanceOf(ExpressionBuilder::class, $user->expression());
     }
 
     public function testUnsupportedMethodRaisesException()

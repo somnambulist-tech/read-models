@@ -67,7 +67,7 @@ class ModelBuilderTest extends TestCase
     {
         $this->expectException(NoResultsException::class);
 
-        User::where('users.is_active = 5')->fetchFirstOrFail();
+        User::query()->where('users.is_active = 5')->fetchFirstOrFail();
     }
 
     /**
@@ -75,7 +75,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testPaginate()
     {
-        $pager = User::where('users.is_active = 0')->paginate();
+        $pager = User::query()->where('users.is_active = 0')->paginate();
 
         $this->assertInstanceOf(Pagerfanta::class, $pager);
         $this->assertEquals(1, $pager->getCurrentPage());
@@ -88,7 +88,7 @@ class ModelBuilderTest extends TestCase
     public function testPaginateFetchPages()
     {
         // expects at least 3 records in the test data
-        $pager = User::where('users.is_active = 0')->paginate(3, 1);
+        $pager = User::query()->where('users.is_active = 0')->paginate(3, 1);
 
         $this->assertInstanceOf(Pagerfanta::class, $pager);
         $this->assertEquals(3, $pager->getCurrentPage());
@@ -101,7 +101,7 @@ class ModelBuilderTest extends TestCase
     public function testPaginateWithOrderBy()
     {
         // expects at least 3 records in the test data
-        $pager = User::where('users.is_active = 0')->orderBy('users.name', 'ASC')->paginate(3, 1);
+        $pager = User::query()->where('users.is_active = 0')->orderBy('users.name', 'ASC')->paginate(3, 1);
 
         $this->assertInstanceOf(Pagerfanta::class, $pager);
         $this->assertEquals(3, $pager->getCurrentPage());
@@ -113,7 +113,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhere()
     {
-        $user = User::where('users.is_active = 0')->fetch()->first();
+        $user = User::query()->where('users.is_active = 0')->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertFalse($user->is_active);
@@ -125,7 +125,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhereColumn()
     {
-        $user = User::whereColumn('email', 'like', '%gmail.com')->fetch()->first();
+        $user = User::query()->whereColumn('email', 'like', '%gmail.com')->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertNotEmpty($user->email);
@@ -136,7 +136,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhereBetween()
     {
-        $user = User::whereBetween('created_at', DateTime::parseUtc('-4 weeks'), DateTime::now())->fetch()->first();
+        $user = User::query()->whereBetween('created_at', DateTime::parseUtc('-4 weeks'), DateTime::now())->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertNotEmpty($user->email);
@@ -147,7 +147,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhereNotBetween()
     {
-        $user = User::whereNotBetween('created_at', DateTime::parseUtc('-1 weeks'), DateTime::now())->fetch()->first();
+        $user = User::query()->whereNotBetween('created_at', DateTime::parseUtc('-1 weeks'), DateTime::now())->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertNotEmpty($user->email);
@@ -158,7 +158,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhereIn()
     {
-        $user = UserAddress::whereIn('type', ['default', 'home', 'work'])->fetch()->first();
+        $user = UserAddress::query()->whereIn('type', ['default', 'home', 'work'])->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertNotEmpty($user->id);
@@ -169,7 +169,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhereNotIn()
     {
-        $user = UserAddress::whereNotIn('type', ['default'])->fetch()->first();
+        $user = UserAddress::query()->whereNotIn('type', ['default'])->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertNotEmpty($user->id);
@@ -180,7 +180,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhereNull()
     {
-        $user = UserContact::whereNull('contact_email')->fetch()->first();
+        $user = UserContact::query()->whereNull('contact_email')->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertNull($user->contact->email);
@@ -192,7 +192,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testWhereNotNull()
     {
-        $user = UserContact::whereNotNull('contact_email')->fetch()->first();
+        $user = UserContact::query()->whereNotNull('contact_email')->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertNotNull($user->contact->email);

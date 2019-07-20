@@ -4,26 +4,21 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
+use BadMethodCallException;
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
-use Doctrine\DBAL\Query\QueryBuilder;
 use DomainException;
-use function get_class_methods;
 use IlluminateAgnostic\Str\Support\Arr;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use JsonSerializable;
 use LogicException;
-use function method_exists;
-use Pagerfanta\Pagerfanta;
-use function preg_match;
 use Somnambulist\Collection\Contracts\Arrayable;
 use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Contracts\AttributeCaster;
 use Somnambulist\ReadModels\Contracts\EmbeddableFactory;
-use Somnambulist\ReadModels\Contracts\Queryable;
+use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Hydrators\DoctrineTypeCaster;
 use Somnambulist\ReadModels\Hydrators\SimpleObjectFactory;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
@@ -32,11 +27,13 @@ use Somnambulist\ReadModels\Relationships\BelongsToMany;
 use Somnambulist\ReadModels\Relationships\HasOne;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
-use Somnambulist\ReadModels\Utils\ProxyTo;
 use function array_key_exists;
 use function count;
 use function explode;
+use function get_class_methods;
 use function is_null;
+use function method_exists;
+use function preg_match;
 use function sprintf;
 use function stripos;
 
@@ -45,51 +42,8 @@ use function stripos;
  *
  * @package    Somnambulist\ReadModels
  * @subpackage Somnambulist\ReadModels\Model
- *
- * @method static null|Model find(int|string $id)
- * @method static Model findOrFail(int|string $id)
- * @method ExpressionBuilder expression()
- * @method Collection fetch()
- * @method int count()
- * @method Pagerfanta paginate(int $page = 1, int $perPage = 30)
- * @method QueryBuilder getQueryBuilder()
- * @method ModelBuilder andHaving(string $expression)
- * @method ModelBuilder getParameter(string|int $key)
- * @method ModelBuilder getParameters()
- * @method ModelBuilder getParameterType(string $key)
- * @method ModelBuilder getParameterTypes()
- * @method ModelBuilder groupBy(string $column)
- * @method ModelBuilder having(string $expression)
- * @method ModelBuilder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method ModelBuilder join(string $fromAlias, string $join, string $alias, $conditions)
- * @method ModelBuilder leftJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method ModelBuilder limit(int $limit)
- * @method ModelBuilder offset(int $offset)
- * @method ModelBuilder orderBy(string $column, string $dir)
- * @method ModelBuilder orHaving(string $expression)
- * @method ModelBuilder orWhere(string $expression, array $values = [])
- * @method ModelBuilder orWhereBetween(string $column, mixed $start, mixed $end)
- * @method ModelBuilder orWhereColumn(string $column, string $operator, mixed $value)
- * @method ModelBuilder orWhereIn(string $column, array $values)
- * @method ModelBuilder orWhereNotBetween(string $column, mixed $start, mixed $end)
- * @method ModelBuilder orWhereNotIn(string $column, array $values)
- * @method ModelBuilder orWhereNotNull(string $column)
- * @method ModelBuilder orWhereNull(string $column)
- * @method ModelBuilder rightJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method ModelBuilder select(string ...$columns)
- * @method ModelBuilder setParameter(string|int $key, mixed $value, $type = null)
- * @method ModelBuilder setParameters(array $parameters)
- * @method ModelBuilder where(string $expression, array $values = [])
- * @method ModelBuilder whereBetween(string $column, mixed $start, mixed $end)
- * @method ModelBuilder whereColumn(string $column, string $operator, mixed $value)
- * @method ModelBuilder whereIn(string $column, array $values)
- * @method ModelBuilder whereNotBetween(string $column, mixed $start, mixed $end)
- * @method ModelBuilder whereNotIn(string $column, array $values)
- * @method ModelBuilder whereNotNull(string $column)
- * @method ModelBuilder whereNull(string $column)
- * @method ModelBuilder wherePrimaryKey(int|string $id)
  */
-abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
+abstract class Model implements Arrayable, Jsonable, JsonSerializable
 {
 
     /**
@@ -351,20 +305,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
             return $this->getAttribute($attribute);
         }
 
-        return (new ProxyTo())($this->newQuery(), $method, $parameters);
-    }
-
-    /**
-     * Allow for static calls into the ModelBuilder
-     *
-     * @param string $method
-     * @param array  $parameters
-     *
-     * @return mixed
-     */
-    public static function __callStatic($method, $parameters)
-    {
-        return (new static)->{$method}(...$parameters);
+        throw new BadMethodCallException(sprintf('Method "%s" not found on "%s"', $method, static::class));
     }
 
     /**
@@ -487,6 +428,27 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
         }
 
         return self::$identityMap = new ModelIdentityMap();
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Model|null
+     */
+    public static function find($id): ?Model
+    {
+        return static::query()->find($id);
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Model
+     * @throws EntityNotFoundException
+     */
+    public static function findOrFail($id): Model
+    {
+        return static::query()->findOrFail($id);
     }
 
     /**
