@@ -63,7 +63,7 @@ to the Model or Model types. At this stage you can additionally replace the
 AttributeCaster or EmbeddableFactory. The caster and factory could be created as
 services if you wished to inject other dependencies into them.
 
-The boot method of the bundle then needs:
+A minimum `boot` method would look like:
 
 ```php
 class MyBundle extends Bundle
@@ -78,7 +78,7 @@ class MyBundle extends Bundle
 
 Add calls to `bindAttributeCaster` and `bindEmbeddableFactory` if needed or use the
 `ModelConfigurator::configure()` call instead that will setup multiple connections and
-optional the caster / factory if specified.
+optionally the caster / factory if specified.
 
 __Note:__ as the Model uses static binding for the connections, it is not possible to
 perform this step in the services configuration. If you do attempt this and the

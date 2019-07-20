@@ -355,7 +355,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable, Queryable
     }
 
     /**
-     * Handle dynamic static method calls into the method.
+     * Allow for static calls into the ModelBuilder
      *
      * @param string $method
      * @param array  $parameters
