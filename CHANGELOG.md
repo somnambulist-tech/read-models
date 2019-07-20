@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+2019-07-20 - 0.3.0
+------------------
+ 
+ * add exporting relationship attributes via with syntax
+ * add couple of custom property accessors
+ * refactor metadata methods to ModelMetadata class
+ * move IdentityMap to a singleton
+ * remove the ModelBuilder pass through from Model
+
 2019-07-15 - 0.1.6
 ------------------
 

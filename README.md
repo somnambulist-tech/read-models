@@ -34,7 +34,7 @@ changes between releases.
 
  * doctrine metadata component to use the already available metadata
  * better way of handling relationship mapping
- * refactor integration of identity map
+ * refactor identity map (improve attribute tracking)
  * consider reducing the scope of the builder component
  * prevent running / building insert, update, delete queries
 
