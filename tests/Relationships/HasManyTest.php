@@ -8,7 +8,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
@@ -53,7 +52,6 @@ class HasManyTest extends TestCase
         $rel = $user->getRelationship('contacts');
 
         $this->assertInstanceOf(Model::class, $rel->getModel());
-        $this->assertInstanceOf(ModelIdentityMap::class, $rel->getIdentityMap());
         $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
     }
 

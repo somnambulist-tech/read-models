@@ -8,7 +8,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Relationships\BelongsToMany;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 
@@ -49,7 +48,6 @@ class BelongsToManyTest extends TestCase
         $rel = $user->getRelationship('roles');
 
         $this->assertInstanceOf(Model::class, $rel->getModel());
-        $this->assertInstanceOf(ModelIdentityMap::class, $rel->getIdentityMap());
         $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
     }
 }

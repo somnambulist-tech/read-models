@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
 use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\ModelExporter;
-use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use function date;
@@ -29,7 +28,6 @@ class ModelTest extends TestCase
     {
         $user = new User();
 
-        $this->assertInstanceOf(ModelIdentityMap::class, $user->getIdentityMap());
         $this->assertInstanceOf(ModelExporter::class, $user->export());
         $this->assertInstanceOf(ModelBuilder::class, $user->newQuery());
     }

@@ -7,7 +7,6 @@ namespace Somnambulist\ReadModels\Tests;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Relationships\BelongsTo;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
 
@@ -37,7 +36,6 @@ class BelongsToTest extends TestCase
         $rel = $user->getRelationship('user');
 
         $this->assertInstanceOf(Model::class, $rel->getModel());
-        $this->assertInstanceOf(ModelIdentityMap::class, $rel->getIdentityMap());
         $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
     }
 }

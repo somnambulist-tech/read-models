@@ -8,6 +8,7 @@ use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 
 /**
@@ -72,7 +73,7 @@ class BelongsTo extends AbstractRelationship
         $this->fetch();
 
         $models->each(function (Model $child) use ($relationship) {
-            $map    = $this->getIdentityMap();
+            $map    = ModelIdentityMap::instance();
             $parent = null;
 
             // it is entirely possible that there is no inverse relationship if it's between non-foreign key fields

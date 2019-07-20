@@ -8,6 +8,7 @@ use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 
 /**
@@ -65,10 +66,12 @@ class HasOneToMany extends HasOneOrMany
 
         $this->fetch();
 
-        $models->each(function (Model $model) use ($relationship) {
-            $ids = $this->getIdentityMap()->getRelatedIdentitiesFor($model, $class = get_class($this->related));
+        $map = ModelIdentityMap::instance();
 
-            $entities = $this->getIdentityMap()->all($class, $ids);
+        $models->each(function (Model $model) use ($relationship, $map) {
+            $ids = $map->getRelatedIdentitiesFor($model, $class = get_class($this->related));
+
+            $entities = $map->all($class, $ids);
 
             if ($this->indexBy) {
                 foreach ($entities as $key => $value) {

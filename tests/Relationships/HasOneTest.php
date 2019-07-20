@@ -8,7 +8,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Relationships\HasOne;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAlt;
@@ -50,7 +49,6 @@ class HasOneTest extends TestCase
         $rel = $user->getRelationship('address');
 
         $this->assertInstanceOf(Model::class, $rel->getModel());
-        $this->assertInstanceOf(ModelIdentityMap::class, $rel->getIdentityMap());
         $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
     }
 

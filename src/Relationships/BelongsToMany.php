@@ -7,6 +7,7 @@ namespace Somnambulist\ReadModels\Relationships;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
 
@@ -70,9 +71,9 @@ class BelongsToMany extends AbstractRelationship
 
     protected function appendJoinCondition(): ModelBuilder
     {
-        $condition = $this->expression()->eq($this->getQualifiedTargetKeyName(), $this->related->getPrimaryKeyWithTableAlias());
+        $condition = $this->expression()->eq($this->getQualifiedTargetKeyName(), $this->related->meta()->primaryKeyNameWithAlias());
 
-        $this->query->innerJoin($this->related->getTableAlias(), $this->joinTable, '', $condition);
+        $this->query->innerJoin($this->related->meta()->tableAlias(), $this->joinTable, '', $condition);
 
         return $this->query;
     }
@@ -103,10 +104,12 @@ class BelongsToMany extends AbstractRelationship
     {
         $this->fetch();
 
-        $models->each(function (Model $model) use ($relationship) {
-            $ids = $this->getIdentityMap()->getRelatedIdentitiesFor($model, $class = get_class($this->related));
+        $map = ModelIdentityMap::instance();
 
-            $entities = $this->getIdentityMap()->all($class, $ids);
+        $models->each(function (Model $model) use ($relationship, $map) {
+            $ids = $map->getRelatedIdentitiesFor($model, $class = get_class($this->related));
+
+            $entities = $map->all($class, $ids);
 
             ClassHelpers::setPropertyArrayKey(
                 $model, 'relationships', $relationship, new Collection($entities), Model::class

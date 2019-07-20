@@ -52,6 +52,11 @@ class ModelBuilder implements Queryable
     private $model;
 
     /**
+     * @var ModelMetadata
+     */
+    private $meta;
+
+    /**
      * @var QueryBuilder
      */
     private $query;
@@ -70,7 +75,8 @@ class ModelBuilder implements Queryable
     public function __construct(Model $model, QueryBuilder $query)
     {
         $this->model = $model;
-        $this->query = $query->from($model->getTable(), $model->getTableAlias());
+        $this->meta  = $model->meta();
+        $this->query = $query->from($this->meta->table(), $this->meta->tableAlias());
     }
 
     /**
@@ -108,7 +114,7 @@ class ModelBuilder implements Queryable
     public function findOrFail($id, ...$columns): Model
     {
         if (null === $model = $this->find($id, ...$columns)) {
-            throw EntityNotFoundException::noMatchingRecordFor(get_class($this->model), $this->model->getTable(), $id);
+            throw EntityNotFoundException::noMatchingRecordFor(get_class($this->model), $this->meta->table(), $id);
         }
 
         return $model;
@@ -182,7 +188,7 @@ class ModelBuilder implements Queryable
 
         $stmt = $query
             ->select($new)
-            ->addSelect(sprintf('COUNT(DISTINCT %s) AS total_results', $this->model->getPrimaryKeyWithTableAlias()))
+            ->addSelect(sprintf('COUNT(DISTINCT %s) AS total_results', $this->meta->primaryKeyNameWithAlias()))
             ->setMaxResults(1)
             ->setFirstResult(0)
             ->execute()
@@ -278,7 +284,7 @@ class ModelBuilder implements Queryable
      */
     private function prefixColumnWithTableAlias(string $column): string
     {
-        return $this->model->prefixColumnWithTableAlias($column);
+        return $this->meta->prefixAlias($column);
     }
 
     /**
@@ -349,7 +355,7 @@ class ModelBuilder implements Queryable
      */
     public function wherePrimaryKey($id): self
     {
-        return $this->whereColumn($this->model->getPrimaryKeyWithTableAlias(), '=', $id);
+        return $this->whereColumn($this->meta->primaryKeyNameWithAlias(), '=', $id);
     }
 
     private function getAndOrWhereMethodName(string $andOr): string
@@ -368,54 +374,6 @@ class ModelBuilder implements Queryable
             Str::slug(Str::replaceArray('.', ['_'], $this->prefixColumnWithTableAlias($column)), '_'),
             ++$index
         );
-    }
-
-    /**
-     * Create a WHERE column IN () clause with support for and or or and NOT IN ()
-     *
-     * @param string          $column
-     * @param array|Arrayable $values
-     * @param string          $andOr
-     * @param bool            $not
-     *
-     * @return $this
-     */
-    public function whereIn(string $column, $values, string $andOr = 'and', bool $not = false): self
-    {
-        $method = $this->getAndOrWhereMethodName($andOr);
-        $expr   = $not ? 'notIn' : 'in';
-
-        if ($values instanceof Arrayable) {
-            $values = $values->toArray();
-        }
-
-        $placeholders = Collection::collect($values)
-            ->map(function ($value) use ($column) {
-                $this->query->setParameter($key = $this->createParameterPlaceholderKey($column), $value);
-
-                return $key;
-            })
-            ->toArray()
-        ;
-
-        $this->query->{$method}($this->expression()->{$expr}($this->prefixColumnWithTableAlias($column), $placeholders));
-
-        return $this;
-    }
-
-    public function whereNotIn(string $column, $values): self
-    {
-        return $this->whereIn($column, $values, 'and', true);
-    }
-
-    public function orWhereIn(string $column, $values): self
-    {
-        return $this->whereIn($column, $values, 'or');
-    }
-
-    public function orWhereNotIn(string $column, $values): self
-    {
-        return $this->whereIn($column, $values, 'or', true);
     }
 
     /**
@@ -471,6 +429,54 @@ class ModelBuilder implements Queryable
         }
 
         return $this;
+    }
+
+    /**
+     * Create a WHERE column IN () clause with support for and or or and NOT IN ()
+     *
+     * @param string          $column
+     * @param array|Arrayable $values
+     * @param string          $andOr
+     * @param bool            $not
+     *
+     * @return $this
+     */
+    public function whereIn(string $column, $values, string $andOr = 'and', bool $not = false): self
+    {
+        $method = $this->getAndOrWhereMethodName($andOr);
+        $expr   = $not ? 'notIn' : 'in';
+
+        if ($values instanceof Arrayable) {
+            $values = $values->toArray();
+        }
+
+        $placeholders = Collection::collect($values)
+            ->map(function ($value) use ($column) {
+                $this->query->setParameter($key = $this->createParameterPlaceholderKey($column), $value);
+
+                return $key;
+            })
+            ->toArray()
+        ;
+
+        $this->query->{$method}($this->expression()->{$expr}($this->prefixColumnWithTableAlias($column), $placeholders));
+
+        return $this;
+    }
+
+    public function whereNotIn(string $column, $values): self
+    {
+        return $this->whereIn($column, $values, 'and', true);
+    }
+
+    public function orWhereIn(string $column, $values): self
+    {
+        return $this->whereIn($column, $values, 'or');
+    }
+
+    public function orWhereNotIn(string $column, $values): self
+    {
+        return $this->whereIn($column, $values, 'or', true);
     }
 
     /**
@@ -649,11 +655,6 @@ class ModelBuilder implements Queryable
     public function getModel(): Model
     {
         return $this->model;
-    }
-
-    public function getIdentityMap(): ModelIdentityMap
-    {
-        return $this->model->getIdentityMap();
     }
 
     /**

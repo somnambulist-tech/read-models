@@ -37,7 +37,6 @@ changes between releases.
  * refactor integration of identity map
  * consider reducing the scope of the builder component
  * prevent running / building insert, update, delete queries
- * extract table data methods into a meta-data object
 
 ## Requirements
 
@@ -231,6 +230,8 @@ fewer objects in memory at any one time (for example a User with permissions).
 
 The identity map does need clearing at the end of a request and if running in a long running
 process be sure to periodically call `->clear()`.
+
+The Identity Map is a singleton accessed via a static call to: `ModelIdentityMap::instance()`.
 
 #### IdentityMap Test Listener
 

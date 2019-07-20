@@ -8,7 +8,6 @@ use BadMethodCallException;
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\DBAL\Connection;
 use DomainException;
-use IlluminateAgnostic\Str\Support\Arr;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -29,13 +28,11 @@ use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function array_key_exists;
 use function count;
-use function explode;
 use function get_class_methods;
 use function is_null;
 use function method_exists;
 use function preg_match;
 use function sprintf;
-use function stripos;
 
 /**
  * Class Model
@@ -78,20 +75,14 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
     private static $connections = [];
 
     /**
-     * @var ModelIdentityMap
-     * @internal
-     */
-    private static $identityMap;
-
-    /**
      * @var AttributeCaster
      */
-    protected static $attributeCaster;
+    private static $attributeCaster;
 
     /**
      * @var EmbeddableFactory
      */
-    protected static $embeddableFactory;
+    private static $embeddableFactory;
 
     /**
      * The table associated with the model, will be guessed if not set
@@ -271,6 +262,12 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
     private $exporter;
 
     /**
+     * @var ModelMetadata
+     * @internal
+     */
+    private $metadata;
+
+    /**
      * The field name that flags the owner record; used by identity map
      *
      * @var string
@@ -285,7 +282,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public function __construct(array $attributes = [])
     {
-        $this->getIdentityMap()->registerAlias($this);
+        ModelIdentityMap::instance()->registerAlias($this);
 
         $this->mapAttributes($attributes);
     }
@@ -388,7 +385,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public static function bindAttributeCaster(AttributeCaster $hydrator): void
     {
-        static::$attributeCaster = $hydrator;
+        self::$attributeCaster = $hydrator;
     }
 
     /**
@@ -400,34 +397,25 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public static function bindEmbeddableFactory(EmbeddableFactory $hydrator): void
     {
-        static::$embeddableFactory = $hydrator;
+        self::$embeddableFactory = $hydrator;
     }
 
     private function getAttributeCaster(): AttributeCaster
     {
-        if (static::$attributeCaster instanceof AttributeCaster) {
-            return static::$attributeCaster;
+        if (self::$attributeCaster instanceof AttributeCaster) {
+            return self::$attributeCaster;
         }
 
-        return static::$attributeCaster = new DoctrineTypeCaster();
+        return self::$attributeCaster = new DoctrineTypeCaster();
     }
 
     private function getEmbeddableFactory(): EmbeddableFactory
     {
-        if (static::$embeddableFactory instanceof EmbeddableFactory) {
-            return static::$embeddableFactory;
+        if (self::$embeddableFactory instanceof EmbeddableFactory) {
+            return self::$embeddableFactory;
         }
 
-        return static::$embeddableFactory = new SimpleObjectFactory();
-    }
-
-    public static function getIdentityMap(): ModelIdentityMap
-    {
-        if (self::$identityMap instanceof ModelIdentityMap) {
-            return self::$identityMap;
-        }
-
-        return self::$identityMap = new ModelIdentityMap();
+        return self::$embeddableFactory = new SimpleObjectFactory();
     }
 
     /**
@@ -505,12 +493,13 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
     public function new(array $attributes = []): Model
     {
         if (!empty($attributes)) {
-            $this->getIdentityMap()->inferRelationshipFromAttributes($this, $attributes);
+            $map = ModelIdentityMap::instance();
+            $map->inferRelationshipFromAttributes($this, $attributes);
 
-            if (null === $model = $this->getIdentityMap()->get(static::class, $attributes[$this->getPrimaryKeyName()])) {
+            if (null === $model = $map->get(static::class, $attributes[$this->meta()->primaryKeyName()])) {
                 $model = new static($attributes);
 
-                $this->getIdentityMap()->add($model);
+                $map->add($model);
             }
 
             return $model;
@@ -600,48 +589,9 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         return sprintf('get%sAttribute', Str::studly($name));
     }
 
-    public function prefixColumnWithTableAlias(string $column): string
-    {
-        if (false !== stripos($column, '.')) {
-            return $column;
-        }
-
-        return sprintf('%s.%s', $this->getTableAlias(), $column);
-    }
-
-    public function removeTableAliasFrom(string $key): string
-    {
-        return stripos($key, '.') !== false ? Arr::last(explode('.', $key)) : $key;
-    }
-
-    public function getTable(): string
-    {
-        return $this->table ?? Inflector::tableize(Inflector::pluralize(ClassHelpers::getObjectShortClassName($this)));
-    }
-
-    public function getTableAlias(): ?string
-    {
-        return $this->tableAlias ?? $this->getTable();
-    }
-
     public function getPrimaryKey()
     {
-        return $this->attributes[$this->getPrimaryKeyName()];
-    }
-
-    public function getPrimaryKeyName(): string
-    {
-        return $this->primaryKey;
-    }
-
-    public function getPrimaryKeyWithTableAlias(): string
-    {
-        return $this->prefixColumnWithTableAlias($this->getPrimaryKeyName());
-    }
-
-    public function getExternalPrimaryKeyName(): ?string
-    {
-        return $this->externalPrimaryKey;
+        return $this->attributes[$this->meta()->primaryKeyName()];
     }
 
     /**
@@ -651,33 +601,20 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public function getExternalPrimaryKey()
     {
-        return $this->attributes[$this->getExternalPrimaryKeyName()] ?? null;
+        return $this->attributes[$this->meta()->externalKeyName()] ?? null;
     }
 
-    /**
-     * Creates a foreign key name from the current class name and primary key name
-     *
-     * This is used in relationships if a specific foreign key column name is not
-     * defined on the relationship.
-     *
-     * @return string
-     */
-    public function getForeignKey(): string
+    public function meta(): ModelMetadata
     {
-        return $this->foreignKey ?? sprintf(
-            '%s_%s', Str::snake(ClassHelpers::getObjectShortClassName($this), '_'), $this->getPrimaryKeyName()
-        );
-    }
+        if (!$this->metadata instanceof ModelMetadata) {
+            $this->metadata = new ModelMetadata(
+                $this, $this->primaryKey,
+                $this->table, $this->tableAlias,
+                $this->externalPrimaryKey, $this->foreignKey
+            );
+        }
 
-    /**
-     * Gets the owning side of the relationships key name
-     *
-     * @return string|null
-     * @internal
-     */
-    public function getOwningKey(): ?string
-    {
-        return $this->owningKey;
+        return $this->metadata;
     }
 
     public function export(): ModelExporter
@@ -732,6 +669,17 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         }
 
         return $relationship;
+    }
+
+    /**
+     * Gets the owning side of the relationships key name
+     *
+     * @return string|null
+     * @internal
+     */
+    public function getOwningKey(): ?string
+    {
+        return $this->owningKey;
     }
 
     /**
@@ -832,8 +780,8 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         /** @var Model $instance */
         $instance   = new $class();
         $relation   = $relation ?: ClassHelpers::getCallingMethod();
-        $foreignKey = $foreignKey ?: sprintf('%s_%s', Str::snake($relation), $instance->getPrimaryKeyName());
-        $ownerKey   = $ownerKey ?: $instance->getPrimaryKeyName();
+        $foreignKey = $foreignKey ?: sprintf('%s_%s', Str::snake($relation), $instance->meta()->primaryKeyName());
+        $ownerKey   = $ownerKey ?: $instance->meta()->primaryKeyName();
 
         return new BelongsTo($instance->newQuery(), $this, $foreignKey, $ownerKey);
     }
@@ -867,14 +815,14 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
     {
         /** @var Model $instance */
         $instance       = new $class();
-        $table          = $table ?: sprintf('%s_%s', Inflector::singularize($this->getTable()), $instance->getTable());
-        $tableSourceKey = $tableSourceKey ?: $this->getForeignKey();
-        $tableTargetKey = $tableTargetKey ?: $instance->getForeignKey();
-        $sourceKey      = $sourceKey ?: $this->getPrimaryKeyName();
-        $targetKey      = $targetKey ?: $instance->getPrimaryKeyName();
+        $table          = $table ?: sprintf('%s_%s', Inflector::singularize($this->meta()->table()), $instance->meta()->table());
+        $tableSourceKey = $tableSourceKey ?: $this->meta()->foreignKey();
+        $tableTargetKey = $tableTargetKey ?: $instance->meta()->foreignKey();
+        $sourceKey      = $sourceKey ?: $this->meta()->primaryKeyName();
+        $targetKey      = $targetKey ?: $instance->meta()->primaryKeyName();
 
-        $this->getIdentityMap()->registerAlias($this, $tableSourceKey);
-        $this->getIdentityMap()->registerAlias($instance, $tableTargetKey);
+        ModelIdentityMap::instance()->registerAlias($this, $tableSourceKey);
+        ModelIdentityMap::instance()->registerAlias($instance, $tableTargetKey);
 
         return new BelongsToMany(
             $instance->newQuery(), $this, $table, $tableSourceKey, $tableTargetKey, $sourceKey, $targetKey
@@ -905,15 +853,15 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         string $class, ?string $foreignKey = null, ?string $localKey = null, ?string $indexBy = null
     ): HasOneToMany
     {
-        $foreignKey = $foreignKey ?: $this->getForeignKey();
-        $localKey   = $localKey ?: $this->getPrimaryKeyName();
+        $foreignKey = $foreignKey ?: $this->meta()->foreignKey();
+        $localKey   = $localKey ?: $this->meta()->primaryKeyName();
 
         /** @var Model $instance */
         $instance = new $class();
         $instance->owningKey = $foreignKey;
 
         return new HasOneToMany(
-            $instance->newQuery(), $this, $instance->getTableAlias() . '.' . $foreignKey, $localKey, $indexBy
+            $instance->newQuery(), $this, $instance->meta()->tableAlias() . '.' . $foreignKey, $localKey, $indexBy
         );
     }
 
@@ -931,15 +879,15 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     protected function hasOne(string $class, ?string $foreignKey = null, ?string $localKey = null): HasOne
     {
-        $foreignKey = $foreignKey ?: $this->getForeignKey();
-        $localKey   = $localKey ?: $this->getPrimaryKeyName();
+        $foreignKey = $foreignKey ?: $this->meta()->foreignKey();
+        $localKey   = $localKey ?: $this->meta()->primaryKeyName();
 
         /** @var Model $instance */
         $instance = new $class();
         $instance->owningKey = $foreignKey;
 
         return new HasOne(
-            $instance->newQuery(), $this, $instance->getTableAlias() . '.' . $foreignKey, $localKey
+            $instance->newQuery(), $this, $instance->meta()->tableAlias() . '.' . $foreignKey, $localKey
         );
     }
 }

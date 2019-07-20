@@ -31,7 +31,7 @@ final class PaginatorAdapter implements AdapterInterface
         $this->countBuilder = function (ModelBuilder $query) {
             $qb = $query->getQueryBuilder();
             $qb
-                ->select(sprintf('COUNT(DISTINCT %s) AS total_results', $query->getModel()->getPrimaryKeyWithTableAlias()))
+                ->select(sprintf('COUNT(DISTINCT %s) AS total_results', $query->getModel()->meta()->primaryKeyNameWithAlias()))
                 ->setMaxResults(1)
                 // @todo is this enough to work reliably?
                 ->resetQueryPart('orderBy')

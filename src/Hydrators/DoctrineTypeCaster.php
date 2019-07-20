@@ -42,7 +42,7 @@ class DoctrineTypeCaster implements AttributeCaster
     public function cast(Model $model, array $attributes = [], array $casts = []): array
     {
         foreach ($attributes as $key => $value) {
-            $key = $model->removeTableAliasFrom($key);
+            $key = $model->meta()->removeAlias($key);
 
             if (null !== $type = $this->getCastType($casts, $key)) {
                 if (Str::startsWith($type, 'resource:')) {

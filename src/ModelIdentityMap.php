@@ -20,6 +20,11 @@ final class ModelIdentityMap
 {
 
     /**
+     * @var self
+     */
+    private static $instance;
+
+    /**
      * Tracks instantiated objects by class and identity
      *
      * @var array
@@ -48,6 +53,15 @@ final class ModelIdentityMap
 
     }
 
+    public static function instance(): self
+    {
+        if (!static::$instance instanceof self) {
+            static::$instance = new self();
+        }
+
+        return static::$instance;
+    }
+
     public function hasAlias(string $alias): bool
     {
         return isset($this->aliases[$alias]);
@@ -71,7 +85,7 @@ final class ModelIdentityMap
      */
     public function registerAlias(Model $model, ?string $foreignKeyName = null): void
     {
-        $key = $foreignKeyName ?? $model->getForeignKey();
+        $key = $foreignKeyName ?? $model->meta()->foreignKey();
 
         if (!$this->hasAlias($key)) {
             $this->aliases[$key] = get_class($model);
@@ -124,7 +138,7 @@ final class ModelIdentityMap
             if (Str::startsWith($key, Model::RELATIONSHIP_SOURCE_MODEL_REF)) {
                 $ref = array_values(array_slice(explode('__', $key), -1))[0];
                 unset($attributes[$key]);
-            } elseif ($model->getForeignKey() === $key || $model->getOwningKey() === $key) {
+            } elseif ($model->meta()->foreignKey() === $key || $model->getOwningKey() === $key) {
                 $ref = $key;
             }
 
@@ -132,7 +146,7 @@ final class ModelIdentityMap
                 $source = $this->aliases[$ref];
                 $target = get_class($model);
 
-                $this->registerRelationship($source, $value, $target, $attributes[$model->getPrimaryKeyName()]);
+                $this->registerRelationship($source, $value, $target, $attributes[$model->meta()->primaryKeyName()]);
             }
         }
     }

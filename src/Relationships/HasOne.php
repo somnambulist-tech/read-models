@@ -7,6 +7,7 @@ namespace Somnambulist\ReadModels\Relationships;
 use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 
 /**
@@ -33,9 +34,9 @@ class HasOne extends HasOneOrMany
 
         $this->fetch();
 
-        $models->each(function (Model $parent) use ($relationship) {
-            $map = $this->getIdentityMap();
+        $map = ModelIdentityMap::instance();
 
+        $models->each(function (Model $parent) use ($relationship, $map) {
             $ids = $map->getRelatedIdentitiesFor($parent, $class = get_class($this->related));
 
             $children = $map->all($class, $ids);
