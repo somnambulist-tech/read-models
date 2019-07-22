@@ -27,9 +27,6 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
  * identity map
  * pluggable attribute / embeddable hydrators
 
-__Note:__ this library is at an early stage of development and there may be large API
-changes between releases.
-
 ### Thinking About Adding...
 
  * doctrine metadata component to use the already available metadata
@@ -215,6 +212,66 @@ object.
 
 [Auto-generated API docs](docs/api-read-models.md) are avaiable in the docs folder.
 
+### Querying Data
+
+Like with many other ActiveRecord implemntations, underlying the Model is a ModelBuilder that
+wraps the standard Doctrine DBAL QueryBuilder with some convenience methods. The underlying
+query can be accessed to allow for even more complex queries, however you should consider
+using straight SQL at that point to fetch the primary ID's and then loading models from those
+IDs after the fact.
+
+All queries will start with either: `with()` or `query()`. The following methods are provided:
+
+ * `andHaving`
+ * `count` returns the count of the query at this point
+ * `expression` returns the DBAL ExpressionBuilder
+ * `groupBy`
+ * `having`
+ * `innerJoin`
+ * `join`
+ * `leftJoin`
+ * `limit` set the maximum results per page
+ * `offset` set the start of the results
+ * `orderBy`
+ * `orHaving`
+ * `orWhere` add an arbitrarily complex `OR <expression>` clause including multiple values
+ * `orWhereBetween` add an `OR <column> BETWEEN <start> AND <end>` clause
+ * `orWhereColumn`
+ * `orWhereIn`
+ * `orWhereNotBetween`
+ * `orWhereNotIn`
+ * `orWhereNotNull`
+ * `orWhereNull`
+ * `rightJoin`
+ * `select` select specific columns or add additional properties (see [Select Notes](#Select Notes))
+ * `where` add an arbitrarily complex `AND <expression>` clause including multiple values
+ * `whereBetween` add an `AND <column> BETWEEN <start> AND <end>` clause
+ * `whereColumn`
+ * `whereIn`
+ * `whereNotBetween`
+ * `whereNotIn`
+ * `whereNotNull`
+ * `whereNull`
+ * `wherePrimaryKey` specifically search for the primary key with the specified value
+
+These methods can be chained together, the underlying DBAL QueryBuilder called to add more
+complex expressions.
+
+__Note:__ the query builder does not produce "optimised" SQL. It is dependent on the developer
+to profile and test the generated SQL queries. Certain types of query (nested sub-selects or
+dependent WHERE clauses) may not perform very well.
+
+#### Select Notes
+
+When changing the selected columns, bare in mind that the identity map will return the same
+instance and that instance is the first loaded instance. If you only load a couple of attributes
+then you may have issues later on. Additionally: some logic may require or be dependent on the
+full model being loaded e.g.: virtual properties.
+
+For relationships, the required keys to setup and query that relationship will be automatically
+added to any query to ensure it can still function. This may not work in all cases, so ensure
+that you have sufficient tests for any data fetches.
+
 ### Identity Map
 
 Read-Models uses an identity map to ensure that you only ever have one instance, and the same
@@ -324,7 +381,7 @@ In addition to calling a new instance, a factory method can be used:
 class UserAddress extends Model
 {
     protected $embeds = [
-        'country' => ['Somnambulist\ValueObjects\Types\Geography\Country::create', ['country']]
+        'country' => ['Somnambulist\Domain\Entities\Types\Geography\Country::memberByKey', ['country']]
     ];
 }
 ```
@@ -338,9 +395,9 @@ The result is something like:
   #attributes: array:14 [
     "id" => 1
     "user_id" => 1
-    "country" => Somnambulist\ValueObjects\Types\Geography\Country^ {#54
+    "country" => Somnambulist\Domain\Entities\Types\Geography\Country^ {#54
       -name: "United Kingdom"
-      -code: Somnambulist\ValueObjects\Types\Geography\CountryCode^ {#138
+      -code: Somnambulist\Domain\Entities\Types\Geography\CountryCode^ {#138
         -value: "GBR"
         -key: "GBR"
       }
@@ -505,6 +562,19 @@ This will export the User with all roles but only the name and all permissions p
 only the permission name.
 
 These rules can be defined on the default exports too.
+
+## Profiling
+
+If you use Symfony; using the standard Doctrine DBAL connection from your entity manager will
+automatically ensure that _ALL_ SQL queries are added to the profiler without having to do
+anything else! You get full insight into the query that was executed, the data bound etc.
+For further insights consider using an application profiler such as:
+
+ * [Tideways](https://tideways.io)
+ * [BlackFire](https://blackfire.io)
+
+For other frameworks; as DBAL is used, hook into the Configuration object and add an SQL
+logger instance that can report to your frameworks profiler.
 
 ## Test Suite
 
