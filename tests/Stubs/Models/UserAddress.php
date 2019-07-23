@@ -21,7 +21,7 @@ class UserAddress extends Model
     protected $tableAlias = 'ua';
 
     protected $casts = [
-        'country' => Country::class,
+        'country'    => Country::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -34,8 +34,19 @@ class UserAddress extends Model
                 '?address_town',
                 '?address_county',
                 '?address_postcode',
-            ], true
-        ]
+            ],
+        ],
+    ];
+
+    protected $exports = [
+        'attributes'    => [
+            'country', 'address_line_1', 'address_line_2',
+            'address_town'     => 'town',
+            'address_county'   => 'county',
+            'address_postcode' => 'postcode',
+
+        ],
+        'relationships' => [],
     ];
 
     protected function user()

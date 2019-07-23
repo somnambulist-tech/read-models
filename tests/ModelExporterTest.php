@@ -6,6 +6,7 @@ namespace Somnambulist\ReadModels\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\ReadModels\Tests\Stubs\Models\UserAlt;
 use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
@@ -57,11 +58,11 @@ class ModelExporterTest extends TestCase
         $this->assertIsArray($array['addresses']);
 
         $this->assertArrayHasKey('default', $array['addresses']);
-        $this->assertArrayHasKey('type', $array['addresses']['default']);
-        $this->assertArrayHasKey('address', $array['addresses']['default']);
+        $this->assertArrayHasKey('address_line_1', $array['addresses']['default']);
+        $this->assertArrayHasKey('address_line_2', $array['addresses']['default']);
+        $this->assertArrayHasKey('town', $array['addresses']['default']);
+        $this->assertArrayHasKey('county', $array['addresses']['default']);
         $this->assertArrayHasKey('country', $array['addresses']['default']);
-        $this->assertArrayHasKey('created_at', $array['addresses']['default']);
-        $this->assertArrayHasKey('updated_at', $array['addresses']['default']);
     }
 
     public function testExportCustomAttributes()
@@ -138,6 +139,25 @@ class ModelExporterTest extends TestCase
         $this->assertArrayNotHasKey('id', $array['roles'][0]['permissions'][0]);
         $this->assertArrayNotHasKey('created_at', $array['roles'][0]['permissions'][0]);
         $this->assertArrayNotHasKey('updated_at', $array['roles'][0]['permissions'][0]);
+    }
+
+    public function testExportNestedRelationshipsWithoutAttributesDefersToExportSettingsInRelatedModel()
+    {
+        $user = UserAlt::find($this->getRandomUserIdWithRelationship('user_addresses', 'ua', 'ua.user_id = u.id'));
+
+        $array = $user->export()->with('address')->toArray();
+
+        $this->assertArrayHasKey('address', $array);
+        $this->assertArrayHasKey('address_line_1', $array['address']);
+        $this->assertArrayHasKey('address_line_2', $array['address']);
+        $this->assertArrayHasKey('town', $array['address']);
+        $this->assertArrayHasKey('county', $array['address']);
+        $this->assertArrayHasKey('postcode', $array['address']);
+        $this->assertArrayHasKey('country', $array['address']);
+        $this->assertArrayNotHasKey('type', $array['address']);
+        $this->assertArrayNotHasKey('id', $array['address']);
+        $this->assertArrayNotHasKey('created_at', $array['address']);
+        $this->assertArrayNotHasKey('updated_at', $array['address']);
     }
 
     public function testExportToJson()

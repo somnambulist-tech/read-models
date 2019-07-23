@@ -129,10 +129,22 @@ final class ModelExporter implements Jsonable
 
             if ($items instanceof Collection) {
                 $arr = $items->map(function (Model $model) use ($nested, $attributes) {
-                    return $model->export()->with(...(array)$nested)->attributes($attributes)->toArray();
+                    $export = $model->export()->with(...(array)$nested);
+
+                    if (count($attributes) > 0) {
+                        $export->attributes($attributes);
+                    }
+
+                    return $export->toArray();
                 })->toArray();
             } elseif ($items instanceof Model) {
-                $arr = $items->export()->with(...(array)$nested)->attributes($attributes)->toArray();
+                $export = $items->export()->with(...(array)$nested);
+
+                if (count($attributes) > 0) {
+                    $export->attributes($attributes);
+                }
+
+                $arr = $export->toArray();
             }
 
             $array[$relationship] = $arr;
