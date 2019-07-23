@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+2019-07-22 - 1.0.1
+------------------
+
+ * fix bug exporting attributes via relationship not preserving model export options
+
+2019-07-22 - 1.0.0
+------------------
+
+ * stable release
+
 2019-07-20 - 0.3.0
 ------------------
  
