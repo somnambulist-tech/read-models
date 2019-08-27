@@ -434,13 +434,13 @@ default is always false - you have to explicitly opt-in.
 
 ### Custom Hydrators
 
-Both the attribute casting and the embeddable building can be switched for another implementation.
-They are injected via an interface. This can be done per model via the static calls to:
+Both the attribute casting and the embeddable building can be switched for another
+implementation by calling the appropriate bind method. Note that this applies to all models
+as these are global. To implement a new hydrator, implement the interface and then in the
+boot / setup call, call the bind methods.
 
- * `User::bindAttributeCaster($myCaster)`
- * `User::bindEmbeddableFactory($myFactory)`
- 
-Or to switch all, use the `Model::bind....()` and all instances will use that version.
+ * `Model::bindAttributeCaster($myCaster)`
+ * `Model::bindEmbeddableFactory($myFactory)`
 
 Note: the identity map cannot be switched out and is global across all Models - otherwise it
 won't work.
