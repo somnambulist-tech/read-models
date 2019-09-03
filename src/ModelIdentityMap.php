@@ -233,14 +233,14 @@ final class ModelIdentityMap
         return (int)array_sum(array_map('count', $this->identityMap));
     }
 
-    public function getMap(): array
-    {
-        return $this->identityMap;
-    }
-
     public function getAliases(): array
     {
         return $this->aliases;
+    }
+
+    public function getMap(): array
+    {
+        return $this->identityMap;
     }
 
     public function getRelationships(): array
