@@ -51,7 +51,7 @@ class DoctrineTypeCaster implements AttributeCaster
                 }
 
                 $value = Type::getType($type)->convertToPHPValue(
-                    $value, $model::connection(static::class)->getDatabasePlatform()
+                    $value, $model::connection(get_class($model))->getDatabasePlatform()
                 );
             }
 
