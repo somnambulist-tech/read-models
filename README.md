@@ -463,16 +463,49 @@ class User extends Models
 
 If you leave the method public, the relationship can be directly accessed for method chaining,
 however you can make it protected and still access the relationship using: getRelationship().
-The benefit of a protected relationship, is fewer exposed methods.
+The benefit of a protected relationship, is fewer exposed methods and not confusing other devs
+with both a property and method for the same thing.
 
-To access the related models:
+#### Using the Relationship
+
+Relationships can operate in two ways:
+
+ * Returning the relationship object that represents the linked data allowing it to be queried,
+ * Returning the actual, loaded, objects by executing the default relationship query.
+
+To access the relationship object, call the method that defines it - provided that is is public.
+
+For example: to access the roles relationship and modify the query:
+
+```php
+User::find(1)->roles()->select(...)...->fetch();
+```
+
+By accessing the relationship object you have full control over the query that will be executed
+and can limit what is selected, or add conditionals etc. This method will require explicitly
+calling `->fetch()` to actually run the query.
+
+To fetch and load the related models immediately call the relationship name as a property. This
+will execute the underlying query object and return either a Collection instance or the object.
+The return type depends on the relationship that was defined. One to one relationships or 1:m
+inversed, will always return the mapped object. One to many or many to many will always produce
+a Collection of objects.
+
+For example: to fetch the first Role of the mapped Roles to a User:
 
 ```php
 User::find(1)->roles->first();
 ```
 
-The relationship will return a `Collection` object where there are many or the object itself
-for 1:1 and belongsTo.
+The call to `->first()` returns the first object from the loaded Collection and is being run
+from the Collection object. Under the hood, the attribute accessor accessed the relationship
+method, fetching the rules and executing the default query, returning the collection and mapping
+it into the parent model.
+
+__Note:__ calls into relationships are always eager i.e.: all records will be returned without
+any limits. Further: if default includes are defined, cascade queries may be issued. It is not
+recommended to perform this step in loops as it can lead to n+1 queries being run. To better
+optimise use eager loading to reduce the queries needed.
 
 #### Eager Load Relationships
 
