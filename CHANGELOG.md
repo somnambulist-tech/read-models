@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2019-09-03 - 1.0.2
+------------------
+
+ * fix bug using wrong class name in DoctrineTypeCaster
+
 2019-07-22 - 1.0.1
 ------------------
 
