@@ -225,6 +225,11 @@ All queries will start with either: `with()` or `query()`. The following methods
  * `andHaving`
  * `count` returns the count of the query at this point
  * `expression` returns the DBAL ExpressionBuilder
+ * `fetch` runs the current query, returning results
+ * `fetchFirstOrFail` runs the current query, returning the first result or throwing an exception
+ * `fetchFirstOrNull` runs the current query, returning the first result or null
+ * `findBy` returns a Collection matching the criteria
+ * `findOneBy` returns the first result matching the criteria or null
  * `groupBy`
  * `having`
  * `innerJoin`
@@ -260,6 +265,25 @@ complex expressions.
 __Note:__ the query builder does not produce "optimised" SQL. It is dependent on the developer
 to profile and test the generated SQL queries. Certain types of query (nested sub-selects or
 dependent WHERE clauses) may not perform very well.
+
+__Note:__ `where` and `orWhere` are not for basic column queries. These methods are for custom
+SQL that must contain named placeholders with an array of values. Use `whereColumn` for a basic
+column query. These methods allow you to create complex nested WHERE criteria or use sub-selects
+etc and add that SQL to your query.
+
+#### `findBy` and `findOneBy`
+
+From 1.1.0 `findBy` and `findOneBy` have been added to the `ModelBuilder`. These allow for basic
+`AND WHERE x = y` type queries that will return multiple or one result. The methods have the
+same signature as the Doctrine EntityRepository (except orderBy defaults to an empty array).
+Use them when you wish to quickly find record(s) with simple criteria:
+
+```php
+// return the first 10 matches where user is_active=1 AND email=bob@example.org
+// ordered by created_at desc
+
+$results = User::query()->findBy(['is_active' => 1, 'email' => 'bob@example.org'], ['created_at' => 'DESC'], 10);
+```
 
 #### Select Notes
 

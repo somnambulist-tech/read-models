@@ -108,6 +108,48 @@ class ModelBuilder implements Queryable
     }
 
     /**
+     * Find records by the given criteria similar to EntityRepository findBy
+     *
+     * @param array    $criteria An array of field name -> value pairs to search
+     * @param array    $orderBy An array of field name -> ASC|DESC values to order by
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return Collection
+     */
+    public function findBy(array $criteria, array $orderBy = [], int $limit = null, int $offset = null): Collection
+    {
+        foreach ($criteria as $field => $value) {
+            $this->whereColumn($field, '=', $value);
+        }
+        foreach ($orderBy as $field => $dir) {
+            $this->orderBy($field, $dir);
+        }
+
+        if ($limit) {
+            $this->limit($limit);
+        }
+        if ($offset) {
+            $this->offset($offset);
+        }
+
+        return $this->fetch();
+    }
+
+    /**
+     * Returns the first record matching the criteria and order or null
+     *
+     * @param array $criteria An array of field name -> value pairs to search
+     * @param array $orderBy  An array of field name -> ASC|DESC values to order by
+     *
+     * @return Model|null
+     */
+    public function findOneBy(array $criteria, array $orderBy = []): ?Model
+    {
+        return $this->findBy($criteria, $orderBy, 1)->first() ?? null;
+    }
+
+    /**
      * Find the model by the primary key, but raise an exception if not found
      *
      * @param string $id
@@ -167,6 +209,16 @@ class ModelBuilder implements Queryable
         }
 
         return $model;
+    }
+
+    /**
+     * Returns the first matching result of the query, or null if no results
+     *
+     * @return Model|null
+     */
+    public function fetchFirstOrNull(): ?Model
+    {
+        return $this->fetch()->first() ?? null;
     }
 
     /**

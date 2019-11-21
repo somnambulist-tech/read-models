@@ -6,9 +6,11 @@ namespace Somnambulist\ReadModels\Tests;
 
 use Pagerfanta\Pagerfanta;
 use PHPUnit\Framework\TestCase;
+use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Exceptions\NoResultsException;
+use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserContact;
@@ -52,6 +54,38 @@ class ModelBuilderTest extends TestCase
     /**
      * @group find
      */
+    public function testFindBy()
+    {
+        $results = User::query()->findBy(['is_active' => 1], [], 10);
+
+        $this->assertInstanceOf(Collection::class, $results);
+        $this->assertCount(10, $results);
+    }
+
+    /**
+     * @group find
+     */
+    public function testFindByOrdersResults()
+    {
+        $results = User::query()->findBy([], ['name' => 'ASC'], 10);
+
+        $this->assertInstanceOf(Collection::class, $results);
+        $this->assertCount(10, $results);
+    }
+
+    /**
+     * @group find
+     */
+    public function testFindOneBy()
+    {
+        $result = User::query()->findOneBy(['is_active' => 1]);
+
+        $this->assertInstanceOf(Model::class, $result);
+    }
+
+    /**
+     * @group find
+     */
     public function testFindOrFail()
     {
         $this->expectException(EntityNotFoundException::class);
@@ -68,6 +102,14 @@ class ModelBuilderTest extends TestCase
         $this->expectException(NoResultsException::class);
 
         User::query()->where('users.is_active = 5')->fetchFirstOrFail();
+    }
+
+    /**
+     * @group fetch
+     */
+    public function testFetchOrNull()
+    {
+        $this->assertNull(User::query()->where('users.is_active = 5')->fetchFirstOrNull());
     }
 
     /**

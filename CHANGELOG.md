@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2019-09-03 - 1.1.0
+------------------
+
+ * Added `findBy`, `findOneBy`, `fetchFirstOrNull` helper methods to ModelBuilder
+
 2019-09-03 - 1.0.2
 ------------------
 
