@@ -39,7 +39,7 @@ class HasOne extends HasOneOrMany
         $models->each(function (Model $parent) use ($relationship, $map) {
             $ids = $map->getRelatedIdentitiesFor($parent, $class = get_class($this->related));
 
-            $children = $map->all($class, $ids);
+            $children = $map->all($class, $ids)[0] ?? null;
 
             ClassHelpers::setPropertyArrayKey($parent, 'relationships', $relationship, $children, Model::class);
         });

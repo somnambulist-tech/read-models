@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelIdentityMap;
 
 /**
  * Class User
@@ -16,6 +17,8 @@ class User extends Model
 {
 
     protected $externalPrimaryKey = 'uuid';
+
+    protected $foreignKey = 'user_id';
 
     protected $casts = [
         'uuid' => 'uuid',
@@ -73,5 +76,18 @@ class User extends Model
     protected function permissions()
     {
         return $this->hasMany(Permission::class);
+    }
+
+    protected function profile()
+    {
+        /*
+         * For these tests we have to fake the relationship by pre-registering user_uuid
+         * to the aliases so that the user profile can be reverse loaded successfully.
+         * If you have a more standard naming scheme, this should not be necessary i.e. if
+         * the foreign key in user_profiles was user_id instead, this would not be necessary.
+         */
+        ModelIdentityMap::instance()->registerAlias($this, 'user_uuid');
+
+        return $this->hasOne(UserProfile::class, 'user_uuid', 'uuid');
     }
 }

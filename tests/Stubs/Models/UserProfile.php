@@ -17,6 +17,10 @@ use Somnambulist\ReadModels\Model;
 class UserProfile extends Model
 {
 
+    protected $externalPrimaryKey = 'user_uuid';
+
+    protected $foreignKey = 'user_profile_id';
+
     protected function user()
     {
         return $this->belongsTo(User::class, 'user_uuid', 'uuid');

@@ -32,6 +32,19 @@ class RelationshipViaExternalKeyTest extends TestCase
     /**
      * @group external-key
      */
+    public function testExternalPrimaryKeyOnSource()
+    {
+        $profile = UserProfile::query()->limit(1)->fetchFirstOrNull();
+
+        $user = User::with('profile')->whereColumn('uuid', '=', $profile->user_uuid)->limit(1)->fetchFirstOrNull();
+
+        $this->assertInstanceOf(UserProfile::class, $user->profile);
+        $this->assertEquals($user->uuid, $user->profile->user_uuid);
+    }
+
+    /**
+     * @group external-key
+     */
     public function testExternalPrimaryKeyUsesIdentityMap()
     {
         $profile = UserProfile::with('user')->limit(1)->fetch()->first();

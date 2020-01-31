@@ -1,10 +1,17 @@
 Change Log
 ==========
 
+2020-01-31 - 1.1.1
+------------------
+ 
+ * addresses issues when using the external identity to load relationships
+ * fix bug in `HasOne` where it would assign multiple results instead of the first matching
+ * fix bug in `ModelIdentityMap::getRelatedIdentitiesFor` that would not check external identity
+
 2019-09-03 - 1.1.0
 ------------------
 
- * Added `findBy`, `findOneBy`, `fetchFirstOrNull` helper methods to ModelBuilder
+ * added `findBy`, `findOneBy`, `fetchFirstOrNull` helper methods to ModelBuilder
 
 2019-09-03 - 1.0.2
 ------------------
@@ -44,9 +51,9 @@ Change Log
 2019-07-13 - 0.1.0
 ------------------
 
- * Alpha release to test functionality in a real project
+ * alpha release to test functionality in a real project
 
 2019-07-04
 ----------
 
-Initial commit
+ * initial commit

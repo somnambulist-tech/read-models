@@ -8,6 +8,7 @@ use IlluminateAgnostic\Str\Support\Str;
 use function array_intersect_key;
 use function array_key_exists;
 use function explode;
+use function func_get_args;
 use function get_class;
 
 /**
@@ -164,11 +165,25 @@ final class ModelIdentityMap
      */
     public function getRelatedIdentitiesFor(Model $model, ?string $related = null): array
     {
+        $identity = $model->getExternalPrimaryKey() ?? $model->getPrimaryKey();
+
         if ($related) {
-            return $this->relationships[get_class($model)][$model->getPrimaryKey()][$related] ?? [];
+            return
+                $this->relationships[get_class($model)][(string)$identity][$related]
+                ??
+                $this->relationships[get_class($model)][$model->getPrimaryKey()][$related]
+                ??
+                []
+            ;
         }
 
-        return $this->relationships[get_class($model)][$model->getPrimaryKey()] ?? [];
+        return
+            $this->relationships[get_class($model)][(string)$identity]
+            ??
+            $this->relationships[get_class($model)][$model->getPrimaryKey()]
+            ??
+            []
+        ;
     }
 
     public function add(Model $model): void
