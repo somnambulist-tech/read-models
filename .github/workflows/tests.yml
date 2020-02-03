@@ -22,6 +22,7 @@ jobs:
 
     - name: Build test data
       run:
+        echo "TEST_CONNECTION='sqlite:///tests/resources/users.db'" > .env
         tests/resources/seed.php db:create
         tests/resources/seed.php db:seed
 
