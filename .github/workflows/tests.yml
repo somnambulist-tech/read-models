@@ -1,0 +1,29 @@
+name: tests
+
+on:
+  push:
+    
+  create:
+    tags:
+      - '*'  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Build test data
+      run:
+        tests/resources/seed.php db:create
+        tests/resources/seed.php db:seed
+
+    - name: Run test suite
+      run: vendor/bin/phpunit

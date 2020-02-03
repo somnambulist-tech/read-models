@@ -1,5 +1,7 @@
 # Read-Models
 
+[![GitHub Actions Build Status](https://github.com/somnambulist-tech/read-models/workflows/tests/badge.svg)](https://github.com/somnambulist-tech/read-models/actions?query=workflow%3Atests)
+
 Read-Models are a companion resource to a Doctrine ORM entity based project. They
 provide an active-record style data access layer, designed for presentational
 purposes only. This allows your domain objects to remain completely focused on
