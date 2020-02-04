@@ -108,7 +108,7 @@ class DataGenerator
         $this->connection->commit();
     }
 
-    public function build($records = 50): void
+    public function build($records = 100): void
     {
         $this->connection->beginTransaction();
 

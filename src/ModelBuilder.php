@@ -161,7 +161,7 @@ class ModelBuilder implements Queryable
     public function findOrFail($id, ...$columns): Model
     {
         if (null === $model = $this->find($id, ...$columns)) {
-            throw EntityNotFoundException::noMatchingRecordFor(get_class($this->model), $this->meta->table(), $id);
+            throw EntityNotFoundException::noMatchingRecordFor(get_class($this->model), $this->meta->primaryKeyName(), $id);
         }
 
         return $model;

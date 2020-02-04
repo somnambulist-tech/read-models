@@ -33,7 +33,7 @@ $app->addCommands([
             $this
                 ->setName('db:seed')
                 ->setDescription('Build some randomly generated seed data for testing with')
-                ->addOption('records', 'r', InputOption::VALUE_OPTIONAL, 'Number of records to generate', 50)
+                ->addOption('records', 'r', InputOption::VALUE_OPTIONAL, 'Number of records to generate', 100)
             ;
         }
 

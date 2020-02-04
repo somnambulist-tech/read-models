@@ -89,7 +89,7 @@ class ModelBuilderTest extends TestCase
     public function testFindOrFail()
     {
         $this->expectException(EntityNotFoundException::class);
-        $this->expectExceptionMessage('Could not find a record for Somnambulist\ReadModels\Tests\Stubs\Models\User with users and 999999999999');
+        $this->expectExceptionMessage('Could not find a record for Somnambulist\ReadModels\Tests\Stubs\Models\User with id and 999999999999');
 
         User::findOrFail(999999999999);
     }
