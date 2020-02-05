@@ -6,9 +6,9 @@ namespace Somnambulist\ReadModels\EventSubscriber;
 
 use Somnambulist\ReadModels\ModelIdentityMap;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -35,26 +35,17 @@ class IdentityMapClearerSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param GetResponseEvent $event
-     */
-    public function onRequest(GetResponseEvent $event): void
+    public function onRequest(RequestEvent $event): void
     {
         ModelIdentityMap::instance()->clear();
     }
 
-    /**
-     * @param GetResponseForExceptionEvent $event
-     */
-    public function onException(GetResponseForExceptionEvent $event): void
+    public function onException(ExceptionEvent $event): void
     {
         ModelIdentityMap::instance()->clear();
     }
 
-    /**
-     * @param PostResponseEvent $event
-     */
-    public function onTerminate(PostResponseEvent $event): void
+    public function onTerminate(ResponseEvent $event): void
     {
         ModelIdentityMap::instance()->clear();
     }

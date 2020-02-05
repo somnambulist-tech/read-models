@@ -9,10 +9,10 @@ use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Tests\Stubs\DataGenerator;
 use Symfony\Component\Dotenv\Dotenv;
 
-(new Dotenv)->loadEnv(dirname(dirname(__DIR__)) . '/.env');
+(new Dotenv)->loadEnv(dirname(__DIR__, 2) . '/.env');
 
 $connection = DriverManager::getConnection([
-    'url' => getenv('TEST_CONNECTION'),
+    'url' => $_ENV['TEST_CONNECTION'],
 ]);
 // this doesn't seem to be working at all :confused:
 $connection->exec('PRAGMA foreign_keys=on');
