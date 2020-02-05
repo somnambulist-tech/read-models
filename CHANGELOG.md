@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-02-05 - 1.1.4
+------------------
+
+ * fix SF5 compatibility in the kernel subscriber
+
 2020-01-31 - 1.1.1
 ------------------
  
