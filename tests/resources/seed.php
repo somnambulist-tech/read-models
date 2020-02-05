@@ -54,6 +54,8 @@ $app->addCommands([
             } catch (Exception $e) {
                 $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             }
+
+            return 0;
         }
     },
 
@@ -100,6 +102,8 @@ $app->addCommands([
             } catch (Exception $e) {
                 $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             }
+
+            return 0;
         }
     },
 
@@ -245,6 +249,8 @@ $app->addCommands([
             } catch (Exception $e) {
                 $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             }
+
+            return 0;
         }
     },
 
