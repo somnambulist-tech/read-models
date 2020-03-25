@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-02-05 - 1.2.0
+------------------
+
+ * add `IdentityMapClearerMessengerSubscriber` to clear the identity map when using SF Messenger
+
 2020-02-05 - 1.1.4
 ------------------
 

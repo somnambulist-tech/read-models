@@ -33,8 +33,9 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
 
  * doctrine metadata component to use the already available metadata
  * better way of handling relationship mapping
- * refactor identity map (improve attribute tracking)
- * consider reducing the scope of the builder component
+ * refactor identity map (improve object tracking to prevent stale data / SQL fetches)
+ * reducing the amount of static method calls
+ * reducing the scope of the builder component
  * prevent running / building insert, update, delete queries
 
 ## Requirements
@@ -318,6 +319,11 @@ The identity map does need clearing at the end of a request and if running in a 
 process be sure to periodically call `->clear()`.
 
 The Identity Map is a singleton accessed via a static call to: `ModelIdentityMap::instance()`.
+
+For Symfony based projects there are 2 kernel event listeners that can be subscribed:
+
+ * `IdentityMapClearerSubscriber` clears the map on request / error
+ * `IdentityMapClearerMessengerSubscriber` clears the map after handling messages in Messenger
 
 #### IdentityMap Test Listener
 

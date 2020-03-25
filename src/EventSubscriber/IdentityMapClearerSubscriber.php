@@ -35,15 +35,20 @@ class IdentityMapClearerSubscriber implements EventSubscriberInterface
 
     public function onRequest(KernelEvent $event): void
     {
-        ModelIdentityMap::instance()->clear();
+        $this->clearIdentityMap();
     }
 
     public function onException(KernelEvent $event): void
     {
-        ModelIdentityMap::instance()->clear();
+        $this->clearIdentityMap();
     }
 
     public function onTerminate(KernelEvent $event): void
+    {
+        $this->clearIdentityMap();
+    }
+
+    private function clearIdentityMap(): void
     {
         ModelIdentityMap::instance()->clear();
     }
