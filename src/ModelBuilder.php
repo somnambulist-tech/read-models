@@ -21,6 +21,7 @@ use Somnambulist\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Utils\ProxyTo;
 use function sprintf;
+use function str_replace;
 
 /**
  * Class ModelBuilder
@@ -428,7 +429,7 @@ class ModelBuilder implements Queryable
         // placeholder name can only be ascii with underscores, hyphens and dots are not allowed
         return sprintf(
             ':bind_%s_%s',
-            Str::slug(Str::replaceArray('.', ['_'], $this->prefixColumnWithTableAlias($column)), '_'),
+            Str::slug(str_replace(['.', '-'], '_', $this->prefixColumnWithTableAlias($column)), '_'),
             ++$index
         );
     }

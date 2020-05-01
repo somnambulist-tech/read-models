@@ -50,14 +50,20 @@ class BelongsTo extends AbstractRelationship
         parent::__construct($query, $child);
     }
 
-    protected function initialiseRelationship(): void
+    public function addConstraints(): AbstractRelationship
     {
+        $this->hasConstraints = true;
+
         $this->query->whereColumn($this->ownerKey, '=', $this->parent->getRawAttribute($this->foreignKey));
+
+        return $this;
     }
 
     public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
     {
-        $this->query = $this->query->newQuery()->whereIn(
+        $this->hasConstraints = true;
+
+        $this->query = $this->query->whereIn(
             $this->ownerKey, $models->map->getRawAttribute($this->foreignKey)->removeNulls()->unique()->toArray()
         );
 

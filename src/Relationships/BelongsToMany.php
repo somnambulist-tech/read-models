@@ -78,17 +78,22 @@ class BelongsToMany extends AbstractRelationship
         return $this->query;
     }
 
-    protected function initialiseRelationship(): void
+    public function addConstraints(): AbstractRelationship
     {
+        $this->hasConstraints = true;
+
         $this
             ->appendJoinCondition()
             ->whereColumn($this->getQualifiedSourceKeyName(), '=', $this->parent->getRawAttribute($this->sourceKey))
         ;
+
+        return $this;
     }
 
     public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
     {
-        $this->query = $this->query->newQuery();
+        $this->hasConstraints = true;
+
         $this
             ->appendJoinCondition()
             ->select(sprintf('%s AS %s', $this->getQualifiedSourceKeyName(), $this->getRelationshipSourceModelReferenceKeyName()))

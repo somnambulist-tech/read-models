@@ -93,6 +93,13 @@ abstract class AbstractRelationship implements Queryable
     protected $hasMany = false;
 
     /**
+     * True if the relationship constraints have been applied
+     *
+     * @var bool
+     */
+    protected $hasConstraints = false;
+
+    /**
      * Constructor.
      *
      * @param ModelBuilder $builder
@@ -103,14 +110,12 @@ abstract class AbstractRelationship implements Queryable
         $this->parent  = $parent;
         $this->related = $builder->model;
         $this->query   = $builder;
-
-        $this->initialiseRelationship();
     }
 
     /**
      * Apply the base single model constraints to the main query
      */
-    abstract protected function initialiseRelationship(): void;
+    abstract public function addConstraints(): self;
 
     /**
      * Add the constraints required for eager loading a set of results
@@ -169,12 +174,30 @@ abstract class AbstractRelationship implements Queryable
     }
 
     /**
+     * Returns either the first result or the collection for the relationship
+     *
+     * @return mixed|Collection
+     */
+    public function fetchValueForRelationship()
+    {
+        if ($this->hasMany()) {
+            return $this->fetch();
+        }
+
+        return $this->fetch()->first();
+    }
+
+    /**
      * Executes the relationship, returning any results
      *
      * @return Collection
      */
     public function fetch(): Collection
     {
+        if (!$this->hasConstraints) {
+            $this->addConstraints();
+        }
+
         return $this->query->fetch();
     }
 

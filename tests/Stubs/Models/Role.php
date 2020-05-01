@@ -6,6 +6,7 @@ namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
 use Somnambulist\Collection\MutableCollection;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\Relationships\BelongsToMany;
 
 /**
  * Class Role
@@ -28,5 +29,13 @@ class Role extends Model
     protected function permissions()
     {
         return $this->belongsToMany(Permission::class);
+    }
+
+    public function permissions2(): BelongsToMany
+    {
+        $rel = $this->belongsToMany(Permission::class);
+        $rel->orderBy('id', 'DESC');
+
+        return $rel;
     }
 }

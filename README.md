@@ -32,7 +32,7 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
 ### Thinking About Adding...
 
  * doctrine metadata component to use the already available metadata
- * better way of handling relationship mapping
+ * better way of handling relationship mapping (remove the multiple loading paths)
  * refactor identity map (improve object tracking to prevent stale data / SQL fetches)
  * reducing the amount of static method calls
  * reducing the scope of the builder component

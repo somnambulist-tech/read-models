@@ -43,15 +43,21 @@ abstract class HasOneOrMany extends AbstractRelationship
         parent::__construct($builder, $parent);
     }
 
-    protected function initialiseRelationship(): void
+    public function addConstraints(): AbstractRelationship
     {
+        $this->hasConstraints = true;
+
         $this->query->whereColumn($this->foreignKey, '=', $this->parent->getRawAttribute($this->localKey));
         $this->query->whereNotNull($this->foreignKey);
+
+        return $this;
     }
 
     public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
     {
-        $this->query = $this->query->newQuery()->whereIn(
+        $this->hasConstraints = true;
+
+        $this->query = $this->query->whereIn(
             $this->foreignKey, $models->extract($this->localKey)->unique()->toArray()
         );
 

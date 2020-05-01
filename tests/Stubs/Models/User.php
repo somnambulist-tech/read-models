@@ -73,11 +73,6 @@ class User extends Model
         return $this->belongsToMany(Role::class);
     }
 
-    protected function permissions()
-    {
-        return $this->hasMany(Permission::class);
-    }
-
     protected function profile()
     {
         /*

@@ -731,7 +731,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
             ));
         }
 
-        $results = $relation->hasMany() ? $relation->fetch() : $relation->fetch()->first();
+        $results = $relation->addConstraints()->fetchValueForRelationship();
 
         $this->setRelationshipResults($method, $results);
 

@@ -1,7 +1,14 @@
 Change Log
 ==========
 
-2020-02-05 - 1.2.0
+2020-04-30 - 1.2.1
+------------------
+
+ * fix bug in `createParameterPlaceholderKey` where not all characters are replaced
+ * fix bug where eager loading relationships loses any defined relationship constraints
+ * refactor relationships to defer addition of default constraints until relationship fetch
+
+2020-03-25 - 1.2.0
 ------------------
 
  * add `IdentityMapClearerMessengerSubscriber` to clear the identity map when using SF Messenger
@@ -9,12 +16,22 @@ Change Log
 2020-02-05 - 1.1.4
 ------------------
 
+ * fix SF5 compatibility in the kernel subscriber (again)
+
+2020-02-05 - 1.1.3
+------------------
+
  * fix SF5 compatibility in the kernel subscriber
+
+2020-02-04 - 1.1.2
+------------------
+
+ * fix not found exception should use primary key, not table name
 
 2020-01-31 - 1.1.1
 ------------------
  
- * addresses issues when using the external identity to load relationships
+ * address issues when using the external identity to load relationships
  * fix bug in `HasOne` where it would assign multiple results instead of the first matching
  * fix bug in `ModelIdentityMap::getRelatedIdentitiesFor` that would not check external identity
 
@@ -41,8 +58,8 @@ Change Log
 2019-07-20 - 0.3.0
 ------------------
  
- * add exporting relationship attributes via with syntax
- * add couple of custom property accessors
+ * add exporting relationship attributes via the same syntax as `with`
+ * add a couple of custom property accessors
  * refactor metadata methods to ModelMetadata class
  * move IdentityMap to a singleton
  * remove the ModelBuilder pass through from Model
