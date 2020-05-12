@@ -7,7 +7,6 @@ namespace Somnambulist\ReadModels\Exceptions;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use function sprintf;
-use Throwable;
 
 /**
  * Class NoResultsException

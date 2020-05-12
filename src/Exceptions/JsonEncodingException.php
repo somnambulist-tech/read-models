@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\ReadModels\Exceptions;
 
 use RuntimeException;
+use Somnambulist\ReadModels\Model;
 
 /**
  * Class JsonEncodingException

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Somnambulist\ReadModels;
 
 use Closure;
-use function explode;
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\ReadModels\Exceptions\JsonEncodingException;
 use function count;
+use function explode;
 use function is_array;
 
 /**
