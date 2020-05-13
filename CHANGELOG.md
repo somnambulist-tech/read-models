@@ -1,10 +1,16 @@
 Change Log
 ==========
 
+2020-05-13 - 1.2.3
+------------------
+
+ * attempt to fix #3: slow pagination queries by using derived select of main query
+ * fix incorrect group by counting in `PaginatorAdapter`
+
 2020-05-12 - 1.2.2
 ------------------
 
- * Correct the namespace for the `JsonEncodingException`
+ * correct the namespace for the `JsonEncodingException`
 
 2020-04-30 - 1.2.1
 ------------------

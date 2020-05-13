@@ -151,6 +151,26 @@ class ModelBuilderTest extends TestCase
     }
 
     /**
+     * @group paginate
+     */
+    public function testPaginateWithGroupBy()
+    {
+        $pager = User::query()
+            ->leftJoin('users', 'user_roles', 'r', 'r.user_id = users.id')
+            ->leftJoin('r', 'role_permissions', 'p', 'p.role_id = r.role_id')
+            ->where('p.permission_id IS NOT NULL')
+            ->groupBy('users.id')
+            ->groupBy('p.permission_id')
+            ->paginate(1, 1)
+        ;
+
+        $this->assertInstanceOf(Pagerfanta::class, $pager);
+        $this->assertEquals(1, $pager->getCurrentPage());
+        $this->assertNotCount(0, $pager->getCurrentPageResults());
+        $this->assertNotEquals(0, $pager->getNbResults());
+    }
+
+    /**
      * @group where
      */
     public function testWhere()
