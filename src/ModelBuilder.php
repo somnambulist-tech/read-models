@@ -274,7 +274,7 @@ class ModelBuilder implements Queryable
      */
     public function paginate(int $page = 1, int $perPage = 30): Pagerfanta
     {
-        return (new Pagerfanta(new PaginatorAdapter($this)))->setCurrentPage($page)->setMaxPerPage($perPage);
+        return (new Pagerfanta(new PaginatorAdapter($this)))->setMaxPerPage($perPage)->setCurrentPage($page);
     }
 
     /**

@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+2020-06-24 - 1.2.4
+------------------
+
+ * fix method calls when setting up pagination; calling `setCurrentPage` before `setMaxPerPage`
+   causes a failure with pagerfanta > 2.1.3.
+
 2020-05-13 - 1.2.3
 ------------------
 
