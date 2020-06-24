@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-06-24 - 1.2.5
+------------------
+
+ * fix schema prefixes on table names on `BelongsToMany` joins
+
 2020-06-24 - 1.2.4
 ------------------
 

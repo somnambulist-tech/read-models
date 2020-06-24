@@ -10,6 +10,8 @@ use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
+use function sprintf;
+use function str_replace;
 
 /**
  * Class BelongsToMany
@@ -126,7 +128,7 @@ class BelongsToMany extends AbstractRelationship
 
     protected function getRelationshipSourceModelReferenceKeyName(): string
     {
-        return sprintf('%s__%s__%s', Model::RELATIONSHIP_SOURCE_MODEL_REF, $this->joinTable, $this->joinTableSourceKey);
+        return sprintf('%s__%s__%s', Model::RELATIONSHIP_SOURCE_MODEL_REF, str_replace('.', '_', $this->joinTable), $this->joinTableSourceKey);
     }
 
     protected function getQualifiedSourceKeyName(): string
