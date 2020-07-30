@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-06-24 - 1.3.0
+------------------
+
+ * update dependency version constraints; raising pragmarx/ia-str to 6/7
+
 2020-06-24 - 1.2.5
 ------------------
 

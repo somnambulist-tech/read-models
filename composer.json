@@ -4,12 +4,12 @@
     "description": "A stripped down active-record'ish query layer for fetching data from your database.",
     "license": "MIT",
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.3",
         "ext-json":  "*",
         "doctrine/dbal": "~2.9",
         "doctrine/inflector": "~1.3",
-        "pagerfanta/pagerfanta": "~2.1",
-        "pragmarx/ia-str": "~5.8",
+        "pagerfanta/pagerfanta": "~2.2",
+        "pragmarx/ia-str": "^6.0|^7.0",
         "somnambulist/collection": "~3.0"
     },
     "require-dev": {
@@ -41,6 +41,6 @@
     "suggest": {
         "doctrine/orm": "Use full weight Doctrine for managing persistence and data",
         "doctrine/migrations": "To build schema changes",
-        "symfony/http-kernel": "To use the kernel listener, requires >=4.3"
+        "symfony/http-kernel": "To use the kernel listener, requires >=5.0"
     }
 }
