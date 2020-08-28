@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-06-28 - 1.4.0
+------------------
+
+ * update dependency version constraints; raising somnambulist/collection to 3/4
+
 2020-06-24 - 1.3.0
 ------------------
 
