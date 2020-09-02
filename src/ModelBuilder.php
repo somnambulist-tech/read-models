@@ -325,7 +325,7 @@ class ModelBuilder implements Queryable
 
         // We are basically looking for any relationships that are nested deeper than
         // the given top-level relationship. We will just check for any relations
-        // that start with the given top relations and adds them to our arrays.
+        // that start with the given top relations and add them to our arrays.
         foreach ($this->eagerLoad as $name => $constraints) {
             if (Str::contains($name, '.') && Str::startsWith($name, $relation . '.')) {
                 $nested[substr($name, strlen($relation . '.'))] = $constraints;
@@ -370,9 +370,7 @@ class ModelBuilder implements Queryable
             $columns = ['*'];
         }
 
-        $columns = array_map(function ($column) {
-            return $this->prefixColumnWithTableAlias($column);
-        }, $columns);
+        $columns = array_map(fn ($column) => $this->prefixColumnWithTableAlias($column), $columns);
 
         $this->query->select(array_unique(array_merge($this->query->getQueryPart('select'), $columns)));
 

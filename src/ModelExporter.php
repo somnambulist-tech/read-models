@@ -22,28 +22,10 @@ use function is_array;
 final class ModelExporter implements Jsonable
 {
 
-    /**
-     * @var Model
-     */
-    private $model;
+    private Model $model;
+    private array $attributes;
+    private array $relationships;
 
-    /**
-     * @var array
-     */
-    private $attributes = [];
-
-    /**
-     * @var array
-     */
-    private $relationships = [];
-
-    /**
-     * Constructor.
-     *
-     * @param Model $model
-     * @param array $attributes
-     * @param array $relationships
-     */
     public function __construct(Model $model, array $attributes = [], array $relationships = [])
     {
         $this->model         = $model;
@@ -89,11 +71,6 @@ final class ModelExporter implements Jsonable
         return $this;
     }
 
-    /**
-     * @param int $options
-     *
-     * @return string
-     */
     public function toJson(int $options = 0): string
     {
         $json = json_encode($this->toArray(), $options);
@@ -105,11 +82,6 @@ final class ModelExporter implements Jsonable
         return $json;
     }
 
-    /**
-     * Create an array from the model data; including any specified relationships
-     *
-     * @return array
-     */
     public function toArray(): array
     {
         $array = $this->extractAttributes($this->model->getAttributes());
@@ -186,16 +158,10 @@ final class ModelExporter implements Jsonable
 
     private function getAttributeExtractionKey(string $key): string
     {
-        if (array_key_exists($key, $this->attributes)) {
-            return $this->attributes[$key];
-        }
-
-        return $key;
+        return $this->attributes[$key] ?? $key;
     }
 
     /**
-     * Extracts any object properties, or converts to a string if possible
-     *
      * @param object $object
      *
      * @return array|string
@@ -206,8 +172,6 @@ final class ModelExporter implements Jsonable
             return (string)$object;
         }
 
-        return $this->extractAttributes(Closure::bind(function () {
-            return get_object_vars($this);
-        }, $object, $object)());
+        return $this->extractAttributes(Closure::bind(fn () => get_object_vars($this), $object, $object)());
     }
 }

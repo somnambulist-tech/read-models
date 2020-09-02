@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\PHPUnit;
 
-use PHPUnit\Framework\TestListener;
-use PHPUnit\Framework\TestListenerDefaultImplementation;
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
 use Somnambulist\ReadModels\ModelIdentityMap;
@@ -28,7 +26,7 @@ use Somnambulist\ReadModels\ModelIdentityMap;
  * @package    Somnambulist\ReadModels\PHPUnit
  * @subpackage Somnambulist\ReadModels\PHPUnit\PHPUnitListener
  */
-class PHPUnitListener implements TestListener, BeforeTestHook, AfterTestHook
+class PHPUnitListener implements BeforeTestHook, AfterTestHook
 {
 
     public function executeAfterTest(string $test, float $time): void
@@ -40,6 +38,4 @@ class PHPUnitListener implements TestListener, BeforeTestHook, AfterTestHook
     {
         ModelIdentityMap::instance()->clear();
     }
-
-    use TestListenerDefaultImplementation;
 }

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
@@ -8,7 +6,6 @@ use IlluminateAgnostic\Str\Support\Str;
 use function array_intersect_key;
 use function array_key_exists;
 use function explode;
-use function func_get_args;
 use function get_class;
 
 /**
@@ -20,35 +17,11 @@ use function get_class;
 final class ModelIdentityMap
 {
 
-    /**
-     * @var self
-     */
-    private static $instance;
+    private static ModelIdentityMap $instance;
+    private array $identityMap = [];
+    private array $aliases = [];
+    private array $relationships = [];
 
-    /**
-     * Tracks instantiated objects by class and identity
-     *
-     * @var array
-     */
-    private $identityMap = [];
-
-    /**
-     * Tracks foreign key alias to model class for lookups
-     *
-     * @var array
-     */
-    private $aliases = [];
-
-    /**
-     * Tracks object to object relationships by class and identity
-     *
-     * @var array
-     */
-    private $relationships = [];
-
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
 
@@ -82,7 +55,7 @@ final class ModelIdentityMap
      * has user_source and user_target.
      *
      * @param Model  $model
-     * @param string $foreignKeyName
+     * @param string|null $foreignKeyName
      */
     public function registerAlias(Model $model, ?string $foreignKeyName = null): void
     {
