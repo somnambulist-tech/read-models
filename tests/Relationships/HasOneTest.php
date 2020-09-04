@@ -10,7 +10,9 @@ use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Relationships\HasOne;
+use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAlt;
+use Somnambulist\ReadModels\Tests\Stubs\Models\UserProfile;
 
 /**
  * Class HasOneTest
@@ -29,8 +31,6 @@ class HasOneTest extends TestCase
         $rel = $user->getRelationship('address');
 
         $this->assertInstanceOf(HasOne::class, $rel);
-
-        $this->assertFalse($rel->hasMany());
     }
 
     public function testObjectCalls()
@@ -58,5 +58,13 @@ class HasOneTest extends TestCase
         $rel = $user->getRelationship('address');
 
         $this->assertInstanceOf(AbstractRelationship::class, $rel->whereNull('town'));
+    }
+
+    public function testReturnsEmptyObjectIfSetOnRelationship()
+    {
+        $user = new User();
+
+        $this->assertInstanceOf(UserProfile::class, $user->fixed_profile);
+        $this->assertNull($user->fixed_profile->user_uuid);
     }
 }

@@ -8,7 +8,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Relationships\BelongsTo;
+use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
+use Somnambulist\ReadModels\Tests\Stubs\Models\UserProfile;
 
 /**
  * Class BelongsToTest
@@ -37,5 +39,16 @@ class BelongsToTest extends TestCase
 
         $this->assertInstanceOf(Model::class, $rel->getModel());
         $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
+    }
+
+    /**
+     * @group cur
+     */
+    public function testReturnsEmptyObjectIfSetOnRelationship()
+    {
+        $ua = new UserAddress();
+
+        $this->assertInstanceOf(User::class, $ua->fixed_user);
+        $this->assertNull($ua->fixed_user->uuid);
     }
 }

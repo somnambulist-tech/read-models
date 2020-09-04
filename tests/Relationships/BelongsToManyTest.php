@@ -28,8 +28,6 @@ class BelongsToManyTest extends TestCase
         $rel = $user->getRelationship('roles');
 
         $this->assertInstanceOf(BelongsToMany::class, $rel);
-
-        $this->assertTrue($rel->hasMany());
     }
 
     public function testObjectCalls()

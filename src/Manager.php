@@ -2,7 +2,9 @@
 
 namespace Somnambulist\ReadModels;
 
+use Doctrine\DBAL\Connection;
 use RuntimeException;
+use function get_class;
 use function sprintf;
 
 /**
@@ -47,6 +49,11 @@ final class Manager
         if (self::$instance instanceof Manager) {
             self::$instance->map()->clear();
         }
+    }
+
+    public function connect(Model $model): Connection
+    {
+        return $this->connections->for(get_class($model));
     }
 
     public function connection(): ConnectionManager

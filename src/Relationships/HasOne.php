@@ -5,6 +5,7 @@ namespace Somnambulist\ReadModels\Relationships;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
 
@@ -16,6 +17,15 @@ use function get_class;
  */
 class HasOne extends HasOneOrMany
 {
+
+    private bool $nullOnNotFound;
+
+    public function __construct(ModelBuilder $builder, Model $parent, string $foreignKey, string $localKey, bool $nullOnNotFound = true)
+    {
+        parent::__construct($builder, $parent, $foreignKey, $localKey);
+
+        $this->nullOnNotFound = $nullOnNotFound;
+    }
 
     public function addRelationshipResultsToModels(Collection $models, string $relationship): AbstractRelationship
     {
@@ -30,9 +40,9 @@ class HasOne extends HasOneOrMany
         $models->each(function (Model $parent) use ($relationship, $map) {
             $ids = $map->getRelatedIdentitiesFor($parent, $class = get_class($this->related));
 
-            $children = $map->all($class, $ids)[0] ?? null;
+            $related = $map->all($class, $ids)[0] ?? ($this->nullOnNotFound ? null : $this->related->new());
 
-            ClassHelpers::setPropertyArrayKey($parent, 'relationships', $relationship, $children, Model::class);
+            ClassHelpers::setPropertyArrayKey($parent, 'relationships', $relationship, $related, Model::class);
         });
 
         return $this;

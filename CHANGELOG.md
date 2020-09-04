@@ -5,6 +5,8 @@ Change Log
 ----------
 
  * refactor relationship loading
+ * refactor ModelBuilder to set query itself instead of being passed in
+ * removed `__get` meta from `Model` in favour of renamed `meta()` method
 
 2020-09-03
 ----------

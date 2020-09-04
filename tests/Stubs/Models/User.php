@@ -87,4 +87,17 @@ class User extends Model
 
         return $this->hasOne(UserProfile::class, 'user_uuid', 'uuid');
     }
+
+    protected function fixed_profile()
+    {
+        /*
+         * For these tests we have to fake the relationship by pre-registering user_uuid
+         * to the aliases so that the user profile can be reverse loaded successfully.
+         * If you have a more standard naming scheme, this should not be necessary i.e. if
+         * the foreign key in user_profiles was user_id instead, this would not be necessary.
+         */
+        Manager::instance()->map()->registerAlias($this, 'user_uuid');
+
+        return $this->hasOne(UserProfile::class, 'user_uuid', 'uuid', false);
+    }
 }

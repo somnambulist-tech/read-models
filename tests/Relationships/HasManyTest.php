@@ -32,8 +32,6 @@ class HasManyTest extends TestCase
         $rel = $user->getRelationship('contacts');
 
         $this->assertInstanceOf(HasOneToMany::class, $rel);
-
-        $this->assertTrue($rel->hasMany());
     }
 
     public function testObjectCalls()

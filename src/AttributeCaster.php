@@ -29,9 +29,15 @@ final class AttributeCaster
         }
     }
 
-    public function add(CasterInterface $caster): void
+    /**
+     * @param CasterInterface $caster
+     * @param array|null      $types  If provided, registers these types instead of the casters declared types
+     */
+    public function add(CasterInterface $caster, ?array $types = null): void
     {
-        foreach ($caster->types() as $type) {
+        $types = $types ?? $caster->types();
+
+        foreach ($types as $type) {
             $this->casters[$type] = $caster;
         }
     }
@@ -59,5 +65,18 @@ final class AttributeCaster
         }
 
         return $this->casters[$type];
+    }
+
+    /**
+     * Extends the bound AttributeCaster for $type to all types in $to
+     *
+     * @param string $type
+     * @param array  $to
+     *
+     * @throws AttributeCasterException
+     */
+    public function extend(string $type, array $to): void
+    {
+        $this->add($this->for($type), $to);
     }
 }

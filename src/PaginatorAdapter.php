@@ -32,7 +32,7 @@ final class PaginatorAdapter implements AdapterInterface
         $qb->resetQueryPart('orderBy');
 
         if (count($qb->getQueryPart('select')) == 0) {
-            $qb->select($query->model->meta->primaryKeyNameWithAlias());
+            $qb->select($query->model->meta()->primaryKeyNameWithAlias());
         }
         if (count($qb->getQueryPart('groupBy')) > 0) {
             $qb->select($qb->getQueryPart('groupBy'));

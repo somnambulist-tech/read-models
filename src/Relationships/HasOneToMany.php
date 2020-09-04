@@ -19,7 +19,6 @@ class HasOneToMany extends HasOneOrMany
 {
 
     protected ?string $indexBy;
-    protected bool $hasMany = true;
 
     public function __construct(ModelBuilder $builder, Model $parent, string $foreignKey, string $localKey, ?string $indexBy = null)
     {

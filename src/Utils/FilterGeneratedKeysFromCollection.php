@@ -4,7 +4,7 @@ namespace Somnambulist\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 
 /**
  * Class FilterGeneratedAttributesAndKeysFromCollection
@@ -28,10 +28,12 @@ final class FilterGeneratedKeysFromCollection
             Collection::collect($attributes)
                 ->filter(function ($value, $key) {
                     $ignorable =
-                        Str::contains($key, [Model::INTERNAL_KEY_PREFIX])
+                        Str::contains($key, [AbstractRelationship::INTERNAL_KEY_PREFIX])
                         ||
                         (
-                            is_string($value) && Str::contains($value, [Model::RELATIONSHIP_SOURCE_MODEL_REF, Model::RELATIONSHIP_TARGET_MODEL_REF])
+                            is_string($value) && Str::contains($value, [
+                                AbstractRelationship::RELATIONSHIP_SOURCE_MODEL_REF, AbstractRelationship::RELATIONSHIP_TARGET_MODEL_REF
+                            ])
                         )
                     ;
 

@@ -8,6 +8,7 @@ use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
+use function is_null;
 
 /**
  * Class BelongsTo
@@ -20,11 +21,13 @@ class BelongsTo extends AbstractRelationship
 
     protected string $foreignKey;
     protected string $ownerKey;
+    protected bool $nullOnNotFound;
 
-    public function __construct(ModelBuilder $query, Model $child, string $foreignKey, string $ownerKey)
+    public function __construct(ModelBuilder $query, Model $child, string $foreignKey, string $ownerKey, bool $nullOnNotFound = true)
     {
-        $this->foreignKey = $foreignKey;
-        $this->ownerKey   = $ownerKey;
+        $this->foreignKey     = $foreignKey;
+        $this->ownerKey       = $ownerKey;
+        $this->nullOnNotFound = $nullOnNotFound;
 
         parent::__construct($query, $child);
     }
@@ -47,12 +50,15 @@ class BelongsTo extends AbstractRelationship
         $this->fetch();
 
         $models->each(function (Model $child) use ($relationship) {
-            $map    = Manager::instance()->map();
-            $parent = null;
+            $map = Manager::instance()->map();
 
             // it is entirely possible that there is no inverse relationship if it's between non-foreign key fields
             if (null !== $parent = $map->get($parentClass = get_class($this->related), $child->getRawAttribute($this->foreignKey))) {
                 $map->registerRelationship($parentClass, $parent->getPrimaryKey(), get_class($child), $child->getPrimaryKey());
+            }
+
+            if (false === $this->nullOnNotFound && is_null($parent)) {
+                $parent = $this->related->new();
             }
 
             ClassHelpers::setPropertyArrayKey($child, 'relationships', $relationship, $parent, Model::class);

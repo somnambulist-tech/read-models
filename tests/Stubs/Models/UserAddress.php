@@ -41,4 +41,9 @@ class UserAddress extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected function fixed_user()
+    {
+        return $this->belongsTo(User::class, null, null, null, false);
+    }
 }

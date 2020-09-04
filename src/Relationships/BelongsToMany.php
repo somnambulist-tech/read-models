@@ -25,7 +25,6 @@ class BelongsToMany extends AbstractRelationship
     private string $joinTableTargetKey;
     private string $sourceKey;
     private string $targetKey;
-    protected bool $hasMany = true;
 
     public function __construct(ModelBuilder $query, Model $parent, string $joinTable, string $joinTableSourceKey, string $joinTableTargetKey, string $sourceKey, string $targetKey)
     {
@@ -38,20 +37,16 @@ class BelongsToMany extends AbstractRelationship
         parent::__construct($query, $parent);
     }
 
-    protected function appendJoinCondition(): ModelBuilder
-    {
-        $condition = $this->expression()->eq($this->getQualifiedTargetKeyName(), $this->related->meta->primaryKeyNameWithAlias());
-
-        $this->query->innerJoin($this->related->meta->tableAlias(), $this->joinTable, '', $condition);
-
-        return $this->query;
-    }
-
     public function addConstraints(Collection $models): AbstractRelationship
     {
         $this
-            ->appendJoinCondition()
             ->select(sprintf('%s AS %s', $this->getQualifiedSourceKeyName(), $this->getRelationshipSourceModelReferenceKeyName()))
+            ->innerJoin(
+                $this->related->meta()->tableAlias(),
+                $this->joinTable,
+                '',
+                sprintf('%s = %s', $this->getQualifiedTargetKeyName(), $this->related->meta()->primaryKeyNameWithAlias())
+            )
             ->whereIn(
                 $this->getQualifiedSourceKeyName(), $models->extract($this->sourceKey)->unique()->toArray()
             )
@@ -81,7 +76,7 @@ class BelongsToMany extends AbstractRelationship
 
     protected function getRelationshipSourceModelReferenceKeyName(): string
     {
-        return sprintf('%s__%s__%s', Model::RELATIONSHIP_SOURCE_MODEL_REF, str_replace('.', '_', $this->joinTable), $this->joinTableSourceKey);
+        return sprintf('%s__%s__%s', self::RELATIONSHIP_SOURCE_MODEL_REF, str_replace('.', '_', $this->joinTable), $this->joinTableSourceKey);
     }
 
     protected function getQualifiedSourceKeyName(): string

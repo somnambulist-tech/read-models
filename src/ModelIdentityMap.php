@@ -49,7 +49,7 @@ final class ModelIdentityMap
      */
     public function registerAlias(Model $model, ?string $foreignKeyName = null): void
     {
-        $key = $foreignKeyName ?? $model->meta->foreignKey();
+        $key = $foreignKeyName ?? $model->meta()->foreignKey();
 
         if (!$this->hasAlias($key)) {
             $this->aliases[$key] = get_class($model);
@@ -99,10 +99,10 @@ final class ModelIdentityMap
         foreach ($attributes as $key => $value) {
             $ref = null;
 
-            if (Str::startsWith($key, Model::RELATIONSHIP_SOURCE_MODEL_REF)) {
+            if (Str::startsWith($key, Relationships\AbstractRelationship::RELATIONSHIP_SOURCE_MODEL_REF)) {
                 $ref = array_values(array_slice(explode('__', $key), -1))[0];
                 unset($attributes[$key]);
-            } elseif ($model->meta->foreignKey() === $key || $model->getOwningKey() === $key) {
+            } elseif ($model->meta()->foreignKey() === $key || $model->getOwningKey() === $key) {
                 $ref = $key;
             }
 
@@ -110,7 +110,7 @@ final class ModelIdentityMap
                 $source = $this->aliases[$ref];
                 $target = get_class($model);
 
-                $this->registerRelationship($source, $value, $target, $attributes[$model->meta->primaryKeyName()]);
+                $this->registerRelationship($source, $value, $target, $attributes[$model->meta()->primaryKeyName()]);
             }
         }
     }

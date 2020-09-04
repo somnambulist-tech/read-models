@@ -57,16 +57,16 @@ class ModelBuilder implements Queryable
     private QueryBuilder $query;
     private array $eagerLoad = [];
 
-    public function __construct(Model $model, QueryBuilder $query)
+    public function __construct(Model $model)
     {
         $this->model = $model;
-        $this->meta  = $model->metadata();
-        $this->query = $query->from($this->meta->table(), $this->meta->tableAlias());
+        $this->meta  = $model->meta();
+        $this->query = Manager::instance()->connect($model)->createQueryBuilder()->from($this->meta->table(), $this->meta->tableAlias());
     }
 
     public function newQuery(): self
     {
-        return new static($this->model, $this->query->getConnection()->createQueryBuilder());
+        return new static($this->model);
     }
 
     /**
