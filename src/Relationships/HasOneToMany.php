@@ -43,7 +43,7 @@ class HasOneToMany extends HasOneOrMany
         return $entities;
     }
 
-    public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
+    public function addRelationshipResultsToModels(Collection $models, string $relationship): AbstractRelationship
     {
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->foreignKey)) {
             $this->query->select($this->foreignKey);

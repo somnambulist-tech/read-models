@@ -72,7 +72,7 @@ class User extends Model
 
     protected function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class, 'user_roles');
     }
 
     protected function profile()

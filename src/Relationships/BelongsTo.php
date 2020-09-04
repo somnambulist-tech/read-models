@@ -29,19 +29,8 @@ class BelongsTo extends AbstractRelationship
         parent::__construct($query, $child);
     }
 
-    public function addConstraints(): AbstractRelationship
+    public function addConstraints(Collection $models): AbstractRelationship
     {
-        $this->hasConstraints = true;
-
-        $this->query->whereColumn($this->ownerKey, '=', $this->parent->getRawAttribute($this->foreignKey));
-
-        return $this;
-    }
-
-    public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
-    {
-        $this->hasConstraints = true;
-
         $this->query = $this->query->whereIn(
             $this->ownerKey, $models->map->getRawAttribute($this->foreignKey)->removeNulls()->unique()->toArray()
         );
@@ -49,7 +38,7 @@ class BelongsTo extends AbstractRelationship
         return $this;
     }
 
-    public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
+    public function addRelationshipResultsToModels(Collection $models, string $relationship): AbstractRelationship
     {
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->ownerKey)) {
             $this->query->select($this->ownerKey);

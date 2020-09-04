@@ -77,11 +77,6 @@ abstract class AbstractRelationship implements Queryable
      */
     protected bool $hasMany = false;
 
-    /**
-     * True if the relationship constraints have been applied
-     */
-    protected bool $hasConstraints = false;
-
     public function __construct(ModelBuilder $builder, Model $parent)
     {
         $this->parent  = $parent;
@@ -90,39 +85,17 @@ abstract class AbstractRelationship implements Queryable
     }
 
     /**
-     * Apply the base single model constraints to the main query
-     */
-    abstract public function addConstraints(): self;
-
-    /**
-     * Add the constraints required for eager loading a set of results
-     *
-     * This should initiate a new query to avoid the initialiseRelationship query.
+     * Add the constraints required for loading a set of results
      *
      * @param Collection $models
      *
      * @return AbstractRelationship
      * @internal
      */
-    abstract public function addEagerLoadingConstraints(Collection $models): self;
+    abstract public function addConstraints(Collection $models): self;
 
     /**
-     * Adds additional models to eager load to the fetch
-     *
-     * @param string ...$relationships
-     *
-     * @return AbstractRelationship
-     * @internal
-     */
-    public function addEagerLoadingRelationships(...$relationships): self
-    {
-        $this->with(...$relationships);
-
-        return $this;
-    }
-
-    /**
-     * Executes and maps the eager loaded data to the collection of Models
+     * Executes and maps the loaded data to the collection of Models
      *
      * The related models will be inserted in the models relationships array at the key
      * specified by $relationship.
@@ -133,7 +106,7 @@ abstract class AbstractRelationship implements Queryable
      * @return AbstractRelationship
      * @internal
      */
-    abstract public function addEagerLoadingResults(Collection $models, string $relationship): self;
+    abstract public function addRelationshipResultsToModels(Collection $models, string $relationship): self;
 
     /**
      * Allows a callable to modify the current query before the results are fetched
@@ -161,10 +134,6 @@ abstract class AbstractRelationship implements Queryable
 
     public function fetch(): Collection
     {
-        if (!$this->hasConstraints) {
-            $this->addConstraints();
-        }
-
         return $this->query->fetch();
     }
 

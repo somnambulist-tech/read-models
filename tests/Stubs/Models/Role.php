@@ -30,12 +30,12 @@ class Role extends Model
 
     protected function permissions()
     {
-        return $this->belongsToMany(Permission::class);
+        return $this->belongsToMany(Permission::class, 'role_permissions');
     }
 
     public function permissions2(): BelongsToMany
     {
-        $rel = $this->belongsToMany(Permission::class);
+        $rel = $this->belongsToMany(Permission::class, 'role_permissions');
         $rel->orderBy('id', 'DESC');
 
         return $rel;

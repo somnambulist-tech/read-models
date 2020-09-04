@@ -47,22 +47,8 @@ class BelongsToMany extends AbstractRelationship
         return $this->query;
     }
 
-    public function addConstraints(): AbstractRelationship
+    public function addConstraints(Collection $models): AbstractRelationship
     {
-        $this->hasConstraints = true;
-
-        $this
-            ->appendJoinCondition()
-            ->whereColumn($this->getQualifiedSourceKeyName(), '=', $this->parent->getRawAttribute($this->sourceKey))
-        ;
-
-        return $this;
-    }
-
-    public function addEagerLoadingConstraints(Collection $models): AbstractRelationship
-    {
-        $this->hasConstraints = true;
-
         $this
             ->appendJoinCondition()
             ->select(sprintf('%s AS %s', $this->getQualifiedSourceKeyName(), $this->getRelationshipSourceModelReferenceKeyName()))
@@ -74,7 +60,7 @@ class BelongsToMany extends AbstractRelationship
         return $this;
     }
 
-    public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
+    public function addRelationshipResultsToModels(Collection $models, string $relationship): AbstractRelationship
     {
         $this->fetch();
 

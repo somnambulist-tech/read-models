@@ -1,6 +1,24 @@
 Change Log
 ==========
 
+2020-09-04
+----------
+
+ * refactor relationship loading
+
+2020-09-03
+----------
+
+ * update to PHP 7.4 and use 7.4 syntax
+ * refactor `Model` to extract attribute handling
+ * refactor `Configurator` to a `Manager` that can be dependency injected via a container
+ * refactor `Model::connections` to use a `ConnectionManager`
+ * refactor usage of identity map to simplify `Model`
+ * refactor casting / embeds to use only casters
+ * remove static methods / properties for the configuration from `Model`
+ * update all unit tests
+ * require `table` be defined on `Model`
+
 2020-06-28 - 1.4.0
 ------------------
 

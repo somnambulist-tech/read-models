@@ -407,7 +407,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * @throws LogicException
      */
-    private function getRelationshipFromMethod($method)
+    private function getRelationshipFromMethod(string $method)
     {
         $relation = $this->$method();
 
@@ -423,11 +423,12 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
             ));
         }
 
-        $results = $relation->addConstraints()->fetchValueForRelationship();
+        $relation
+            ->addConstraints($m = new Collection([$this]))
+            ->addRelationshipResultsToModels($m, $method)
+        ;
 
-        $this->setRelationshipResults($method, $results);
-
-        return $results;
+        return $this->relationships[$method];
     }
 
     /**
@@ -437,20 +438,9 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * @return bool
      */
-    private function isRelationshipLoaded($key): bool
+    private function isRelationshipLoaded(string $key): bool
     {
         return array_key_exists($key, $this->relationships);
-    }
-
-    /**
-     * Set the given relationship on the model.
-     *
-     * @param string $relation
-     * @param mixed  $value
-     */
-    private function setRelationshipResults($relation, $value): void
-    {
-        $this->relationships[$relation] = $value;
     }
 
     /**
@@ -493,12 +483,10 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      * columns. The relationship would be defined as a User has Roles so the source is
      * user_id and the target is role_id.
      *
-     * If the table is not given, it will be guessed using the source table singularized
-     * and the target pluralized, separated by an underscore e.g.: users and roles
-     * would create: user_roles
+     * The table name must be provided and will not be guessed.
      *
      * @param string      $class
-     * @param string|null $table
+     * @param string      $table
      * @param string|null $tableSourceKey
      * @param string|null $tableTargetKey
      * @param string|null $sourceKey      The source models primary key name
@@ -506,14 +494,13 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * @return BelongsToMany
      */
-    protected function belongsToMany(string $class, ?string $table = null,
+    protected function belongsToMany(string $class, string $table,
         ?string $tableSourceKey = null, ?string $tableTargetKey = null,
         ?string $sourceKey = null, ?string $targetKey = null
     ): BelongsToMany
     {
         /** @var Model $instance */
         $instance       = new $class();
-        $table          = $table ?: sprintf('%s_%s', Inflector::singularize($this->meta->table()), $instance->meta->table());
         $tableSourceKey = $tableSourceKey ?: $this->meta->foreignKey();
         $tableTargetKey = $tableTargetKey ?: $instance->meta->foreignKey();
         $sourceKey      = $sourceKey ?: $this->meta->primaryKeyName();
