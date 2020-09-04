@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
-
 use Somnambulist\Domain\Entities\Types\Identity\EmailAddress;
 use Somnambulist\Domain\Entities\Types\PhoneNumber;
 
@@ -17,20 +16,11 @@ use Somnambulist\Domain\Entities\Types\PhoneNumber;
 class Contact
 {
 
-    private $name;
+    private string $name;
+    private ?PhoneNumber $phone;
+    private ?EmailAddress $email;
 
-    private $phone;
-
-    private $email;
-
-    /**
-     * Constructor.
-     *
-     * @param $name
-     * @param $phone
-     * @param $email
-     */
-    public function __construct($name, ?PhoneNumber $phone, ?EmailAddress $email)
+    public function __construct(string $name, ?PhoneNumber $phone, ?EmailAddress $email)
     {
         $this->name  = $name;
         $this->phone = $phone;
@@ -42,25 +32,16 @@ class Contact
         return $this->{$name} ?? null;
     }
 
-    /**
-     * @return mixed
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * @return PhoneNumber|null
-     */
     public function phone(): ?PhoneNumber
     {
         return $this->phone;
     }
 
-    /**
-     * @return EmailAddress|null
-     */
     public function email(): ?EmailAddress
     {
         return $this->email;

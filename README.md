@@ -90,7 +90,7 @@ requests.
 
 ```yaml
 services:
-    Somnambulist\ReadModels\EventSubscriber\IdentityMapClearerSubscriber:
+    Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerSubscriber:
         public: false
 ```
 

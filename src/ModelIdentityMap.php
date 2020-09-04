@@ -17,7 +17,6 @@ use function get_class;
 final class ModelIdentityMap
 {
 
-    private static ModelIdentityMap $instance;
     private array $identityMap = [];
     private array $aliases = [];
     private array $relationships = [];
@@ -25,15 +24,6 @@ final class ModelIdentityMap
     public function __construct()
     {
 
-    }
-
-    public static function instance(): self
-    {
-        if (!static::$instance instanceof self) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
     }
 
     public function hasAlias(string $alias): bool

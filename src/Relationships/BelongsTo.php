@@ -1,15 +1,13 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
-use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelIdentityMap;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
+use function get_class;
 
 /**
  * Class BelongsTo
@@ -20,28 +18,9 @@ use Somnambulist\ReadModels\Utils\ClassHelpers;
 class BelongsTo extends AbstractRelationship
 {
 
-    /**
-     * The foreign key of the parent model
-     *
-     * @var string
-     */
-    protected $foreignKey;
+    protected string $foreignKey;
+    protected string $ownerKey;
 
-    /**
-     * The associated key on the parent model
-     *
-     * @var string
-     */
-    protected $ownerKey;
-
-    /**
-     * Constructor.
-     *
-     * @param ModelBuilder $query
-     * @param Model        $child
-     * @param string       $foreignKey
-     * @param string       $ownerKey
-     */
     public function __construct(ModelBuilder $query, Model $child, string $foreignKey, string $ownerKey)
     {
         $this->foreignKey = $foreignKey;
@@ -79,7 +58,7 @@ class BelongsTo extends AbstractRelationship
         $this->fetch();
 
         $models->each(function (Model $child) use ($relationship) {
-            $map    = ModelIdentityMap::instance();
+            $map    = Manager::instance()->map();
             $parent = null;
 
             // it is entirely possible that there is no inverse relationship if it's between non-foreign key fields
@@ -92,5 +71,4 @@ class BelongsTo extends AbstractRelationship
 
         return $this;
     }
-
 }

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Exceptions;
 
@@ -16,12 +14,6 @@ use Somnambulist\ReadModels\Model;
 class JsonEncodingException extends RuntimeException
 {
 
-    /**
-     * @param Model  $model
-     * @param string $error
-     *
-     * @return JsonEncodingException
-     */
     public static function failedToConvertModel(Model $model, string $error): JsonEncodingException
     {
         return new self(

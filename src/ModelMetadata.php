@@ -1,14 +1,11 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
-use Doctrine\Common\Inflector\Inflector;
-use function explode;
 use IlluminateAgnostic\Str\Support\Arr;
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
+use function explode;
 use function sprintf;
 use function stripos;
 
@@ -21,50 +18,17 @@ use function stripos;
 final class ModelMetadata
 {
 
-    /**
-     * @var Model
-     */
-    private $model;
+    private Model $model;
+    private string $table;
+    private string $primaryKey;
+    private ?string $tableAlias;
+    private ?string $externalKey;
+    private ?string $foreignKey;
 
-    /**
-     * @var string
-     */
-    private $table;
-
-    /**
-     * @var string|null
-     */
-    private $tableAlias;
-
-    /**
-     * @var string
-     */
-    private $primaryKey = 'id';
-
-    /**
-     * @var string|null
-     */
-    private $externalKey = null;
-
-    /**
-     * @var string|null
-     */
-    private $foreignKey = null;
-
-    /**
-     * Constructor.
-     *
-     * @param Model       $model
-     * @param string      $primaryKey
-     * @param string|null $table
-     * @param string|null $alias
-     * @param string|null $externalKey
-     * @param string|null $foreignKey
-     */
     public function __construct(
         Model $model,
+        string $table,
         string $primaryKey = 'id',
-        ?string $table = null,
         ?string $alias = null,
         ?string $externalKey = null,
         ?string $foreignKey = null
@@ -94,7 +58,7 @@ final class ModelMetadata
 
     public function table(): string
     {
-        return $this->table ?? Inflector::tableize(Inflector::pluralize(ClassHelpers::getObjectShortClassName($this->model)));
+        return $this->table;
     }
 
     public function tableAlias(): string
@@ -128,7 +92,6 @@ final class ModelMetadata
     public function foreignKey(): string
     {
         return $this->foreignKey ??
-           sprintf('%s_%s', Str::snake(ClassHelpers::getObjectShortClassName($this->model), '_'), $this->primaryKeyName())
-        ;
+               sprintf('%s_%s', Str::snake(ClassHelpers::getObjectShortClassName($this->model), '_'), $this->primaryKeyName());
     }
 }

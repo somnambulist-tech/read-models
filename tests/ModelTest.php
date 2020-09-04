@@ -58,6 +58,7 @@ class ModelTest extends TestCase
             'uuid' => '97c0c307-aac2-4486-ab22-45b5fed386c3',
             'email' => 'bob@example.com',
             'name' => 'bob',
+            'is_active' => true,
             'password' => password_hash('password', PASSWORD_DEFAULT),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
@@ -80,6 +81,7 @@ class ModelTest extends TestCase
             'uuid' => '97c0c307-aac2-4486-ab22-45b5fed386c3',
             'email' => 'bob@example.com',
             'name' => 'bob',
+            'is_active' => true,
         ]);
 
         $this->assertTrue(isset($user->name));
@@ -99,6 +101,7 @@ class ModelTest extends TestCase
             'uuid' => '97c0c307-aac2-4486-ab22-45b5fed386c3',
             'email' => 'bob@example.com',
             'name' => 'bob',
+            'is_active' => true,
             'password' => password_hash('password', PASSWORD_DEFAULT),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
@@ -119,6 +122,7 @@ class ModelTest extends TestCase
             'uuid' => '97c0c307-aac2-4486-ab22-45b5fed386c3',
             'email' => 'bob@example.com',
             'name' => 'bob',
+            'is_active' => true,
             'password' => password_hash('password', PASSWORD_DEFAULT),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),

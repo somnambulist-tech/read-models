@@ -1,37 +1,25 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
-use BadMethodCallException;
 use Doctrine\Common\Inflector\Inflector;
-use Doctrine\DBAL\Connection;
-use DomainException;
 use IlluminateAgnostic\Str\Support\Str;
-use InvalidArgumentException;
 use JsonSerializable;
 use LogicException;
 use Somnambulist\Collection\Contracts\Arrayable;
 use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Contracts\AttributeCaster;
-use Somnambulist\ReadModels\Contracts\EmbeddableFactory;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
-use Somnambulist\ReadModels\Hydrators\DoctrineTypeCaster;
-use Somnambulist\ReadModels\Hydrators\SimpleObjectFactory;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Relationships\BelongsTo;
 use Somnambulist\ReadModels\Relationships\BelongsToMany;
 use Somnambulist\ReadModels\Relationships\HasOne;
 use Somnambulist\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
+use Somnambulist\ReadModels\Utils\FilterGeneratedKeysFromCollection;
 use function array_key_exists;
-use function count;
-use function get_class_methods;
 use function is_null;
 use function method_exists;
-use function preg_match;
 use function sprintf;
 
 /**
@@ -42,7 +30,7 @@ use function sprintf;
  *
  * @property-read ModelMetadata $meta
  */
-abstract class Model implements Arrayable, Jsonable, JsonSerializable
+abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonSerializable
 {
 
     /**
@@ -66,41 +54,17 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public const RELATIONSHIP_TARGET_MODEL_REF = self::INTERNAL_KEY_PREFIX . '_tar_ref';
 
-
-
-    /**
-     * The pool of connections, one per model class + a default
-     *
-     * @var array|Connection[]
-     * @internal
-     */
-    private static $connections = [];
-
-    /**
-     * @var AttributeCaster
-     */
-    private static $attributeCaster;
-
-    /**
-     * @var EmbeddableFactory
-     */
-    private static $embeddableFactory;
-
     /**
      * The table associated with the model, will be guessed if not set
      *
      * Override to set a specific table if it does not match the class name.
-     *
-     * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * A default table alias to automatically scope table/columns
-     *
-     * @var string|null
      */
-    protected $tableAlias;
+    protected ?string $tableAlias = null;
 
     /**
      * The primary key for the model
@@ -111,10 +75,8 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      * want the UUID as the external value. To support the database mappings though
      * this needs to be set to the _internal_ identifier. This way related models can
      * be set using the integer keys.
-     *
-     * @var string
      */
-    protected $primaryKey = 'id';
+    protected string $primaryKey = 'id';
 
     /**
      * The primary key used for external references
@@ -134,10 +96,8 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      *
      * Typically this would be used on a BelongsTo relationship. See the example in the
      * tests of a User having a profile that is linked by UUID.
-     *
-     * @var string|null
      */
-    protected $externalPrimaryKey = null;
+    protected ?string $externalPrimaryKey = null;
 
     /**
      * How the primary key appears as a foreign key
@@ -150,27 +110,20 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      *
      * Note: this applies to 1:m and 1:1 and 1:m reversed relationships. m:m uses the
      * keys defined on the relationship to build the relationship keys.
-     *
-     * @var string|null
      */
-    protected $foreignKey = null;
+    protected ?string $foreignKey = null;
 
     /**
      * The relationships to eager load on every query
-     *
-     * @var array
      */
-    protected $with = [];
+    protected array $with = [];
 
     /**
-     * The loaded database properties
+     * Convert to a PHP type based on the registered types
      *
-     * @var array
-     */
-    protected $attributes = [];
-
-    /**
-     * Convert to a PHP type based on the registered Doctrine Types
+     * Additional types include complex object casters can be registered in the {@see AttributeCaster}.
+     * For complex objects, the caster may remove attributes if they should not be left available from
+     * the attribute array.
      *
      * <code>
      * [
@@ -180,48 +133,8 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      *     'updated_at' => 'datetime',
      * ]
      * </code>
-     *
-     * @var array
      */
-    protected $casts = [];
-
-    /**
-     * Convert sets of attributes into embedded value-objects
-     *
-     * The object will be assigned to the attribute key given. Parameters must
-     * be set in the constructor order. The attributes used to make the embed
-     * can be removed by providing `true` after the argument array:
-     *
-     * <code>
-     * [
-     *     'address' => [
-     *         App\Models\Address::class, ['address_line_1', 'address_line_2', 'town'], true
-     *     ]
-     * ]
-     * </code>
-     *
-     * Embeddables can be nested:
-     *
-     * <code>
-     * [
-     *     'address' => [
-     *         App\Models\Address::class, [
-     *             'address_line_1', 'address_line_2', 'town',
-     *             ['App\Models\Country::create', ['country',], true
-     *         ], true
-     *     ]
-     * ]
-     * </code>
-     *
-     * If an element is optional, prefix it with a ? - note that this will only work if the
-     * value is `null`. `false`, 0 and empty string are not considered to be optional. For
-     * example: parts of the address might be optional but an address should still be created.
-     * The arguments must be defined in the order of the object constructor or static factory
-     * method.
-     *
-     * @var array
-     */
-    protected $embeds = [];
+    protected array $casts = [];
 
     /**
      * Set what can be exported, or not by attribute and relationship name
@@ -241,79 +154,39 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      *
      * These can be overridden before calling toArray/toJson on the exporter but will
      * be used when calling jsonSerialize().
-     *
-     * @var array
      */
-    protected $exports = [
+    protected array $exports = [
         'attributes'    => [],
         'relationships' => [],
     ];
 
     /**
-     * The various loaded relationships this model has
-     *
-     * @var array
      * @internal
      */
-    private $relationships = [];
+    private array $relationships = [];
 
     /**
-     * @var ModelExporter
      * @internal
      */
-    private $exporter;
+    private ?ModelExporter $exporter = null;
 
     /**
-     * @var ModelMetadata
      * @internal
      */
-    private $metadata;
+    private ?ModelMetadata $metadata = null;
 
     /**
      * The field name that flags the owner record; used by identity map
      *
-     * @var string
      * @internal
      */
-    private $owningKey;
+    private ?string $owningKey = null;
 
-    /**
-     * Constructor.
-     *
-     * @param array $attributes
-     */
     public function __construct(array $attributes = [])
     {
-        ModelIdentityMap::instance()->registerAlias($this);
-
-        $this->mapAttributes($attributes);
+        parent::__construct(Manager::instance()->caster()->cast($attributes, $this->casts));
     }
 
-    /**
-     * @param string $method
-     * @param array  $parameters
-     *
-     * @return Model
-     */
-    public function __call($method, $parameters)
-    {
-        $mutator   = $this->getAttributeMutator($method);
-        $attribute = Str::snake($method);
-
-        if (array_key_exists($attribute, $this->attributes) || method_exists($this, $mutator)) {
-            return $this->getAttribute($attribute);
-        }
-
-        throw new BadMethodCallException(sprintf('Method "%s" not found on "%s"', $method, static::class));
-    }
-
-    /**
-     * Allows accessing the attributes and relationships as properties
-     *
-     * @param string $name
-     *
-     * @return mixed|AbstractRelationship|null
-     */
     public function __get($name)
     {
         if ('meta' == $name) {
@@ -323,105 +196,9 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         return $this->getAttribute($name);
     }
 
-    public function __set($name, $value)
-    {
-        throw new DomainException(sprintf('Models are read-only and cannot be changed once loaded'));
-    }
-
-    public function __unset($name)
-    {
-        throw new DomainException(sprintf('Models are read-only and cannot be changed once loaded'));
-    }
-
-    public function __isset($name)
-    {
-        return !is_null($this->getAttribute($name));
-    }
-
     public function __toString()
     {
         return $this->export()->toJson();
-    }
-
-    /**
-     * Set the DBAL Connection to use by default or for a specific model
-     *
-     * The model class name should be used and then that connection will be used with all
-     * instances of that model. A default connection should still be provided as a fallback.
-     *
-     * @param Connection $connection
-     * @param string     $model
-     */
-    public static function bindConnection(Connection $connection, string $model = 'default'): void
-    {
-        self::$connections[$model] = $connection;
-    }
-
-    /**
-     * Get a specified or the default connection
-     *
-     * @param string $model
-     *
-     * @return Connection
-     * @throws InvalidArgumentException if connection has not been setup
-     */
-    public static function connection(string $model = null): Connection
-    {
-        $try = $model ?? 'default';
-
-        if ('default' !== $model && !array_key_exists($try, self::$connections)) {
-            $try = 'default';
-        }
-
-        if (null === $connection = (self::$connections[$try] ?? null)) {
-            throw new InvalidArgumentException(
-                sprintf('A connection for "%s" or "%s" has not been defined', $model, $try)
-            );
-        }
-
-        return $connection;
-    }
-
-    /**
-     * Change the primary attribute hydrator to another implementation
-     *
-     * Affects all models; should not be changed once objects have been loaded.
-     *
-     * @param AttributeCaster $hydrator
-     */
-    public static function bindAttributeCaster(AttributeCaster $hydrator): void
-    {
-        self::$attributeCaster = $hydrator;
-    }
-
-    /**
-     * Change the embeddable objects hydrator to another implementation
-     *
-     * Affects all models; should not be changed once objects have been loaded.
-     *
-     * @param EmbeddableFactory $hydrator
-     */
-    public static function bindEmbeddableFactory(EmbeddableFactory $hydrator): void
-    {
-        self::$embeddableFactory = $hydrator;
-    }
-
-    private function getAttributeCaster(): AttributeCaster
-    {
-        if (self::$attributeCaster instanceof AttributeCaster) {
-            return self::$attributeCaster;
-        }
-
-        return self::$attributeCaster = new DoctrineTypeCaster();
-    }
-
-    private function getEmbeddableFactory(): EmbeddableFactory
-    {
-        if (self::$embeddableFactory instanceof EmbeddableFactory) {
-            return self::$embeddableFactory;
-        }
-
-        return self::$embeddableFactory = new SimpleObjectFactory();
     }
 
     /**
@@ -469,84 +246,24 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         return (new static)->newQuery();
     }
 
-    /**
-     * Hydrates the model and maps the results to the object
-     *
-     * Uses the configured hydrators to convert the attributes to types. The hydrators
-     * can be swapped for alternative implementations. The default will use Doctrine
-     * Types and convert embeddable's to objects.
-     *
-     * @param array $attributes
-     */
-    private function mapAttributes(array $attributes): void
-    {
-        $this->attributes = $this->getAttributeCaster()->cast($this, $attributes, $this->casts);
-
-        if (count($this->attributes) > 0 && count($this->embeds) > 0) {
-            $factory = $this->getEmbeddableFactory();
-
-            foreach ($this->embeds as $key => $options) {
-                $this->attributes[$key] = $factory->make($this->attributes, $options[0], $options[1], $options[2] ?? false);
-            }
-        }
-    }
-
     public function newQuery(): ModelBuilder
     {
-        return (new ModelBuilder($this, static::connection(static::class)->createQueryBuilder()))->with($this->with);
+        $builder = new ModelBuilder($this, Manager::instance()->connection()->for(static::class)->createQueryBuilder());
+        $builder->with($this->with);
+
+        return $builder;
     }
 
     public function new(array $attributes = []): Model
     {
-        if (!empty($attributes)) {
-            $map = ModelIdentityMap::instance();
-            $map->inferRelationshipFromAttributes($this, $attributes);
-
-            if (null === $model = $map->get(static::class, $attributes[$this->meta->primaryKeyName()])) {
-                $model = new static($attributes);
-
-                $map->add($model);
-            }
-
-            return $model;
-        }
-
-        return new static();
+        return new static($attributes);
     }
 
-    /**
-     * Returns all attributes including virtual, excluding the internally allocated attributes
-     *
-     * @return array
-     */
     public function getAttributes(): array
     {
-        $attributes = $this->attributes;
-        $ignore     = get_class_methods(self::class);
-
-        foreach (get_class_methods($this) as $method) {
-            $matches = [];
-
-            if (!in_array($method, $ignore) && preg_match('/^get(?<property>[\w\d]+)Attribute/', $method, $matches)) {
-                $prop = Str::snake($matches['property']);
-
-                $attributes[$prop] = $this->{$method}($this->attributes[$prop] ?? null);
-            }
-        }
+        $attributes = parent::getAttributes();
 
         return (new FilterGeneratedKeysFromCollection())($attributes);
-    }
-
-    /**
-     * Returns the raw attribute without passing through mutators or relationships
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function getRawAttribute(string $name)
-    {
-        return $this->attributes[$name] ?? null;
     }
 
     /**
@@ -565,34 +282,11 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
      */
     public function getAttribute(string $name)
     {
-        $mutator = $this->getAttributeMutator($name);
-
-        // real attributes first
-        if (array_key_exists($name, $this->attributes)) {
-            if (method_exists($this, $mutator)) {
-                return $this->{$mutator}($this->attributes[$name]);
-            }
-
-            return $this->attributes[$name];
+        if (null !== $attr = parent::getAttribute($name)) {
+            return $attr;
         }
 
-        // virtual attributes accessed via the mutator
-        if (method_exists($this, $mutator)) {
-            return $this->{$mutator}();
-        }
-
-        // ignore anything on the base Model class
-        if (method_exists(self::class, $name)) {
-            return null;
-        }
-
-        // fall into the relationship
         return $this->getRelationshipValue($name);
-    }
-
-    private function getAttributeMutator(string $name)
-    {
-        return sprintf('get%sAttribute', Str::studly($name));
     }
 
     public function getPrimaryKey()
@@ -614,9 +308,7 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
     {
         if (!$this->metadata instanceof ModelMetadata) {
             $this->metadata = new ModelMetadata(
-                $this, $this->primaryKey,
-                $this->table, $this->tableAlias,
-                $this->externalPrimaryKey, $this->foreignKey
+                $this, $this->table, $this->primaryKey, $this->tableAlias, $this->externalPrimaryKey, $this->foreignKey
             );
         }
 
@@ -827,8 +519,8 @@ abstract class Model implements Arrayable, Jsonable, JsonSerializable
         $sourceKey      = $sourceKey ?: $this->meta->primaryKeyName();
         $targetKey      = $targetKey ?: $instance->meta->primaryKeyName();
 
-        ModelIdentityMap::instance()->registerAlias($this, $tableSourceKey);
-        ModelIdentityMap::instance()->registerAlias($instance, $tableTargetKey);
+        Manager::instance()->map()->registerAlias($this, $tableSourceKey);
+        Manager::instance()->map()->registerAlias($instance, $tableTargetKey);
 
         return new BelongsToMany(
             $instance->newQuery(), $this, $table, $tableSourceKey, $tableTargetKey, $sourceKey, $targetKey

@@ -1,11 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\ReadModels\Model;
 
 /**
  * Class FilterGeneratedAttributesAndKeysFromCollection

@@ -15,18 +15,18 @@ use Somnambulist\ReadModels\Model;
 class UserAlt extends Model
 {
 
-    protected $table = 'users';
+    protected string $table = 'users';
 
-    protected $foreignKey = 'user_id';
+    protected ?string $foreignKey = 'user_id';
 
-    protected $casts = [
+    protected array $casts = [
         'uuid' => 'uuid',
         'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    protected $exports = [
+    protected array $exports = [
         'attributes' => [
             'uuid' => 'id',
             'name',

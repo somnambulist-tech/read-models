@@ -1,10 +1,6 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Contracts;
-
-use Somnambulist\ReadModels\Model;
 
 /**
  * Interface AttributeCaster
@@ -16,15 +12,20 @@ interface AttributeCaster
 {
 
     /**
-     * Cast attributes to a type or simple object (or not)
-     *
-     * Return the modified attributes an array.
-     *
-     * @param Model $model
-     * @param array $attributes
-     * @param array $casts
+     * An array of the type names that this caster will respond to
      *
      * @return array
      */
-    public function cast(Model $model, array $attributes = [], array $casts = []): array;
+    public function types(): array;
+
+    public function supports(string $type): bool;
+
+    /**
+     * Cast attributes to a particular type / object resetting the attribute value
+     *
+     * @param array  $attributes
+     * @param string $attribute
+     * @param string $type
+     */
+    public function cast(array &$attributes, string $attribute, string $type): void;
 }

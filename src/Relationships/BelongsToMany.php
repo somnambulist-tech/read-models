@@ -1,13 +1,11 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
 use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
 use function sprintf;
@@ -22,44 +20,13 @@ use function str_replace;
 class BelongsToMany extends AbstractRelationship
 {
 
-    /**
-     * @var string
-     */
-    private $joinTable;
+    private string $joinTable;
+    private string $joinTableSourceKey;
+    private string $joinTableTargetKey;
+    private string $sourceKey;
+    private string $targetKey;
+    protected bool $hasMany = true;
 
-    /**
-     * @var string
-     */
-    private $joinTableSourceKey;
-
-    /**
-     * @var string
-     */
-    private $joinTableTargetKey;
-
-    /**
-     * @var string
-     */
-    private $sourceKey;
-
-    /**
-     * @var string
-     */
-    private $targetKey;
-
-    protected $hasMany = true;
-
-    /**
-     * Constructor.
-     *
-     * @param ModelBuilder $query
-     * @param Model        $parent
-     * @param string       $joinTable          The name of the table linking the models
-     * @param string       $joinTableSourceKey The name of the column on the join table for the source
-     * @param string       $joinTableTargetKey The name of the column
-     * @param string       $sourceKey          The name of the attribute on the source referenced in the join table
-     * @param string       $targetKey          The name of the attribute on the target referenced in the join table
-     */
     public function __construct(ModelBuilder $query, Model $parent, string $joinTable, string $joinTableSourceKey, string $joinTableTargetKey, string $sourceKey, string $targetKey)
     {
         $this->joinTable          = $joinTable;
@@ -111,7 +78,7 @@ class BelongsToMany extends AbstractRelationship
     {
         $this->fetch();
 
-        $map = ModelIdentityMap::instance();
+        $map = Manager::instance()->map();
 
         $models->each(function (Model $model) use ($relationship, $map) {
             $ids = $map->getRelatedIdentitiesFor($model, $class = get_class($this->related));

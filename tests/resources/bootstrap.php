@@ -1,12 +1,13 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\SQLLogger;
-use Somnambulist\Domain\Doctrine\Bootstrapper;
-use Somnambulist\ReadModels\Model;
+use Somnambulist\Domain\Doctrine\TypeBootstrapper;
+use Somnambulist\ReadModels\Manager;
+use Somnambulist\ReadModels\Tests\Stubs\Casters\AddressCaster;
+use Somnambulist\ReadModels\Tests\Stubs\Casters\ContactCaster;
 use Somnambulist\ReadModels\Tests\Stubs\DataGenerator;
+use Somnambulist\ReadModels\TypeCasters\DoctrineTypeCaster;
 use Symfony\Component\Dotenv\Dotenv;
 
 (new Dotenv)->loadEnv(dirname(__DIR__, 2) . '/.env');
@@ -55,10 +56,19 @@ if (in_array('--debug', $_SERVER['argv'])) {
     $connection->getConfiguration()->setSQLLogger(new EchoSQLLogger());
 }
 
-Bootstrapper::registerEnumerations();
-Bootstrapper::registerTypes();
-Bootstrapper::registerExtendedTypes();
-Model::bindConnection($connection);
+TypeBootstrapper::registerEnumerations();
+TypeBootstrapper::registerTypes(TypeBootstrapper::$types);
 
 $faker = Faker\Factory::create('en_US');
 $generator = new DataGenerator($connection, $faker);
+
+new Manager(
+    [
+        'default' => $connection,
+    ],
+    [
+        new DoctrineTypeCaster($connection),
+        new AddressCaster(),
+        new ContactCaster(),
+    ]
+);

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels;
 
@@ -8,7 +6,6 @@ use BadMethodCallException;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use function get_class;
 use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
@@ -19,7 +16,10 @@ use Somnambulist\ReadModels\Contracts\Queryable;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\ReadModels\Utils\FilterGeneratedKeysFromCollection;
+use Somnambulist\ReadModels\Utils\GenerateRelationshipsToEagerLoad;
 use Somnambulist\ReadModels\Utils\ProxyTo;
+use function get_class;
 use function sprintf;
 use function str_replace;
 
@@ -52,32 +52,11 @@ use function str_replace;
 class ModelBuilder implements Queryable
 {
 
-    /**
-     * @var Model
-     */
-    private $model;
+    private Model $model;
+    private ModelMetadata $meta;
+    private QueryBuilder $query;
+    private array $eagerLoad = [];
 
-    /**
-     * @var ModelMetadata
-     */
-    private $meta;
-
-    /**
-     * @var QueryBuilder
-     */
-    private $query;
-
-    /**
-     * @var array
-     */
-    private $eagerLoad = [];
-
-    /**
-     * Constructor.
-     *
-     * @param Model        $model
-     * @param QueryBuilder $query
-     */
     public function __construct(Model $model, QueryBuilder $query)
     {
         $this->model = $model;
@@ -85,14 +64,9 @@ class ModelBuilder implements Queryable
         $this->query = $query->from($this->meta->table(), $this->meta->tableAlias());
     }
 
-    /**
-     * Returns a new query builder instance for the set Model
-     *
-     * @return ModelBuilder
-     */
     public function newQuery(): self
     {
-        return new static($this->model, Model::connection(get_class($this->model))->createQueryBuilder());
+        return new static($this->model, $this->query->getConnection()->createQueryBuilder());
     }
 
     /**
@@ -168,11 +142,6 @@ class ModelBuilder implements Queryable
         return $model;
     }
 
-    /**
-     * Executes the current query, returning a Collection of results
-     *
-     * @return Collection
-     */
     public function fetch(): Collection
     {
         $models  = new Collection();
@@ -182,11 +151,20 @@ class ModelBuilder implements Queryable
             $this->select('*');
         }
 
+        $map = Manager::instance()->map();
+        $map->registerAlias($this->model);
+
         if ($stmt = $this->query->execute()) {
             $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
 
             foreach ($stmt as $row) {
-                $models->add($this->model->new($row));
+                $map->inferRelationshipFromAttributes($this->model, $row);
+
+                if (null === $model = $map->get(get_class($this->model), $row[$this->meta->primaryKeyName()])) {
+                    $map->add($model = $this->model->new($row));
+                }
+
+                $models->add($model);
             }
 
             if ($models->count() > 0) {
@@ -197,29 +175,18 @@ class ModelBuilder implements Queryable
         return $models;
     }
 
-    /**
-     * Returns the first matching result of the query, or raises an exception
-     *
-     * @return Model
-     * @throws NoResultsException
-     */
     public function fetchFirstOrFail(): Model
     {
-        if (!$model = $this->fetch()->first()) {
+        if (null === $model = $this->fetch()->first()) {
             throw NoResultsException::noResultsForQuery(get_class($this->model), $this->query);
         }
 
         return $model;
     }
 
-    /**
-     * Returns the first matching result of the query, or null if no results
-     *
-     * @return Model|null
-     */
     public function fetchFirstOrNull(): ?Model
     {
-        return $this->fetch()->first() ?? null;
+        return $this->fetch()->first();
     }
 
     /**
@@ -335,21 +302,11 @@ class ModelBuilder implements Queryable
         return $nested;
     }
 
-    /**
-     * @param string $column
-     *
-     * @return string
-     */
     private function prefixColumnWithTableAlias(string $column): string
     {
         return $this->meta->prefixAlias($column);
     }
 
-    /**
-     * The DBAL Expression builder object for creating where clauses
-     *
-     * @return ExpressionBuilder
-     */
     public function expression(): ExpressionBuilder
     {
         return $this->query->expr();
@@ -402,13 +359,6 @@ class ModelBuilder implements Queryable
         return false;
     }
 
-    /**
-     * Add a where clause on the primary key to the query
-     *
-     * @param mixed $id
-     *
-     * @return $this
-     */
     public function wherePrimaryKey($id): self
     {
         return $this->whereColumn($this->meta->primaryKeyNameWithAlias(), '=', $id);

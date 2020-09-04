@@ -1,12 +1,10 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\PHPUnit;
 
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
-use Somnambulist\ReadModels\ModelIdentityMap;
+use Somnambulist\ReadModels\Manager;
 
 /**
  * Class PHPUnitListener
@@ -31,11 +29,11 @@ class PHPUnitListener implements BeforeTestHook, AfterTestHook
 
     public function executeAfterTest(string $test, float $time): void
     {
-        ModelIdentityMap::instance()->clear();
+        Manager::clear();
     }
 
     public function executeBeforeTest(string $test): void
     {
-        ModelIdentityMap::instance()->clear();
+        Manager::clear();
     }
 }

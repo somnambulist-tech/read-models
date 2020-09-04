@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\ReadModels\Contracts\Queryable;
@@ -16,7 +14,7 @@ use Somnambulist\ReadModels\Contracts\Queryable;
  * @link https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Builder.php
  *
  * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\GenerateRelationshipsToEagerLoad
+ * @subpackage Somnambulist\ReadModels\Utils\GenerateRelationshipsToEagerLoad
  */
 final class GenerateRelationshipsToEagerLoad
 {
@@ -83,13 +81,6 @@ final class GenerateRelationshipsToEagerLoad
         return $results;
     }
 
-    /**
-     * Create a constraint to select the given columns for the relation.
-     *
-     * @param string $name
-     *
-     * @return array
-     */
     private function createSelectWithConstraint(string $name): array
     {
         return [

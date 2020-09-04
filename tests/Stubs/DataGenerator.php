@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Stubs;
 
@@ -20,22 +18,9 @@ use function password_hash;
 class DataGenerator
 {
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    private Generator $faker;
 
-    /**
-     * @var Generator
-     */
-    private $faker;
-
-    /**
-     * Constructor.
-     *
-     * @param Connection $connection
-     * @param Generator    $faker
-     */
     public function __construct(Connection $connection, Generator $faker)
     {
         $this->connection = $connection;

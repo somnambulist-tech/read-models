@@ -9,5 +9,20 @@ services:
         autoconfigure: true
         public: false
 
-    Somnambulist\ReadModels\EventSubscriber\IdentityMapClearerSubscriber:
+    Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerSubscriber:
         public: false
+
+    Somnambulist\ReadModels\Manager:
+        arguments:
+            $connections:
+                'default': '@doctrine.dbal.default_connection'
+                'Somnambulist\ReadModels\Tests\Stubs\Models\User': '@doctrine.dbal.default_connection'
+            $casters: !tagged_iterator somnambulist.read_models.caster
+
+    Somnambulist\ReadModels\TypeCasters\:
+        resource: '../../../src/TypeCasters/'
+        tags: ['somnambulist.read_models.caster']
+
+    Somnambulist\ReadModels\Tests\Stubs\Casters\:
+        resource: '../../Stubs/Casters/'
+        tags: ['somnambulist.read_models.caster']

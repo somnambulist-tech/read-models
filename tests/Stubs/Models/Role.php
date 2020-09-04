@@ -19,9 +19,11 @@ use Somnambulist\ReadModels\Relationships\BelongsToMany;
 class Role extends Model
 {
 
-    protected $tableAlias = 'r';
+    protected string $table = 'roles';
 
-    protected $casts = [
+    protected ?string $tableAlias = 'r';
+
+    protected array $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

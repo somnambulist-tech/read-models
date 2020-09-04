@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
-use Somnambulist\Domain\Entities\Types\Geography\Country;
 use Somnambulist\ReadModels\Model;
 
 /**
@@ -16,29 +15,18 @@ use Somnambulist\ReadModels\Model;
 class UserAddress extends Model
 {
 
-    protected $table = 'user_addresses';
+    protected string $table = 'user_addresses';
 
-    protected $tableAlias = 'ua';
+    protected ?string $tableAlias = 'ua';
 
-    protected $casts = [
-        'country'    => Country::class,
+    protected array $casts = [
+        'country'    => 'country',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'address'    => Address::class,
     ];
 
-    protected $embeds = [
-        'address' => [
-            Address::class, [
-                '?address_line_1',
-                '?address_line_2',
-                '?address_town',
-                '?address_county',
-                '?address_postcode',
-            ],
-        ],
-    ];
-
-    protected $exports = [
+    protected array $exports = [
         'attributes'    => [
             'country', 'address_line_1', 'address_line_2',
             'address_town'     => 'town',

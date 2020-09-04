@@ -17,9 +17,11 @@ use Somnambulist\ReadModels\Model;
 class UserProfile extends Model
 {
 
-    protected $externalPrimaryKey = 'user_uuid';
+    protected string $table = 'user_profiles';
 
-    protected $foreignKey = 'user_profile_id';
+    protected ?string $externalPrimaryKey = 'user_uuid';
+
+    protected ?string $foreignKey = 'user_profile_id';
 
     protected function user()
     {

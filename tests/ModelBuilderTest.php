@@ -30,6 +30,7 @@ class ModelBuilderTest extends TestCase
 
     /**
      * @group find
+     * @group cur
      */
     public function testFind()
     {

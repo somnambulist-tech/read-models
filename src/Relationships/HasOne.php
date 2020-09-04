@@ -1,14 +1,12 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
-use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelIdentityMap;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
+use function get_class;
 
 /**
  * Class HasOne
@@ -19,13 +17,6 @@ use Somnambulist\ReadModels\Utils\ClassHelpers;
 class HasOne extends HasOneOrMany
 {
 
-    /**
-     * @param Collection $models
-     * @param string     $relationship
-     *
-     * @return AbstractRelationship
-     * @internal
-     */
     public function addEagerLoadingResults(Collection $models, string $relationship): AbstractRelationship
     {
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->foreignKey)) {
@@ -34,7 +25,7 @@ class HasOne extends HasOneOrMany
 
         $this->fetch();
 
-        $map = ModelIdentityMap::instance();
+        $map = Manager::instance()->map();
 
         $models->each(function (Model $parent) use ($relationship, $map) {
             $ids = $map->getRelatedIdentitiesFor($parent, $class = get_class($this->related));

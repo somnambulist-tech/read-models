@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
@@ -70,41 +68,20 @@ use Somnambulist\ReadModels\Utils\ProxyTo;
 abstract class AbstractRelationship implements Queryable
 {
 
-    /**
-     * @var ModelBuilder
-     */
-    protected $query;
-
-    /**
-     * @var Model
-     */
-    protected $parent;
-
-    /**
-     * @var Model
-     */
-    protected $related;
+    protected ModelBuilder $query;
+    protected Model $parent;
+    protected Model $related;
 
     /**
      * True if the relationship has many results
-     *
-     * @var bool
      */
-    protected $hasMany = false;
+    protected bool $hasMany = false;
 
     /**
      * True if the relationship constraints have been applied
-     *
-     * @var bool
      */
-    protected $hasConstraints = false;
+    protected bool $hasConstraints = false;
 
-    /**
-     * Constructor.
-     *
-     * @param ModelBuilder $builder
-     * @param Model        $parent
-     */
     public function __construct(ModelBuilder $builder, Model $parent)
     {
         $this->parent  = $parent;
@@ -173,11 +150,6 @@ abstract class AbstractRelationship implements Queryable
         return $this;
     }
 
-    /**
-     * Returns either the first result or the collection for the relationship
-     *
-     * @return mixed|Collection
-     */
     public function fetchValueForRelationship()
     {
         if ($this->hasMany()) {
@@ -187,11 +159,6 @@ abstract class AbstractRelationship implements Queryable
         return $this->fetch()->first();
     }
 
-    /**
-     * Executes the relationship, returning any results
-     *
-     * @return Collection
-     */
     public function fetch(): Collection
     {
         if (!$this->hasConstraints) {
@@ -206,44 +173,21 @@ abstract class AbstractRelationship implements Queryable
         return $this->query;
     }
 
-    /**
-     * Returns the parent (owner) of this relationship
-     *
-     * @return Model
-     */
     public function getParent(): Model
     {
         return $this->parent;
     }
 
-    /**
-     * Returns the related object (the current subject) of this relationship
-     *
-     * @return Model
-     */
     public function getRelated(): Model
     {
         return $this->related;
     }
 
-    /**
-     * True if there can be many results from this relationship
-     *
-     * @return bool
-     */
     public function hasMany(): bool
     {
         return $this->hasMany;
     }
 
-    /**
-     * Pass on calls to the builder instance, or return the result of the call
-     *
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return AbstractRelationship|ModelBuilder|mixed
-     */
     public function __call($name, $arguments)
     {
         $result = (new ProxyTo())($this->query, $name, $arguments);

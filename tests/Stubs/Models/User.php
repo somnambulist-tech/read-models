@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
+use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelIdentityMap;
 
 /**
  * Class User
@@ -16,18 +16,20 @@ use Somnambulist\ReadModels\ModelIdentityMap;
 class User extends Model
 {
 
-    protected $externalPrimaryKey = 'uuid';
+    protected string $table = 'users';
 
-    protected $foreignKey = 'user_id';
+    protected ?string $externalPrimaryKey = 'uuid';
 
-    protected $casts = [
+    protected ?string $foreignKey = 'user_id';
+
+    protected array $casts = [
         'uuid' => 'uuid',
         'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    protected $exports = [
+    protected array $exports = [
         'attributes' => [
             'uuid' => 'id',
             'name',
@@ -81,7 +83,7 @@ class User extends Model
          * If you have a more standard naming scheme, this should not be necessary i.e. if
          * the foreign key in user_profiles was user_id instead, this would not be necessary.
          */
-        ModelIdentityMap::instance()->registerAlias($this, 'user_uuid');
+        Manager::instance()->map()->registerAlias($this, 'user_uuid');
 
         return $this->hasOne(UserProfile::class, 'user_uuid', 'uuid');
     }

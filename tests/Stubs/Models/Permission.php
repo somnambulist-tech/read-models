@@ -15,7 +15,9 @@ use Somnambulist\ReadModels\Model;
 class Permission extends Model
 {
 
-    protected $casts = [
+    protected string $table = 'permissions';
+
+    protected array $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

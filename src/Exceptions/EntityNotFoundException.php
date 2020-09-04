@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Exceptions;
 
@@ -15,13 +13,6 @@ use Exception;
 class EntityNotFoundException extends Exception
 {
 
-    /**
-     * @param string     $class
-     * @param string     $key
-     * @param string|int $id
-     *
-     * @return EntityNotFoundException
-     */
     public static function noMatchingRecordFor(string $class, string $key, $id): self
     {
         return new self(sprintf('Could not find a record for %s with %s and %s', $class, $key, $id));

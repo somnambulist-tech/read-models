@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
-use Somnambulist\Domain\Entities\Types\Identity\EmailAddress;
-use Somnambulist\Domain\Entities\Types\PhoneNumber;
 use Somnambulist\ReadModels\Model;
 
 /**
@@ -17,20 +15,11 @@ use Somnambulist\ReadModels\Model;
 class UserContact extends Model
 {
 
-    protected $table = 'user_contacts';
+    protected string $table = 'user_contacts';
 
-    protected $casts = [
+    protected array $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-    ];
-
-    protected $embeds = [
-        'contact' => [
-            Contact::class, [
-                'name',
-                [PhoneNumber::class, ['?contact_phone'], true,],
-                [EmailAddress::class, ['?contact_email'], true,],
-            ], true
-        ]
+        'contact'    => Contact::class,
     ];
 }

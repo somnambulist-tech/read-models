@@ -1,15 +1,13 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Relationships;
 
-use function get_class;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelIdentityMap;
+use Somnambulist\ReadModels\ModelBuilder;
 use Somnambulist\ReadModels\Utils\ClassHelpers;
+use function get_class;
 
 /**
  * Class HasMany
@@ -20,22 +18,9 @@ use Somnambulist\ReadModels\Utils\ClassHelpers;
 class HasOneToMany extends HasOneOrMany
 {
 
-    /**
-     * @var string|null
-     */
-    protected $indexBy;
+    protected ?string $indexBy;
+    protected bool $hasMany = true;
 
-    protected $hasMany = true;
-
-    /**
-     * Constructor.
-     *
-     * @param ModelBuilder $builder
-     * @param Model        $parent
-     * @param string       $foreignKey
-     * @param string       $localKey
-     * @param string|null  $indexBy
-     */
     public function __construct(ModelBuilder $builder, Model $parent, string $foreignKey, string $localKey, ?string $indexBy = null)
     {
         $this->indexBy = $indexBy;
@@ -66,7 +51,7 @@ class HasOneToMany extends HasOneOrMany
 
         $this->fetch();
 
-        $map = ModelIdentityMap::instance();
+        $map = Manager::instance()->map();
 
         $models->each(function (Model $model) use ($relationship, $map) {
             $ids = $map->getRelatedIdentitiesFor($model, $class = get_class($this->related));

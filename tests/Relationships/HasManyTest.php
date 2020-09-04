@@ -60,7 +60,7 @@ class HasManyTest extends TestCase
         /** @var User $user */
         $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
 
-        $this->assertRegExp('/[a-z]+/', $user->addresses->keys()->implode(','));
+        $this->assertMatchesRegularExpression('/[a-z]+/', $user->addresses->keys()->implode(','));
     }
 
     public function testAccessByRelationship()

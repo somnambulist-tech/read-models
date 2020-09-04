@@ -1,13 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
-use Doctrine\DBAL\Connection;
-use Somnambulist\ReadModels\EventSubscriber\IdentityMapClearerSubscriber;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerSubscriber;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -21,13 +16,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class KernelTest extends KernelTestCase
 {
-
-    public function testBundleRegistersConnection()
-    {
-        static::bootKernel();
-
-        $this->assertInstanceOf(Connection::class, Model::connection(User::class));
-    }
 
     public function testBundleAndServices()
     {
