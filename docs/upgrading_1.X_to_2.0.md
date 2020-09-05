@@ -92,10 +92,14 @@ protected $embeds = [
 ```
 
 Now to cast this, a custom caster is needed that will set the "contact" attribute to the contact
-instance. The caster can then decide to remove the attributes or not. See the [embeddables](./embeddables.md)
+instance. The caster can then decide to remove the attributes or not. See the [casting](casting.md)
 documentation for more details and an example.
 
 For v2 each of the embeds will need converting to a caster. A side effect is that duplicate
 code will now be re-usable. Several built-in casters are available including a `DoctrineTypeCaster`.
 
 __Note:__ by default *no* casters are registered with the `Manager`.
+
+### EventSubscriber namespace
+
+`EventSubscriber` has been renamed to `EventSubscribers`. Any reference will need changing.
