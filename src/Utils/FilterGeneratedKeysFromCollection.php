@@ -5,6 +5,7 @@ namespace Somnambulist\ReadModels\Utils;
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
+use function is_string;
 
 /**
  * Class FilterGeneratedAttributesAndKeysFromCollection

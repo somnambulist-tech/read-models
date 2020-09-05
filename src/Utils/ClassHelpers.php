@@ -1,19 +1,20 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Utils;
 
 use Closure;
 use ReflectionObject;
+use function count;
+use function debug_backtrace;
+use function is_null;
 
 /**
- * Class Helpers
+ * Class ClassHelpers
  *
  * Assorted helpers, scoped to prevent global functions.
  *
  * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\Utils\Helpers
+ * @subpackage Somnambulist\ReadModels\Utils\ClassHelpers
  */
 class ClassHelpers
 {

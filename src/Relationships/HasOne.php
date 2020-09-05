@@ -6,7 +6,6 @@ use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
 
 /**
@@ -42,7 +41,7 @@ class HasOne extends HasOneOrMany
 
             $related = $map->all($class, $ids)[0] ?? ($this->nullOnNotFound ? null : $this->related->new());
 
-            ClassHelpers::setPropertyArrayKey($parent, 'relationships', $relationship, $related, Model::class);
+            $parent->setRelationshipValue($relationship, $related);
         });
 
         return $this;

@@ -6,7 +6,6 @@ use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
 
 /**
@@ -65,9 +64,7 @@ class HasOneToMany extends HasOneOrMany
                 }
             }
 
-            ClassHelpers::setPropertyArrayKey(
-                $model, 'relationships', $relationship, new Collection($entities), Model::class
-            );
+            $model->setRelationshipValue($relationship, new Collection($entities));
         });
 
         return $this;

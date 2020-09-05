@@ -4,6 +4,12 @@ namespace Somnambulist\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\ReadModels\Contracts\Queryable;
+use function array_merge;
+use function count;
+use function explode;
+use function implode;
+use function is_array;
+use function is_numeric;
 
 /**
  * Class GenerateRelationshipsToEagerLoad

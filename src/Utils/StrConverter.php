@@ -1,8 +1,10 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Utils;
+
+use function fopen;
+use function fwrite;
+use function rewind;
 
 /**
  * Class StrConverter

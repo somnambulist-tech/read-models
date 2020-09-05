@@ -3,6 +3,12 @@
     "type": "library",
     "description": "A stripped down active-record'ish query layer for fetching data from your database.",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Dave Redfern",
+            "email": "info@somnambulist.tech"
+        }
+    ],
     "require": {
         "php": ">=7.4",
         "ext-json":  "*",
@@ -41,6 +47,7 @@
     "suggest": {
         "doctrine/orm": "Use full weight Doctrine for managing persistence and data",
         "doctrine/migrations": "To build schema changes",
-        "symfony/http-kernel": "To use the kernel listener, requires >=5.0"
+        "symfony/http-kernel": "To use the kernel listener, requires >=5.0",
+        "somnambulist/read-models-bundle": "Symfony integration for read-models"
     }
 }

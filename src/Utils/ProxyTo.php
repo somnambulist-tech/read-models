@@ -1,11 +1,12 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Utils;
 
 use BadMethodCallException;
 use Error;
+use function get_class;
+use function preg_match;
+use function sprintf;
 
 /**
  * Class ProxyTo
@@ -39,7 +40,7 @@ class ProxyTo
         } catch (Error | BadMethodCallException $e) {
             $pattern = '~^Call to undefined method (?P<class>[^:]+)::(?P<method>[^\(]+)\(\)$~';
 
-            if (! preg_match($pattern, $e->getMessage(), $matches)) {
+            if (!preg_match($pattern, $e->getMessage(), $matches)) {
                 throw $e;
             }
 
@@ -48,9 +49,7 @@ class ProxyTo
                 throw $e;
             }
 
-            throw new BadMethodCallException(sprintf(
-                'Call to undefined method %s::%s()', $class, $method
-            ));
+            throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', $class, $method));
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace Somnambulist\ReadModels\Exceptions;
 
 use Exception;
+use function sprintf;
 
 /**
  * Class EntityNotFoundException

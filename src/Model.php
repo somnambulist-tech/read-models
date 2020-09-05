@@ -31,14 +31,12 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
 {
 
     /**
-     * The table associated with the model, will be guessed if not set
-     *
-     * Override to set a specific table if it does not match the class name.
+     * The table associated with the model
      */
     protected string $table;
 
     /**
-     * A default table alias to automatically scope table/columns
+     * A table alias to automatically scope table/columns, will use table name if not set
      */
     protected ?string $tableAlias = null;
 
@@ -103,8 +101,8 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * <code>
      * [
-     *     'uuid' => 'uuid',
-     *     'location' => 'resource:geometry',
+     *     'uuid'       => 'uuid',
+     *     'location'   => 'resource:geometry',
      *     'created_at' => 'datetime',
      *     'updated_at' => 'datetime',
      * ]
@@ -337,6 +335,14 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
     }
 
     /**
+     * @internal
+     */
+    public function setRelationshipValue(string $method, ?object $related): void
+    {
+        $this->relationships[$method] = $related;
+    }
+
+    /**
      * Gets the owning side of the relationships key name
      *
      * @internal
@@ -408,7 +414,11 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      * @return BelongsTo
      */
     protected function belongsTo(
-        string $class, ?string $foreignKey = null, ?string $ownerKey = null, ?string $relation = null, bool $nullOnNotFound = true
+        string $class,
+        ?string $foreignKey = null,
+        ?string $ownerKey = null,
+        ?string $relation = null,
+        bool $nullOnNotFound = true
     ): BelongsTo
     {
         /** @var Model $instance */
@@ -440,9 +450,13 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * @return BelongsToMany
      */
-    protected function belongsToMany(string $class, string $table,
-        ?string $sourceColumnName = null, ?string $targetColumnName = null,
-        ?string $sourceKey = null, ?string $targetKey = null
+    protected function belongsToMany(
+        string $class,
+        string $table,
+        ?string $sourceColumnName = null,
+        ?string $targetColumnName = null,
+        ?string $sourceKey = null,
+        ?string $targetKey = null
     ): BelongsToMany
     {
         /** @var Model $instance */

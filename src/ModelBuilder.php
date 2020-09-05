@@ -19,9 +19,17 @@ use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Utils\FilterGeneratedKeysFromCollection;
 use Somnambulist\ReadModels\Utils\GenerateRelationshipsToEagerLoad;
 use Somnambulist\ReadModels\Utils\ProxyTo;
+use function array_map;
+use function array_merge;
+use function array_unique;
+use function count;
 use function get_class;
+use function in_array;
 use function sprintf;
 use function str_replace;
+use function strlen;
+use function strpos;
+use function substr;
 
 /**
  * Class ModelBuilder
@@ -61,7 +69,11 @@ class ModelBuilder implements Queryable
     {
         $this->model = $model;
         $this->meta  = $model->meta();
-        $this->query = Manager::instance()->connect($model)->createQueryBuilder()->from($this->meta->table(), $this->meta->tableAlias());
+        $this->query = Manager::instance()
+            ->connect($model)
+            ->createQueryBuilder()
+            ->from($this->meta->table(), $this->meta->tableAlias())
+        ;
     }
 
     public function newQuery(): self
@@ -121,7 +133,7 @@ class ModelBuilder implements Queryable
      */
     public function findOneBy(array $criteria, array $orderBy = []): ?Model
     {
-        return $this->findBy($criteria, $orderBy, 1)->first() ?? null;
+        return $this->findBy($criteria, $orderBy, 1)->first();
     }
 
     /**
@@ -646,7 +658,6 @@ class ModelBuilder implements Queryable
      * Note: this provides total access to all bound data include query parts.
      * Use with caution.
      *
-     * @return QueryBuilder
      * @internal
      */
     public function getQueryBuilder(): QueryBuilder
@@ -655,7 +666,6 @@ class ModelBuilder implements Queryable
     }
 
     /**
-     * @return Model
      * @internal
      */
     public function getModel(): Model

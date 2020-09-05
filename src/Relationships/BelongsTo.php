@@ -6,7 +6,6 @@ use Somnambulist\Collection\MutableCollection as Collection;
 use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Utils\ClassHelpers;
 use function get_class;
 use function is_null;
 
@@ -61,7 +60,7 @@ class BelongsTo extends AbstractRelationship
                 $parent = $this->related->new();
             }
 
-            ClassHelpers::setPropertyArrayKey($child, 'relationships', $relationship, $parent, Model::class);
+            $child->setRelationshipValue($relationship, $parent);
         });
 
         return $this;

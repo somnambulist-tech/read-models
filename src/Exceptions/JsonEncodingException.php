@@ -4,6 +4,8 @@ namespace Somnambulist\ReadModels\Exceptions;
 
 use RuntimeException;
 use Somnambulist\ReadModels\Model;
+use function get_class;
+use function sprintf;
 
 /**
  * Class JsonEncodingException

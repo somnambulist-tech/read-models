@@ -28,7 +28,7 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
  * support for exporting as JSON / Array data (configurable)
  * relationships (1:1, 1:m, m:m, 1:m reversed)
  * identity map
- * pluggable attribute / embeddable hydrators
+ * pluggable attribute casting / cast to value-objects
 
 ### Thinking About Adding...
 
@@ -36,6 +36,7 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
  * refactor identity map (improve object tracking to prevent stale data / SQL fetches)
  * reducing the scope of the builder component
  * prevent running / building insert, update, delete queries
+ * support composite primary keys?
 
 ## Requirements
 
