@@ -30,13 +30,13 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
  * identity map
  * pluggable attribute casting / cast to value-objects
 
-### Thinking About Adding...
+### Thinking About...
 
  * doctrine metadata component to use the already available metadata
  * refactor identity map (improve object tracking to prevent stale data / SQL fetches)
- * reducing the scope of the builder component
  * prevent running / building insert, update, delete queries
  * support composite primary keys?
+ * re-implement the query builder engine to allow more complex queries
 
 ## Requirements
 

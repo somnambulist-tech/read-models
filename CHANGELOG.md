@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+2020-09-05
+----------
+
+ * add support for local scopes on `Model` for commonly used queries
+ * add support for correlated sub-queries on select by passing ModelBuilders
+ * add support for callbacks on `select()` and `where()` of `ModelBuilder`
+ * clean up various files
+ * fix bugs in parameter method pass through on `ModelBuilder`
+
 2020-09-04
 ----------
 

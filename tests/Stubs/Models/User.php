@@ -1,11 +1,10 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Stubs\Models;
 
 use Somnambulist\ReadModels\Manager;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelBuilder;
 
 /**
  * Class User
@@ -39,6 +38,16 @@ class User extends Model
         ],
         'relationships' => [],
     ];
+
+    public function scopeActiveIs(ModelBuilder $builder, bool $state)
+    {
+        $builder->whereColumn('is_active', '=', (int)$state);
+    }
+
+    public function scopeOnlyActive(ModelBuilder $builder)
+    {
+        $builder->whereColumn('is_active', '=', 1);
+    }
 
     protected function getRegistrationDayAttribute()
     {

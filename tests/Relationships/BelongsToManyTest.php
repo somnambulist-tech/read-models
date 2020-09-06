@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Somnambulist\ReadModels\Tests;
+namespace Somnambulist\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +13,8 @@ use Somnambulist\ReadModels\Tests\Stubs\Models\User;
  * Class BelongsToManyTest
  *
  * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\BelongsToManyTest
+ * @subpackage Somnambulist\ReadModels\Tests\Relationships\BelongsToManyTest
+ *
  * @group relationships
  * @group relationships-belongs-to-many
  */

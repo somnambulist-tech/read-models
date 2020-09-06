@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
@@ -11,6 +9,8 @@ use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
 use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\ReadModels\Model;
+use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserContact;
@@ -21,6 +21,7 @@ use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\ModelBuilderTest
+ *
  * @group model-builder
  */
 class ModelBuilderTest extends TestCase
@@ -30,7 +31,6 @@ class ModelBuilderTest extends TestCase
 
     /**
      * @group find
-     * @group cur
      */
     public function testFind()
     {
@@ -186,6 +186,20 @@ class ModelBuilderTest extends TestCase
     /**
      * @group where
      */
+    public function testWhereWithCallback()
+    {
+        $user = User::query()->where(function (ModelBuilder $builder) {
+            $builder->whereColumn('is_active', '=', 0);
+        })->fetch()->first();
+
+        $this->assertNotNull($user);
+        $this->assertFalse($user->is_active);
+        $this->assertFalse($user->isActive());
+    }
+
+    /**
+     * @group where
+     */
     public function testWhereColumn()
     {
         $user = User::query()->whereColumn('email', 'like', '%gmail.com')->fetch()->first();
@@ -260,5 +274,33 @@ class ModelBuilderTest extends TestCase
         $this->assertNotNull($user);
         $this->assertNotNull($user->contact->email);
         $this->assertNotEmpty($user->id);
+    }
+
+    /**
+     * @group select
+     */
+    public function testSelectCallable()
+    {
+        $user = User::query()->select(function (ModelBuilder $builder) {
+            $builder->query->addSelect('"bob" AS field');
+        })->select()->fetch()->first();
+
+        $this->assertNotNull($user);
+        $this->assertEquals('bob', $user->field);
+    }
+
+    /**
+     * @group select
+     */
+    public function testSelectModelBuilder()
+    {
+        $groups = Role::query()->select('GROUP_CONCAT(r.name)')->innerJoin('r', 'user_roles', 'g', 'g.role_id = r.id')->where('g.user_id = users.id');
+
+        $results = User::query()->select('*')->select($groups, 'groups')->limit(10)->fetch();
+
+        $results->each(function (Model $user) {
+            $this->assertNotNull($user);
+            $this->assertNotEmpty($user->groups);
+        });
     }
 }

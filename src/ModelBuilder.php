@@ -19,17 +19,21 @@ use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Utils\FilterGeneratedKeysFromCollection;
 use Somnambulist\ReadModels\Utils\GenerateRelationshipsToEagerLoad;
 use Somnambulist\ReadModels\Utils\ProxyTo;
+use function array_key_first;
 use function array_map;
 use function array_merge;
 use function array_unique;
 use function count;
 use function get_class;
 use function in_array;
+use function is_callable;
+use function method_exists;
 use function sprintf;
 use function str_replace;
 use function strlen;
 use function strpos;
 use function substr;
+use function ucfirst;
 
 /**
  * Class ModelBuilder
@@ -319,6 +323,11 @@ class ModelBuilder implements Queryable
         return $this->meta->prefixAlias($column);
     }
 
+    private function mergeParameters(array $parameters): void
+    {
+        $this->query->setParameters(array_merge($this->query->getParameters(), $parameters));
+    }
+
     public function expression(): ExpressionBuilder
     {
         return $this->query->expr();
@@ -327,7 +336,12 @@ class ModelBuilder implements Queryable
     /**
      * Select specific columns from the current model
      *
-     * Use multiple arguments: ->select('id', 'name', 'created_at')...
+     * Use multiple arguments: ->select('id', 'name', 'created_at')... or provide a callback to do
+     * other manipulations. The callback will receive the ModelBuilder as the only argument.
+     *
+     * If a ModelBuilder is passed as the first argument, it will be added as a sub-select. In this
+     * instance, the second parameter is the `AS ...` for the result. If not set, the sub-select
+     * will be `AS sub_select_[n+1]`.
      *
      * @param string ...$columns
      *
@@ -337,6 +351,22 @@ class ModelBuilder implements Queryable
     {
         if (empty($columns)) {
             $columns = ['*'];
+        }
+        if (is_callable($columns[0])) {
+            $columns[0]($this);
+
+            return $this;
+        }
+        if ($columns[0] instanceof ModelBuilder) {
+            static $count;
+            $this
+                ->query
+                ->addSelect(sprintf('(%s) AS %s', $columns[0]->getQueryBuilder()->getSQL(), $columns[1] ?? 'sub_select_' . ++$count))
+            ;
+
+            $this->mergeParameters($columns[0]->getParameters());
+
+            return $this;
         }
 
         $columns = array_map(fn ($column) => $this->prefixColumnWithTableAlias($column), $columns);
@@ -404,13 +434,24 @@ class ModelBuilder implements Queryable
      * If the parameter is already bound, it will be overwritten with the value in the values
      * array.
      *
-     * @param string $expression
-     * @param array  $values
+     * Alternative a callback may be passed in instead. This will receive the ModelBuilder
+     * as the first argument. This way the query builder can be used to build the where
+     * expression; or a new query started to use as a WHERE (sub-query) CONDITION type
+     * clause.
+     *
+     * @param string|callable $expression
+     * @param array           $values
      *
      * @return ModelBuilder
      */
-    public function where(string $expression, array $values = []): self
+    public function where($expression, array $values = []): self
     {
+        if (is_callable($expression)) {
+            $expression($this);
+
+            return $this;
+        }
+
         $this->query->andWhere($expression);
 
         foreach ($values as $key => $value) {
@@ -429,12 +470,12 @@ class ModelBuilder implements Queryable
      *
      * The same rules apply as for the AND version. Values must use named placeholders.
      *
-     * @param string $expression
-     * @param array  $values
+     * @param string|callable $expression
+     * @param array           $values
      *
      * @return ModelBuilder
      */
-    public function orWhere(string $expression, array $values = []): self
+    public function orWhere($expression, array $values = []): self
     {
         $this->query->orWhere($expression);
 
@@ -684,26 +725,25 @@ class ModelBuilder implements Queryable
      */
     public function __call($name, $arguments)
     {
-        $allowed = [
-            'setParameter',
-            'getParameters', 'getParameter',
-            'getParameterTypes', 'getParameterType',
-            'join', 'innerJoin', 'leftJoin', 'rightJoin',
-            'having', 'andHaving', 'orHaving',
-        ];
+        $scoped = sprintf('scope%s', ucfirst($name));
 
-        if (!in_array($name, $allowed)) {
-            throw new BadMethodCallException(
-                sprintf(
-                    'Method "%s" is not supported for pass through on "%s"; expected one of (%s)',
-                    $name, static::class, implode(', ', $allowed)
-                )
-            );
+        if (method_exists($this->model, $scoped)) {
+            $this->model->{$scoped}($this, ...$arguments);
+
+            return $this;
         }
 
-        (new ProxyTo())($this->query, $name, $arguments);
+        if (in_array($name, ['getParameters', 'getParameter', 'getParameterTypes', 'getParameterType'])) {
+            return (new ProxyTo())($this->query, $name, $arguments);
+        }
 
-        return $this;
+        if (in_array($name, ['setParameter', 'join', 'innerJoin', 'leftJoin', 'rightJoin', 'having', 'andHaving', 'orHaving'])) {
+            (new ProxyTo())($this->query, $name, $arguments);
+
+            return $this;
+        }
+
+        throw new BadMethodCallException(sprintf('Method "%s" is not supported for pass through on "%s"', $name, static::class));
     }
 
     public function __get($name)

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
@@ -15,6 +13,8 @@ use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelation
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\ModelExporterTest
+ *
+ * @group model
  * @group model-exporter
  */
 class ModelExporterTest extends TestCase

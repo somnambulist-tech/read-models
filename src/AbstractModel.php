@@ -7,6 +7,7 @@ use DomainException;
 use IlluminateAgnostic\Str\Support\Str;
 use function array_key_exists;
 use function get_class_methods;
+use function in_array;
 use function is_null;
 use function method_exists;
 use function preg_match;

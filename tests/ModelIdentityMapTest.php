@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
@@ -16,7 +14,9 @@ use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelation
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\ModelIdentityMapTest
- * @group identity-map
+ *
+ * @group model
+ * @group model-identity-map
  */
 class ModelIdentityMapTest extends TestCase
 {

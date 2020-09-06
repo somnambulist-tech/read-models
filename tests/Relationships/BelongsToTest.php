@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Somnambulist\ReadModels\Tests;
+namespace Somnambulist\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -10,13 +8,13 @@ use Somnambulist\ReadModels\Model;
 use Somnambulist\ReadModels\Relationships\BelongsTo;
 use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
-use Somnambulist\ReadModels\Tests\Stubs\Models\UserProfile;
 
 /**
  * Class BelongsToTest
  *
  * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\BelongsToTest
+ * @subpackage Somnambulist\ReadModels\Tests\Relationships\BelongsToTest
+ *
  * @group relationships
  * @group relationships-belongs-to
  */
@@ -41,9 +39,6 @@ class BelongsToTest extends TestCase
         $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
     }
 
-    /**
-     * @group cur
-     */
     public function testReturnsEmptyObjectIfSetOnRelationship()
     {
         $ua = new UserAddress();

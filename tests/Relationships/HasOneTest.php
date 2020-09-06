@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Somnambulist\ReadModels\Tests;
+namespace Somnambulist\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +16,8 @@ use Somnambulist\ReadModels\Tests\Stubs\Models\UserProfile;
  * Class HasOneTest
  *
  * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\HasOneTest
+ * @subpackage Somnambulist\ReadModels\Tests\Relationships\HasOneTest
+ *
  * @group relationships
  * @group relationships-has-one
  */

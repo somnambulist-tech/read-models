@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\KernelTest
+ *
  * @group kernel
  */
 class KernelTest extends KernelTestCase

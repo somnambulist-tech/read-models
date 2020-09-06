@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests\Relationships;
 
@@ -12,7 +10,9 @@ use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
  *
  * @package    Somnambulist\ReadModels\Tests\Relationships
  * @subpackage Somnambulist\ReadModels\Tests\Relationships\RelationshipViaExternalKeyTest
+ *
  * @group relationships
+ * @group relationships-orderby
  */
 class RelationshipWithOrderByTest extends TestCase
 {

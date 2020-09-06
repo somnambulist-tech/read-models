@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Somnambulist\ReadModels\Tests;
 
@@ -19,6 +17,7 @@ use function password_hash;
  *
  * @package    Somnambulist\ReadModels\Tests
  * @subpackage Somnambulist\ReadModels\Tests\ModelTest
+ *
  * @group model
  */
 class ModelTest extends TestCase
