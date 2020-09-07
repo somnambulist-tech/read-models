@@ -1,12 +1,17 @@
 Change Log
 ==========
 
-2020-06-28 - 1.4.0
+2020-09-07 - 1.4.1
+------------------
+
+ * fix bug where `getParameter*` method calls on `ModelBuilder` are not returning the result
+
+2020-08-28 - 1.4.0
 ------------------
 
  * update dependency version constraints; raising somnambulist/collection to 3/4
 
-2020-06-24 - 1.3.0
+2020-07-30 - 1.3.0
 ------------------
 
  * update dependency version constraints; raising pragmarx/ia-str to 6/7

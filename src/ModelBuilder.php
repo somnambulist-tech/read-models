@@ -20,6 +20,7 @@ use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\ReadModels\Utils\ProxyTo;
+use function in_array;
 use function sprintf;
 use function str_replace;
 
@@ -726,26 +727,17 @@ class ModelBuilder implements Queryable
      */
     public function __call($name, $arguments)
     {
-        $allowed = [
-            'setParameter',
-            'getParameters', 'getParameter',
-            'getParameterTypes', 'getParameterType',
-            'join', 'innerJoin', 'leftJoin', 'rightJoin',
-            'having', 'andHaving', 'orHaving',
-        ];
-
-        if (!in_array($name, $allowed)) {
-            throw new BadMethodCallException(
-                sprintf(
-                    'Method "%s" is not supported for pass through on "%s"; expected one of (%s)',
-                    $name, static::class, implode(', ', $allowed)
-                )
-            );
+        if (in_array($name, ['getParameters', 'getParameter', 'getParameterTypes', 'getParameterType'])) {
+            return (new ProxyTo())($this->query, $name, $arguments);
         }
 
-        (new ProxyTo())($this->query, $name, $arguments);
+        if (in_array($name, ['setParameter', 'join', 'innerJoin', 'leftJoin', 'rightJoin', 'having', 'andHaving', 'orHaving'])) {
+            (new ProxyTo())($this->query, $name, $arguments);
 
-        return $this;
+            return $this;
+        }
+
+        throw new BadMethodCallException(sprintf('Method "%s" is not supported for pass through on "%s"', $name, static::class));
     }
 
     public function __get($name)
