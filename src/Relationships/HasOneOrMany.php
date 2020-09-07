@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Relationships;
+namespace Somnambulist\Components\ReadModels\Relationships;
 
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\Model;
+use Somnambulist\Components\ReadModels\ModelBuilder;
 
 /**
  * Class HasOneOrMany
  *
- * @package    Somnambulist\ReadModels\Relationships
- * @subpackage Somnambulist\ReadModels\Relationships\HasOneOrMany
+ * @package    Somnambulist\Components\ReadModels\Relationships
+ * @subpackage Somnambulist\Components\ReadModels\Relationships\HasOneOrMany
  */
 abstract class HasOneOrMany extends AbstractRelationship
 {

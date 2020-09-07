@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Contracts;
+namespace Somnambulist\Components\ReadModels\Contracts;
 
 use Doctrine\Common\Collections\ExpressionBuilder;
 
@@ -11,8 +11,8 @@ use Doctrine\Common\Collections\ExpressionBuilder;
  * object. This allows for type completion and hints where they might not
  * otherwise exist.
  *
- * @package    Somnambulist\ReadModels\Contracts
- * @subpackage Somnambulist\ReadModels\Contracts\Queryable
+ * @package    Somnambulist\Components\ReadModels\Contracts
+ * @subpackage Somnambulist\Components\ReadModels\Contracts\Queryable
  *
  * @method ExpressionBuilder expression()
  * @method Queryable andHaving(string $expression)

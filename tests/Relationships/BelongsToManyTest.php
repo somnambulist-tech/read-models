@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Relationships;
+namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Relationships\BelongsToMany;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\Components\ReadModels\Model;
+use Somnambulist\Components\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\Relationships\BelongsToMany;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 
 /**
  * Class BelongsToManyTest
  *
- * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\Relationships\BelongsToManyTest
+ * @package    Somnambulist\Components\ReadModels\Tests
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\BelongsToManyTest
  *
  * @group relationships
  * @group relationships-belongs-to-many

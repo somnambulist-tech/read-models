@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\Components\ReadModels;
 
 use BadMethodCallException;
 use Doctrine\DBAL\FetchMode;
@@ -12,14 +12,13 @@ use Pagerfanta\Pagerfanta;
 use RuntimeException;
 use Somnambulist\Collection\Contracts\Arrayable;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Contracts\Queryable;
-use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
-use Somnambulist\ReadModels\Exceptions\NoResultsException;
-use Somnambulist\ReadModels\Relationships\AbstractRelationship;
-use Somnambulist\ReadModels\Utils\FilterGeneratedKeysFromCollection;
-use Somnambulist\ReadModels\Utils\GenerateRelationshipsToEagerLoad;
-use Somnambulist\ReadModels\Utils\ProxyTo;
-use function array_key_first;
+use Somnambulist\Components\ReadModels\Contracts\Queryable;
+use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
+use Somnambulist\Components\ReadModels\Exceptions\NoResultsException;
+use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\Components\ReadModels\Utils\FilterGeneratedKeysFromCollection;
+use Somnambulist\Components\ReadModels\Utils\GenerateRelationshipsToEagerLoad;
+use Somnambulist\Components\ReadModels\Utils\ProxyTo;
 use function array_map;
 use function array_merge;
 use function array_unique;
@@ -38,8 +37,8 @@ use function ucfirst;
 /**
  * Class ModelBuilder
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\ModelBuilder
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\ModelBuilder
  *
  * These methods pass through to the underlying QueryBuilder instance.
  *

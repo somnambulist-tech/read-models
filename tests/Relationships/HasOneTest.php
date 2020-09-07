@@ -1,22 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Relationships;
+namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Relationships\AbstractRelationship;
-use Somnambulist\ReadModels\Relationships\HasOne;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
-use Somnambulist\ReadModels\Tests\Stubs\Models\UserAlt;
-use Somnambulist\ReadModels\Tests\Stubs\Models\UserProfile;
+use Somnambulist\Components\ReadModels\Model;
+use Somnambulist\Components\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\Components\ReadModels\Relationships\HasOne;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAlt;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserProfile;
 
 /**
  * Class HasOneTest
  *
- * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\Relationships\HasOneTest
+ * @package    Somnambulist\Components\ReadModels\Tests
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\HasOneTest
  *
  * @group relationships
  * @group relationships-has-one

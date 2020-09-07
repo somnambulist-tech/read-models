@@ -7,7 +7,7 @@ will be mapped to the "default" connection.
 
 If using this package without the bundle then:
 
- * add the `Somnambulist\ReadModels\Manager` as a service to your `services.yaml`
+ * add the `Somnambulist\Components\ReadModels\Manager` as a service to your `services.yaml`
  * define the connection map (required); at least `default: '@doctrine.dbal.default_connection'`
  * add casters that are tagged with `somnambulist.read_models.type_caster`
  * add `!tagged_iterator somnambulist.read_models.type_caster` to the `Manager` service
@@ -17,16 +17,16 @@ An example is in the tests:
 
 ```yaml
 services:
-    Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerSubscriber:
+    Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerSubscriber:
 
-    Somnambulist\ReadModels\Manager:
+    Somnambulist\Components\ReadModels\Manager:
         public: true
         arguments:
             $connections:
                 'default': '@doctrine.dbal.default_connection'
             $casters: !tagged_iterator somnambulist.read_models.caster
 
-    Somnambulist\ReadModels\TypeCasters\:
+    Somnambulist\Components\ReadModels\TypeCasters\:
         resource: '../vendor/somanmbulist/read-models/src/TypeCasters/'
         tags: ['somnambulist.read_models.caster']
 
@@ -47,7 +47,7 @@ requests.
 
 ```yaml
 services:
-    Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerSubscriber:
+    Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerSubscriber:
         public: false
 ```
 
@@ -65,7 +65,7 @@ to do that:
 
 ```yaml
 services:
-    Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerMessnegerSubscriber:
+    Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerMessnegerSubscriber:
         public: false
 ```
 

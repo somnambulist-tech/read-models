@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\PHPUnit;
+namespace Somnambulist\Components\ReadModels\PHPUnit;
 
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
-use Somnambulist\ReadModels\Manager;
+use Somnambulist\Components\ReadModels\Manager;
 
 /**
  * Class PHPUnitListener
@@ -17,12 +17,12 @@ use Somnambulist\ReadModels\Manager;
  *
  * <code>
  *     <extensions>
- *         <extension class="Somnambulist\ReadModels\PHPUnit\PHPUnitListener" />
+ *         <extension class="Somnambulist\Components\ReadModels\PHPUnit\PHPUnitListener" />
  *     </extensions>
  * </code>
  *
- * @package    Somnambulist\ReadModels\PHPUnit
- * @subpackage Somnambulist\ReadModels\PHPUnit\PHPUnitListener
+ * @package    Somnambulist\Components\ReadModels\PHPUnit
+ * @subpackage Somnambulist\Components\ReadModels\PHPUnit\PHPUnitListener
  */
 class PHPUnitListener implements BeforeTestHook, AfterTestHook
 {

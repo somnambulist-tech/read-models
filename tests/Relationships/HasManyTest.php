@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Relationships;
+namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Relationships\HasOneToMany;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
-use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
-use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
+use Somnambulist\Components\ReadModels\Model;
+use Somnambulist\Components\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
+use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
 /**
  * Class HasManyTest
  *
- * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\Relationships\HasManyTest
+ * @package    Somnambulist\Components\ReadModels\Tests
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\HasManyTest
  *
  * @package relationships
  * @package relationships-has-many

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\Components\ReadModels;
 
 use IlluminateAgnostic\Str\Support\Str;
 use JsonSerializable;
@@ -8,14 +8,15 @@ use LogicException;
 use Somnambulist\Collection\Contracts\Arrayable;
 use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
-use Somnambulist\ReadModels\Relationships\AbstractRelationship;
-use Somnambulist\ReadModels\Relationships\BelongsTo;
-use Somnambulist\ReadModels\Relationships\BelongsToMany;
-use Somnambulist\ReadModels\Relationships\HasOne;
-use Somnambulist\ReadModels\Relationships\HasOneToMany;
-use Somnambulist\ReadModels\Utils\ClassHelpers;
-use Somnambulist\ReadModels\Utils\FilterGeneratedKeysFromCollection;
+use Somnambulist\Components\AttributeModel\AbstractModel;
+use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
+use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\Components\ReadModels\Relationships\BelongsTo;
+use Somnambulist\Components\ReadModels\Relationships\BelongsToMany;
+use Somnambulist\Components\ReadModels\Relationships\HasOne;
+use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
+use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
+use Somnambulist\Components\ReadModels\Utils\FilterGeneratedKeysFromCollection;
 use function array_key_exists;
 use function is_null;
 use function method_exists;
@@ -24,8 +25,8 @@ use function sprintf;
 /**
  * Class Model
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\Model
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\Model
  */
 abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonSerializable
 {

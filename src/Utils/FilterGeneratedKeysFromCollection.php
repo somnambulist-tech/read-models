@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Utils;
+namespace Somnambulist\Components\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
 use function is_string;
 
 /**
  * Class FilterGeneratedAttributesAndKeysFromCollection
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\FilterGeneratedAttributesAndKeysFromCollection
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\FilterGeneratedAttributesAndKeysFromCollection
  */
 final class FilterGeneratedKeysFromCollection
 {

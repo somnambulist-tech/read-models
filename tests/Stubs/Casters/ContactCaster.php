@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Stubs\Casters;
+namespace Somnambulist\Components\ReadModels\Tests\Stubs\Casters;
 
+use Somnambulist\Components\AttributeModel\Contracts\AttributeCasterInterface;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Contact;
 use Somnambulist\Domain\Entities\Types\Identity\EmailAddress;
 use Somnambulist\Domain\Entities\Types\PhoneNumber;
-use Somnambulist\ReadModels\Contracts\AttributeCaster;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Contact;
 
 /**
  * Class ContactCaster
  *
- * @package    Somnambulist\ReadModels\Tests\Stubs\Casters
- * @subpackage Somnambulist\ReadModels\Tests\Stubs\Casters\ContactCaster
+ * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Casters
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Casters\ContactCaster
  */
-class ContactCaster implements AttributeCaster
+class ContactCaster implements AttributeCasterInterface
 {
     public function types(): array
     {
@@ -25,7 +25,7 @@ class ContactCaster implements AttributeCaster
         return in_array($type, $this->types());
     }
 
-    public function cast(array &$attributes, string $attribute, string $type): void
+    public function cast(array &$attributes, $attribute, string $type): void
     {
         $attributes['contact'] = new Contact(
             $attributes['name'],

@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Relationships;
+namespace Somnambulist\Components\ReadModels\Relationships;
 
 use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Contracts\Queryable;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Utils\ProxyTo;
+use Somnambulist\Components\ReadModels\Contracts\Queryable;
+use Somnambulist\Components\ReadModels\Model;
+use Somnambulist\Components\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\Utils\ProxyTo;
 
 /**
  * Class AbstractRelationship
  *
- * @package    Somnambulist\ReadModels\Relationships
- * @subpackage Somnambulist\ReadModels\Relationships\AbstractRelationship
+ * @package    Somnambulist\Components\ReadModels\Relationships
+ * @subpackage Somnambulist\Components\ReadModels\Relationships\AbstractRelationship
  *
  * Supports proxying calls to the Builder class
  *

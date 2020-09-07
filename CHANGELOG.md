@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-09-07
+----------
+
+ * re-namespace to Somnambulist\Components\ReadModels
+
 2020-09-05
 ----------
 

@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Stubs\Models;
+namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
 /**
  * Class Address
  *
- * @package    Somnambulist\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\ReadModels\Tests\Stubs\Models\Address
+ * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\Address
  */
 class Address
 {

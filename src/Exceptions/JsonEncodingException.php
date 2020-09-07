@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Exceptions;
+namespace Somnambulist\Components\ReadModels\Exceptions;
 
 use RuntimeException;
-use Somnambulist\ReadModels\Model;
+use Somnambulist\Components\ReadModels\Model;
 use function get_class;
 use function sprintf;
 
 /**
  * Class JsonEncodingException
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\JsonEncodingException
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\JsonEncodingException
  */
 class JsonEncodingException extends RuntimeException
 {

@@ -2,7 +2,7 @@
 <?php  declare(strict_types=1);
 
 use Doctrine\DBAL\Connection;
-use Somnambulist\ReadModels\Tests\Stubs\DataGenerator;
+use Somnambulist\Components\ReadModels\Tests\Stubs\DataGenerator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

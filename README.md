@@ -57,9 +57,9 @@ Install using composer, or checkout / pull the files from github.com.
 For example:
 
 ```php
-use Somnambulist\ReadModels\Manager;
-use Somnambulist\ReadModels\TypeCasters\DoctrineTypeCaster;
 use Doctrine\DBAL\DriverManager;
+use Somnambulist\Components\ReadModels\Manager;
+use Somnambulist\Components\ReadModels\TypeCasters\DoctrineTypeCaster;
 
 new Manager(
 [
@@ -74,7 +74,7 @@ new Manager(
 
 ## Usage
 
-Extend `Somnambulist\ReadModels\Model` and add casts, define relationships, exports etc.
+Extend `Somnambulist\Components\ReadModels\Model` and add casts, define relationships, exports etc.
 
 ```php
 class User extends Model

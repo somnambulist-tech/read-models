@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\EventSubscribers;
+namespace Somnambulist\Components\ReadModels\EventSubscribers;
 
-use Somnambulist\ReadModels\Manager;
+use Somnambulist\Components\ReadModels\Manager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -16,8 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * application server, that does not terminate, then the identity map will not
  * be cleared between request (e.g. PHP-PM).
  *
- * @package    Somnambulist\ReadModels\EventSubscribers
- * @subpackage Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerSubscriber
+ * @package    Somnambulist\Components\ReadModels\EventSubscribers
+ * @subpackage Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerSubscriber
  */
 class IdentityMapClearerSubscriber implements EventSubscriberInterface
 {

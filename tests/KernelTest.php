@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests;
+namespace Somnambulist\Components\ReadModels\Tests;
 
-use Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerSubscriber;
+use Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerSubscriber;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -10,8 +10,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Class KernelTest
  *
- * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\KernelTest
+ * @package    Somnambulist\Components\ReadModels\Tests
+ * @subpackage Somnambulist\Components\ReadModels\Tests\KernelTest
  *
  * @group kernel
  */

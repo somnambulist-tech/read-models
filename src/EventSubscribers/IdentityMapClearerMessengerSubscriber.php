@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\EventSubscribers;
+namespace Somnambulist\Components\ReadModels\EventSubscribers;
 
-use Somnambulist\ReadModels\Manager;
+use Somnambulist\Components\ReadModels\Manager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
@@ -15,8 +15,8 @@ use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
  *
  * Based on DoctrineBridge::DoctrineClearEntityManagerWorkerSubscriber
  *
- * @package    Somnambulist\ReadModels\EventSubscribers
- * @subpackage Somnambulist\ReadModels\EventSubscribers\IdentityMapClearerMessengerSubscriber
+ * @package    Somnambulist\Components\ReadModels\EventSubscribers
+ * @subpackage Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerMessengerSubscriber
  */
 class IdentityMapClearerMessengerSubscriber implements EventSubscriberInterface
 {

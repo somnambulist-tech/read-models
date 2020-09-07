@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Stubs;
+namespace Somnambulist\Components\ReadModels\Tests\Stubs;
 
+use Doctrine\DBAL\Connection;
+use Faker\Generator;
 use function array_column;
 use function array_combine;
 use function date;
-use Doctrine\DBAL\Connection;
-use Faker\Generator;
 use function password_hash;
 
 /**
  * Class DataGenerator
  *
- * @package    Somnambulist\ReadModels\Tests\Stubs
- * @subpackage Somnambulist\ReadModels\Tests\Stubs\DataGenerator
+ * @package    Somnambulist\Components\ReadModels\Tests\Stubs
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\DataGenerator
  */
 class DataGenerator
 {

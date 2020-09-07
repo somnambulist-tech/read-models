@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\Components\ReadModels;
 
 use Doctrine\DBAL\Connection;
-use Somnambulist\ReadModels\Exceptions\ConnectionManagerException;
+use Somnambulist\Components\ReadModels\Exceptions\ConnectionManagerException;
 use function array_key_exists;
 
 /**
  * Class ConnectionManager
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\ConnectionManager
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\ConnectionManager
  */
 final class ConnectionManager
 {

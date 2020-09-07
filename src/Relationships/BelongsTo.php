@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Relationships;
+namespace Somnambulist\Components\ReadModels\Relationships;
 
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Manager;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\Manager;
+use Somnambulist\Components\ReadModels\Model;
+use Somnambulist\Components\ReadModels\ModelBuilder;
 use function get_class;
 use function is_null;
 
 /**
  * Class BelongsTo
  *
- * @package    Somnambulist\ReadModels\Relationships
- * @subpackage Somnambulist\ReadModels\Relationships\BelongsTo
+ * @package    Somnambulist\Components\ReadModels\Relationships
+ * @subpackage Somnambulist\Components\ReadModels\Relationships\BelongsTo
  */
 class BelongsTo extends AbstractRelationship
 {

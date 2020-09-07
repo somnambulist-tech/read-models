@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Stubs\Models;
+namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
-use Somnambulist\ReadModels\Model;
+use Somnambulist\Components\ReadModels\Model;
 
 /**
  * Class UserAddress
  *
- * @package    Somnambulist\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress
+ * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress
  */
 class UserAddress extends Model
 {

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\Components\ReadModels;
 
 use IlluminateAgnostic\Str\Support\Arr;
 use IlluminateAgnostic\Str\Support\Str;
-use Somnambulist\ReadModels\Utils\ClassHelpers;
+use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use function explode;
 use function sprintf;
 use function stripos;
@@ -12,8 +12,8 @@ use function stripos;
 /**
  * Class ModelMetadata
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\ModelMetadata
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\ModelMetadata
  */
 final class ModelMetadata
 {

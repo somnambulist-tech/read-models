@@ -1,26 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests;
+namespace Somnambulist\Components\ReadModels\Tests;
 
 use Pagerfanta\Pagerfanta;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Collection\Contracts\Collection;
+use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
+use Somnambulist\Components\ReadModels\Exceptions\NoResultsException;
+use Somnambulist\Components\ReadModels\Model;
+use Somnambulist\Components\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Role;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserContact;
+use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
-use Somnambulist\ReadModels\Exceptions\EntityNotFoundException;
-use Somnambulist\ReadModels\Exceptions\NoResultsException;
-use Somnambulist\ReadModels\Model;
-use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
-use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
-use Somnambulist\ReadModels\Tests\Stubs\Models\UserContact;
-use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 
 /**
  * Class ModelBuilderTest
  *
- * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\ModelBuilderTest
+ * @package    Somnambulist\Components\ReadModels\Tests
+ * @subpackage Somnambulist\Components\ReadModels\Tests\ModelBuilderTest
  *
  * @group model-builder
  */
@@ -90,7 +90,7 @@ class ModelBuilderTest extends TestCase
     public function testFindOrFail()
     {
         $this->expectException(EntityNotFoundException::class);
-        $this->expectExceptionMessage('Could not find a record for Somnambulist\ReadModels\Tests\Stubs\Models\User with id and 999999999999');
+        $this->expectExceptionMessage('Could not find a record for Somnambulist\Components\ReadModels\Tests\Stubs\Models\User with id and 999999999999');
 
         User::findOrFail(999999999999);
     }

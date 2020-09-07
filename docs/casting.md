@@ -64,7 +64,7 @@ to be registered in the Managers master caster system. For the above `Contact` V
 could be:
 
 ```php
-use Somnambulist\ReadModels\Contracts\AttributeCaster;
+use Somnambulist\Components\ReadModels\Contracts\AttributeCaster;
 
 class ContactCaster implements AttributeCaster
 {

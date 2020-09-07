@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\Components\ReadModels;
 
 use Closure;
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Collection\Contracts\Jsonable;
 use Somnambulist\Collection\MutableCollection as Collection;
-use Somnambulist\ReadModels\Exceptions\JsonEncodingException;
+use Somnambulist\Components\ReadModels\Exceptions\JsonEncodingException;
 use function count;
 use function explode;
 use function is_array;
@@ -14,8 +14,8 @@ use function is_array;
 /**
  * Class ModelExporter
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\ModelExporter
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\ModelExporter
  */
 final class ModelExporter implements Jsonable
 {

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Utils;
+namespace Somnambulist\Components\ReadModels\Utils;
 
 use function fopen;
 use function fwrite;
@@ -9,8 +9,8 @@ use function rewind;
 /**
  * Class StrConverter
  *
- * @package    Somnambulist\ReadModels\Utils
- * @subpackage Somnambulist\ReadModels\Utils\StrConverter
+ * @package    Somnambulist\Components\ReadModels\Utils
+ * @subpackage Somnambulist\Components\ReadModels\Utils\StrConverter
  */
 class StrConverter
 {

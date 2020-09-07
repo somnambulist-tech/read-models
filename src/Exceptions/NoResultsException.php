@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Exceptions;
+namespace Somnambulist\Components\ReadModels\Exceptions;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
@@ -9,8 +9,8 @@ use function sprintf;
 /**
  * Class NoResultsException
  *
- * @package    Somnambulist\ReadModels\Exceptions
- * @subpackage Somnambulist\ReadModels\Exceptions\NoResultsException
+ * @package    Somnambulist\Components\ReadModels\Exceptions
+ * @subpackage Somnambulist\Components\ReadModels\Exceptions\NoResultsException
  */
 class NoResultsException extends Exception
 {

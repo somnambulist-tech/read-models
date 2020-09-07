@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\Components\ReadModels;
 
 use Pagerfanta\Adapter\AdapterInterface;
 use function count;
@@ -9,8 +9,8 @@ use function sprintf;
 /**
  * Class PaginatorAdapter
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\PaginatorAdapter
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\PaginatorAdapter
  */
 final class PaginatorAdapter implements AdapterInterface
 {

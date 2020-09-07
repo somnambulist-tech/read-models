@@ -2,12 +2,12 @@
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\SQLLogger;
+use Somnambulist\Components\ReadModels\Manager;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Casters\AddressCaster;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Casters\ContactCaster;
+use Somnambulist\Components\ReadModels\Tests\Stubs\DataGenerator;
+use Somnambulist\Components\ReadModels\TypeCasters\DoctrineTypeCaster;
 use Somnambulist\Domain\Doctrine\TypeBootstrapper;
-use Somnambulist\ReadModels\Manager;
-use Somnambulist\ReadModels\Tests\Stubs\Casters\AddressCaster;
-use Somnambulist\ReadModels\Tests\Stubs\Casters\ContactCaster;
-use Somnambulist\ReadModels\Tests\Stubs\DataGenerator;
-use Somnambulist\ReadModels\TypeCasters\DoctrineTypeCaster;
 use Symfony\Component\Dotenv\Dotenv;
 
 (new Dotenv)->loadEnv(dirname(__DIR__, 2) . '/.env');

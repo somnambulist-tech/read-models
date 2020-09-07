@@ -4,11 +4,17 @@
 There have been a number of changes introduced with 2.0 with the largest being:
 
  * PHP 7.4+ is required
+ * namespace change to `Somnambulist\Components\ReadModels`
  * removal of static caster, connections and embeddable factory
  * removal of embeds property
  * removal of embeddable factory in favour of attribute casters
  * table name is required
  * property type-hinting on all property definitions
+
+### Namespace
+
+The previous `Somnambulist\ReadModels` namespace has been changed to `Somnambulist\Components\ReadModels`.
+Any references should be updated.
 
 ### Manager Object
 
@@ -38,8 +44,9 @@ in 2.0 this can either be done entirely in `services.yaml` by setting up the `Ma
 a service or it can be set in the same boot method:
 
 ```php
-use Somnambulist\ReadModels\Manager;
-use Somnambulist\ReadModels\TypeCasters\DoctrineTypeCaster;
+use Somnambulist\Components\ReadModels\Manager;
+use Somnambulist\Components\ReadModels\TypeCasters\DoctrineTypeCaster;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class MyBundle extends Bundle
 {
@@ -58,6 +65,8 @@ class MyBundle extends Bundle
 A Symfony bundle has been made to make it easier to integrate read-models.
 
 __Note:__ the `Manager` requires setting up for any unit testing.
+
+__Note:__ additional type casters are available in the [attribute-model](https://github.com/somnambulist-tech/attribute-model) library.
 
 ### Table Name Property
 

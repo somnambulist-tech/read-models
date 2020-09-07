@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Utils;
+namespace Somnambulist\Components\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
-use Somnambulist\ReadModels\Contracts\Queryable;
+use Somnambulist\Components\ReadModels\Contracts\Queryable;
 use function array_merge;
 use function count;
 use function explode;
@@ -19,8 +19,8 @@ use function is_numeric;
  * Based on the eager loading strategy deployed in Laravel Eloquent.
  * @link https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Builder.php
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\Utils\GenerateRelationshipsToEagerLoad
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\Utils\GenerateRelationshipsToEagerLoad
  */
 final class GenerateRelationshipsToEagerLoad
 {

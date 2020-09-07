@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Utils;
+namespace Somnambulist\Components\ReadModels\Utils;
 
 use Closure;
 use ReflectionObject;
@@ -13,8 +13,8 @@ use function is_null;
  *
  * Assorted helpers, scoped to prevent global functions.
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\Utils\ClassHelpers
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\Utils\ClassHelpers
  */
 class ClassHelpers
 {

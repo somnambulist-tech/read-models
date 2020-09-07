@@ -1,17 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels;
+namespace Somnambulist\Components\ReadModels;
 
 use Doctrine\DBAL\Connection;
 use RuntimeException;
+use Somnambulist\Components\AttributeModel\AttributeCaster;
 use function get_class;
 use function sprintf;
 
 /**
  * Class ModelRegistry
  *
- * @package    Somnambulist\ReadModels
- * @subpackage Somnambulist\ReadModels\ModelRegistry
+ * @package    Somnambulist\Components\ReadModels
+ * @subpackage Somnambulist\Components\ReadModels\ModelRegistry
  */
 final class Manager
 {

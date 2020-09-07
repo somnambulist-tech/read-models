@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests;
+namespace Somnambulist\Components\ReadModels\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
-use Somnambulist\ReadModels\Tests\Stubs\Models\UserAddress;
-use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
-use Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Role;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
+use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
+use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
 /**
  * Class ModelEagerLoadingTest
  *
- * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\ModelEagerLoadingTest
+ * @package    Somnambulist\Components\ReadModels\Tests
+ * @subpackage Somnambulist\Components\ReadModels\Tests\ModelEagerLoadingTest
  *
  * @group model
  * @group model-loading

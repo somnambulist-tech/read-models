@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Support\Behaviours;
+namespace Somnambulist\Components\ReadModels\Tests\Support\Behaviours;
 
 /**
  * Trait GetRandomUserId
  *
- * @package    Somnambulist\ReadModels\Tests\Support\Behaviours
- * @subpackage Somnambulist\ReadModels\Tests\Support\Behaviours\GetRandomUserId
+ * @package    Somnambulist\Components\ReadModels\Tests\Support\Behaviours
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId
  */
 trait GetRandomUserId
 {

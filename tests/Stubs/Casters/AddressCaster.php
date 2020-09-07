@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Stubs\Casters;
+namespace Somnambulist\Components\ReadModels\Tests\Stubs\Casters;
 
-use Somnambulist\ReadModels\Contracts\AttributeCaster;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Address;
+use Somnambulist\Components\AttributeModel\Contracts\AttributeCasterInterface;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Address;
 use function in_array;
 
 /**
  * Class AddressCaster
  *
- * @package    Somnambulist\ReadModels\Tests\Stubs\Casters
- * @subpackage Somnambulist\ReadModels\Tests\Stubs\Casters\AddressCaster
+ * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Casters
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Casters\AddressCaster
  */
-class AddressCaster implements AttributeCaster
+class AddressCaster implements AttributeCasterInterface
 {
     public function types(): array
     {
@@ -24,7 +24,7 @@ class AddressCaster implements AttributeCaster
         return in_array($type, $this->types());
     }
 
-    public function cast(array &$attributes, string $attribute, string $type): void
+    public function cast(array &$attributes, $attribute, string $type): void
     {
         $attributes['address'] = new Address(
             $attributes['address_line1'] ?? null,

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Stubs\Models;
+namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
 use Somnambulist\Domain\Entities\Types\Identity\EmailAddress;
 use Somnambulist\Domain\Entities\Types\PhoneNumber;
@@ -8,8 +8,8 @@ use Somnambulist\Domain\Entities\Types\PhoneNumber;
 /**
  * Class Contact
  *
- * @package    Somnambulist\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\ReadModels\Tests\Stubs\Models\Contact
+ * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\Contact
  */
 class Contact
 {

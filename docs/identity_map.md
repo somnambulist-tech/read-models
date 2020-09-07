@@ -38,7 +38,7 @@ Add the following to your `phpunit.xml` config file to enable the automatic clea
     <!-- other unit config excluded -->
     
     <extensions>
-        <extension class="Somnambulist\ReadModels\PHPUnit\PHPUnitListener"/>
+        <extension class="Somnambulist\Components\ReadModels\PHPUnit\PHPUnitListener"/>
     </extensions>
 </phpunit>
 ```

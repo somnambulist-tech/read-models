@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests\Relationships;
+namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use PHPUnit\Framework\TestCase;
-use Somnambulist\ReadModels\Tests\Stubs\Models\Role;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Role;
 
 /**
  * Class RelationshipViaExternalKeyTest
  *
- * @package    Somnambulist\ReadModels\Tests\Relationships
- * @subpackage Somnambulist\ReadModels\Tests\Relationships\RelationshipViaExternalKeyTest
+ * @package    Somnambulist\Components\ReadModels\Tests\Relationships
+ * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\RelationshipViaExternalKeyTest
  *
  * @group relationships
  * @group relationships-orderby

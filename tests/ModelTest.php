@@ -1,22 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Tests;
+namespace Somnambulist\Components\ReadModels\Tests;
 
 use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
+use Somnambulist\Components\ReadModels\ModelBuilder;
+use Somnambulist\Components\ReadModels\ModelExporter;
+use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
-use Somnambulist\ReadModels\ModelBuilder;
-use Somnambulist\ReadModels\ModelExporter;
-use Somnambulist\ReadModels\Relationships\HasOneToMany;
-use Somnambulist\ReadModels\Tests\Stubs\Models\User;
 use function date;
 use function password_hash;
 
 /**
  * Class ModelTest
  *
- * @package    Somnambulist\ReadModels\Tests
- * @subpackage Somnambulist\ReadModels\Tests\ModelTest
+ * @package    Somnambulist\Components\ReadModels\Tests
+ * @subpackage Somnambulist\Components\ReadModels\Tests\ModelTest
  *
  * @group model
  */

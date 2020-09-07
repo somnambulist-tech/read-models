@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Exceptions;
+namespace Somnambulist\Components\ReadModels\Exceptions;
 
 use Exception;
 use function sprintf;
@@ -8,8 +8,8 @@ use function sprintf;
 /**
  * Class AttributeCasterException
  *
- * @package    Somnambulist\ReadModels\Exceptions
- * @subpackage Somnambulist\ReadModels\Exceptions\AttributeCasterException
+ * @package    Somnambulist\Components\ReadModels\Exceptions
+ * @subpackage Somnambulist\Components\ReadModels\Exceptions\AttributeCasterException
  */
 class AttributeCasterException extends Exception
 {

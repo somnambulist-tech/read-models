@@ -15,7 +15,7 @@
     <ini name="memory_limit" value="256M"/>
     <env name="SHELL_VERBOSITY" value="-1"/>
     <server name="KERNEL_DIR" value="./Tests/Support"/>
-    <server name="KERNEL_CLASS" value="Somnambulist\ReadModels\Tests\Support\Kernel"/>
+    <server name="KERNEL_CLASS" value="Somnambulist\Components\ReadModels\Tests\Support\Kernel"/>
     <server name="APP_ENV" value="test"/>
   </php>
   <testsuites>
@@ -24,6 +24,6 @@
     </testsuite>
   </testsuites>
   <extensions>
-    <extension class="Somnambulist\ReadModels\PHPUnit\PHPUnitListener"/>
+    <extension class="Somnambulist\Components\ReadModels\PHPUnit\PHPUnitListener"/>
   </extensions>
 </phpunit>

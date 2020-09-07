@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Somnambulist\ReadModels\Utils;
+namespace Somnambulist\Components\ReadModels\Utils;
 
 use BadMethodCallException;
 use Error;
@@ -15,8 +15,8 @@ use function sprintf;
  *
  * @link https://github.com/laravel/framework/blob/5.8/src/Illuminate/Support/Traits/ForwardsCalls.php
  *
- * @package    Somnambulist\ReadModels\Utils
- * @subpackage Somnambulist\ReadModels\Utils\ProxyTo
+ * @package    Somnambulist\Components\ReadModels\Utils
+ * @subpackage Somnambulist\Components\ReadModels\Utils\ProxyTo
  */
 class ProxyTo
 {
