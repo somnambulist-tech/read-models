@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels\Tests;
 
 use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
+use Somnambulist\Collection\MutableCollection;
 use Somnambulist\Components\ReadModels\ModelBuilder;
 use Somnambulist\Components\ReadModels\ModelExporter;
 use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
@@ -82,6 +83,7 @@ class ModelTest extends TestCase
             'name' => 'bob',
             'is_active' => true,
         ]);
+        $user->setRelationshipValue('addresses', new MutableCollection());
 
         $this->assertTrue(isset($user->name));
         $this->assertTrue(isset($user->uuid));
