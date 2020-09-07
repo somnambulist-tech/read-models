@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-09-07 - 1.4.1
+------------------
+
+ * fix bug where `getParameter*` method calls on `ModelBuilder` are not returning the result
+
 2020-09-07
 ----------
 
