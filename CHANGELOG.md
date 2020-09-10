@@ -1,15 +1,21 @@
 Change Log
 ==========
 
+2020-09-09
+----------
+
+ * remove `AttributeCasterException` not needed
+
 2020-09-07 - 1.4.1
 ------------------
 
  * fix bug where `getParameter*` method calls on `ModelBuilder` are not returning the result
 
-2020-09-07
-----------
+2020-09-07 - 2.0.0
+------------------
 
  * re-namespace to Somnambulist\Components\ReadModels
+ * release initial 2.0.0
 
 2020-09-05
 ----------
@@ -25,7 +31,7 @@ Change Log
 
  * refactor relationship loading
  * refactor `ModelBuilder` to set query itself instead of being passed in
- * removed `__get` meta from `Model` in favour of renamed `meta()` method
+ * remove `__get` meta from `Model` in favour of renamed `meta()` method
 
 2020-09-03
 ----------
