@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-09-12
+----------
+
+ * allow collection class to be overridden per model
+
 2020-09-09
 ----------
 

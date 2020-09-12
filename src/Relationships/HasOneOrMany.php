@@ -2,7 +2,7 @@
 
 namespace Somnambulist\Components\ReadModels\Relationships;
 
-use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
 

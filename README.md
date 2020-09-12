@@ -184,6 +184,11 @@ docblock comment. Additionally: virtual methods can be tagged using `@method`.
 __Note:__ to get a raw attribute value, use `->getRawAttribute()`. This will return null if
 the attribute is not found, but could also return null for the specified key.
 
+When returning sets of Model objects, the returned set can be customised per model to allow for
+specific filters on the collection or other behaviour. Override the `collectionClass` property
+with the class name to use. This class must implement the Collection contract from the
+somnambulist/collection project and must have `extract()` and `add()` methods.
+
 ## More Reading
 
  * [Upgrading from 1.X to 2.0](docs/upgrading_1.X_to_2.0.md)

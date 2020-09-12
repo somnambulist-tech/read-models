@@ -5,7 +5,7 @@ namespace Somnambulist\Components\ReadModels\Relationships;
 use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Pagerfanta;
-use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Contracts\Queryable;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;

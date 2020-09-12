@@ -11,7 +11,8 @@ use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 use RuntimeException;
 use Somnambulist\Collection\Contracts\Arrayable;
-use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\Collection\Contracts\Collection;
+use Somnambulist\Collection\MutableCollection;
 use Somnambulist\Components\ReadModels\Contracts\Queryable;
 use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\Components\ReadModels\Exceptions\NoResultsException;
@@ -159,7 +160,7 @@ class ModelBuilder implements Queryable
 
     public function fetch(): Collection
     {
-        $models  = new Collection();
+        $models  = $this->model->getCollection();
         $selects = (new FilterGeneratedKeysFromCollection())($this->query->getQueryPart('select'));
 
         if (count($selects) < 1) {
@@ -508,7 +509,7 @@ class ModelBuilder implements Queryable
             $values = $values->toArray();
         }
 
-        $placeholders = Collection::collect($values)
+        $placeholders = MutableCollection::collect($values)
             ->map(function ($value) use ($column) {
                 $this->query->setParameter($key = $this->createParameterPlaceholderKey($column), $value);
 

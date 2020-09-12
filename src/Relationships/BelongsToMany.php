@@ -2,7 +2,7 @@
 
 namespace Somnambulist\Components\ReadModels\Relationships;
 
-use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Manager;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
@@ -65,7 +65,7 @@ class BelongsToMany extends AbstractRelationship
 
             $entities = $map->all($class, $ids);
 
-            $model->setRelationshipValue($relationship, new Collection($entities));
+            $model->setRelationshipValue($relationship, $this->related->getCollection($entities));
         });
 
         return $this;

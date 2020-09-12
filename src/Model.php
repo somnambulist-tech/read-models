@@ -6,8 +6,9 @@ use IlluminateAgnostic\Str\Support\Str;
 use JsonSerializable;
 use LogicException;
 use Somnambulist\Collection\Contracts\Arrayable;
+use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Collection\Contracts\Jsonable;
-use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\Collection\MutableCollection;
 use Somnambulist\Components\AttributeModel\AbstractModel;
 use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
@@ -87,6 +88,15 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      * keys defined on the relationship to build the relationship keys.
      */
     protected ?string $foreignKey = null;
+
+    /**
+     * The type of collection to return results in when returning multiple results
+     *
+     * Allows using custom collections with helper methods for better dealing with sets
+     * of the same model or for defining filters etc on a loaded relationship. The class
+     * must implement the Somnambulist\Collection\Contracts\Collection interface.
+     */
+    protected string $collectionClass = MutableCollection::class;
 
     /**
      * The relationships to eager load on every query
@@ -223,6 +233,11 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
     public function new(array $attributes = []): Model
     {
         return new static($attributes);
+    }
+
+    public function getCollection(array $models = []): Collection
+    {
+        return new $this->collectionClass($models);
     }
 
     public function getAttributes(): array
@@ -383,7 +398,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
         }
 
         $relation
-            ->addConstraints($m = new Collection([$this]))
+            ->addConstraints($m = $this->getCollection([$this]))
             ->addRelationshipResultsToModels($m, $method)
         ;
 
