@@ -39,6 +39,10 @@ services:
 If using Symfony Messenger, there is a separate subscriber that will clear the `IdentityMap`
 between handling messages. Add this to the services if needed.
 
+__Note:__ it may still be necessary to access the `Manager` in a bundle `boot` method before
+the Models will function as the container will only instantiate the `Manager` on first access, 
+but the Models expect it to already be instantiated before usage.
+
 ### Kernel Subscriber
 
 If running under PHP-PM or another app-server that keeps the kernel running, then the
