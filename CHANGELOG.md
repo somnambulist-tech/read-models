@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+2020-09-17
+----------
+
+ * fix bug in identity map; creating inverse relationship was generating incorrect mappings
+ * fix bug in identity map; fetching related identities was returning the marker, not identity
+
 2020-09-12
 ----------
 
