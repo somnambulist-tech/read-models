@@ -97,11 +97,7 @@ final class ModelIdentityMap
      * Register a connection between the source and target
      *
      * Directionality does not matter in the relationship as it is a lookup table
-     * between two models. The inverse relationship will be automatically created.
-     *
-     * The end result is an array of: [class_source][id][class_target][id] = 1
-     *
-     * The 1 is just to give it a value; it could be true or found or the id again.
+     * between two models. The end result is an array of: [class_source][id][class_target][id] = [id]
      *
      * @param string $source
      * @param mixed  $sourceId
@@ -110,9 +106,7 @@ final class ModelIdentityMap
      */
     public function registerRelationship(string $source, $sourceId, string $target, $targetId): void
     {
-        // avoid needing to do array checks because the id can only be there once
-        $this->relationships[$source][(string)$sourceId][$target][(string)$targetId] = 1;
-        $this->relationships[$target][(string)$targetId][$source][(string)$sourceId] = 1;
+        $this->relationships[$source][(string)$sourceId][$target][(string)$targetId] = (string)$targetId;
     }
 
     /**
