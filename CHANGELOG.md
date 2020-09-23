@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2020-09-22 - 1.4.3
+------------------
+
+ * fix identity casting bug in identity map array operations
+
 2020-09-17 - 1.4.2
 ------------------
 
