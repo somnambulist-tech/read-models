@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+2020-09-23 - 2.1.3
+------------------
+
+ * fix bug in relationships not applying default constraint when accessing via method call
+   e.g.: `$user->profile()` vs `$user->profile`; the method call was not triggering `addConstraints()`
+
 2020-09-22 - 2.1.2
 ------------------
 

@@ -64,7 +64,7 @@ class User extends Model
         return $this->created_at->format('dS F Y');
     }
 
-    protected function addresses()
+    public function addresses()
     {
         return $this->hasMany(UserAddress::class, null, null, 'type');
     }
@@ -74,7 +74,7 @@ class User extends Model
         return $this->hasMany(UserContact::class, null, null, 'type');
     }
 
-    protected function relatedTo()
+    public function relatedTo()
     {
         return $this->belongsToMany(User::class, 'user_relations', 'user_source', 'user_target');
     }
@@ -84,7 +84,7 @@ class User extends Model
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    protected function profile()
+    public function profile()
     {
         /*
          * For these tests we have to fake the relationship by pre-registering user_uuid

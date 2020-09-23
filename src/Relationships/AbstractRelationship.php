@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Pagerfanta;
 use Somnambulist\Collection\Contracts\Collection;
+use Somnambulist\Collection\MutableCollection;
 use Somnambulist\Components\ReadModels\Contracts\Queryable;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
@@ -92,6 +93,7 @@ abstract class AbstractRelationship implements Queryable
     protected ModelBuilder $query;
     protected Model $parent;
     protected Model $related;
+    protected bool $hasConstraints = false;
 
     public function __construct(ModelBuilder $builder, Model $parent)
     {
@@ -141,6 +143,10 @@ abstract class AbstractRelationship implements Queryable
 
     public function fetch(): Collection
     {
+        if (!$this->hasConstraints) {
+            $this->addConstraints(new MutableCollection([$this->parent]));
+        }
+
         return $this->query->fetch();
     }
 

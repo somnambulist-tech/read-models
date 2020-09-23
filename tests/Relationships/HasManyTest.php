@@ -4,9 +4,11 @@ namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
+use Somnambulist\Collection\MutableCollection;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
 use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
+use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Address;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
@@ -68,5 +70,17 @@ class HasManyTest extends TestCase
         $address = $user->addresses->first();
 
         $this->assertInstanceOf(UserAddress::class, $address);
+    }
+
+    public function testQueryingRelationship()
+    {
+        /** @var User $user */
+        $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
+
+        $results = $user->addresses()->fetch();
+
+        $this->assertInstanceOf(MutableCollection::class, $results);
+
+        $results->each(fn(UserAddress $addr) => $this->assertEquals($user->id, $addr->user_id));
     }
 }

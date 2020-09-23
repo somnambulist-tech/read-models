@@ -66,4 +66,14 @@ class HasOneTest extends TestCase
         $this->assertInstanceOf(UserProfile::class, $user->fixed_profile);
         $this->assertNull($user->fixed_profile->user_uuid);
     }
+
+    public function testQueryingRelationship()
+    {
+        $user = User::query()->innerJoin('users', 'user_profiles', 'p', 'p.user_uuid = users.uuid')->fetchFirstOrFail();
+        $res  = $user->profile()->fetch();
+        $prof = $res->first();
+
+        $this->assertCount(1, $res);
+        $this->assertEquals($user->uuid, $prof->user_uuid);
+    }
 }

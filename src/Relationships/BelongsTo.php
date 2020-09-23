@@ -33,6 +33,8 @@ class BelongsTo extends AbstractRelationship
 
     public function addConstraints(Collection $models): AbstractRelationship
     {
+        $this->hasConstraints = true;
+
         $this->query = $this->query->whereIn(
             $this->ownerKey, $models->map->getRawAttribute($this->foreignKey)->removeNulls()->unique()->toArray()
         );

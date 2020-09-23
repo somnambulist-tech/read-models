@@ -38,6 +38,8 @@ class BelongsToMany extends AbstractRelationship
 
     public function addConstraints(Collection $models): AbstractRelationship
     {
+        $this->hasConstraints = true;
+
         $this
             ->select(sprintf('%s AS %s', $this->getQualifiedSourceKeyName(), $this->getRelationshipSourceModelReferenceKeyName()))
             ->innerJoin(

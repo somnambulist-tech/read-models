@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
+use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
 use Somnambulist\Components\ReadModels\Relationships\BelongsToMany;
@@ -46,5 +47,17 @@ class BelongsToManyTest extends TestCase
 
         $this->assertInstanceOf(Model::class, $rel->getModel());
         $this->assertInstanceOf(QueryBuilder::class, $rel->getQueryBuilder());
+    }
+
+    public function testQueryingRelationship()
+    {
+        $user = User::query()->fetchFirstOrFail();
+
+        $rel  = $user->relatedTo()->fetch();
+        $rel2 = $user->relatedTo;
+
+        $this->assertInstanceOf(Collection::class, $rel);
+        $this->assertEquals($rel2->count(), $rel->count());
+        $this->assertSame($rel->first(), $rel2->first());
     }
 }

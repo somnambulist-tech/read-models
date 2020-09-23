@@ -28,6 +28,8 @@ abstract class HasOneOrMany extends AbstractRelationship
 
     public function addConstraints(Collection $models): AbstractRelationship
     {
+        $this->hasConstraints = true;
+
         $this->query = $this->query->whereIn(
             $this->foreignKey, $models->extract($this->localKey)->unique()->toArray()
         );
