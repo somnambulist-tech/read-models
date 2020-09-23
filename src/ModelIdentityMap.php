@@ -5,6 +5,7 @@ namespace Somnambulist\Components\ReadModels;
 use IlluminateAgnostic\Str\Support\Str;
 use function array_intersect_key;
 use function array_key_exists;
+use function array_map;
 use function explode;
 use function get_class;
 
@@ -128,7 +129,7 @@ final class ModelIdentityMap
             return
                 $this->relationships[get_class($model)][(string)$identity][$related]
                 ??
-                $this->relationships[get_class($model)][$model->getPrimaryKey()][$related]
+                $this->relationships[get_class($model)][(string)$model->getPrimaryKey()][$related]
                 ??
                 []
             ;
@@ -137,7 +138,7 @@ final class ModelIdentityMap
         return
             $this->relationships[get_class($model)][(string)$identity]
             ??
-            $this->relationships[get_class($model)][$model->getPrimaryKey()]
+            $this->relationships[get_class($model)][(string)$model->getPrimaryKey()]
             ??
             []
         ;
@@ -148,7 +149,7 @@ final class ModelIdentityMap
         $class = get_class($model);
 
         if (!$this->has($class, (string)$id = $model->getPrimaryKey())) {
-            $this->identityMap[$class][$id] = $model;
+            $this->identityMap[$class][(string)$id] = $model;
 
             if (null !== $model->getExternalPrimaryKey()) {
                 $this->identityMap[$class][(string)$model->getExternalPrimaryKey()] = $model;
@@ -172,6 +173,7 @@ final class ModelIdentityMap
         if (!array_key_exists($class, $this->identityMap)) {
             return [];
         }
+        $ids = array_map(fn($id) => (string)$id, $ids);
 
         return array_values(array_intersect_key($this->identityMap[$class], $ids));
     }

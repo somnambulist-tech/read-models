@@ -270,6 +270,11 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
         return $this->getRelationshipValue($name);
     }
 
+    /**
+     * Could return an object e.g. Uuid, Identity, depending on casting
+     *
+     * @return mixed|null
+     */
     public function getPrimaryKey()
     {
         return $this->attributes[$this->meta()->primaryKeyName()] ?? null;

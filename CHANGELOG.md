@@ -1,14 +1,19 @@
 Change Log
 ==========
 
-2020-09-17
-----------
+2020-09-22 - 2.1.2
+------------------
+
+ * fix bug in identity map where not all identity values are cast to strings during array operations
+
+2020-09-17 - 2.1.1
+------------------
 
  * fix bug in identity map; creating inverse relationship was generating incorrect mappings
  * fix bug in identity map; fetching related identities was returning the marker, not identity
 
-2020-09-12
-----------
+2020-09-12 - 2.1.0
+------------------
 
  * allow collection class to be overridden per model
 
