@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+2020-12-18
+----------
+
+ * add bound parameter count check on relationships to prevent running queries without bound args 
+
+2020-10-22
+----------
+
+ * update DBAL usages to remove deprecated methods
+
 2020-09-23 - 2.1.3
 ------------------
 

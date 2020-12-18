@@ -47,8 +47,9 @@ class BelongsTo extends AbstractRelationship
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->ownerKey)) {
             $this->query->select($this->ownerKey);
         }
-
-        $this->fetch();
+        if (count($this->getQueryBuilder()->getParameters()) > 0) {
+            $this->fetch();
+        }
 
         $models->each(function (Model $child) use ($relationship) {
             $map = Manager::instance()->map();

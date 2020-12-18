@@ -6,6 +6,7 @@ use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Manager;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
+use function count;
 use function get_class;
 
 /**
@@ -31,8 +32,9 @@ class HasOne extends HasOneOrMany
         if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->foreignKey)) {
             $this->query->select($this->foreignKey);
         }
-
-        $this->fetch();
+        if (count($this->getQueryBuilder()->getParameters()) > 0) {
+            $this->fetch();
+        }
 
         $map = Manager::instance()->map();
 

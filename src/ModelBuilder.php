@@ -3,7 +3,6 @@
 namespace Somnambulist\Components\ReadModels;
 
 use BadMethodCallException;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use IlluminateAgnostic\Str\Support\Str;
@@ -171,8 +170,6 @@ class ModelBuilder implements Queryable
         $map->registerAlias($this->model);
 
         if ($stmt = $this->query->execute()) {
-            $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
-
             foreach ($stmt as $row) {
                 $map->inferRelationshipFromAttributes($this->model, $row);
 
@@ -236,9 +233,7 @@ class ModelBuilder implements Queryable
         ;
 
         if ($stmt) {
-            $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
-
-            return $stmt->fetchAll()[0]['total_results'] ?? 0;
+            return $stmt->fetchAllAssociative()[0]['total_results'] ?? 0;
         }
 
         return 0;

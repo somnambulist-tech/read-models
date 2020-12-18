@@ -6,6 +6,7 @@ use Somnambulist\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Manager;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
+use function count;
 use function get_class;
 use function sprintf;
 use function str_replace;
@@ -58,7 +59,9 @@ class BelongsToMany extends AbstractRelationship
 
     public function addRelationshipResultsToModels(Collection $models, string $relationship): AbstractRelationship
     {
-        $this->fetch();
+        if (count($this->getQueryBuilder()->getParameters()) > 0) {
+            $this->fetch();
+        }
 
         $map = Manager::instance()->map();
 
