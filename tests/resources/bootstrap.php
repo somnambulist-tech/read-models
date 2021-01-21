@@ -7,7 +7,7 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Casters\AddressCaster;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Casters\ContactCaster;
 use Somnambulist\Components\ReadModels\Tests\Stubs\DataGenerator;
 use Somnambulist\Components\ReadModels\TypeCasters\DoctrineTypeCaster;
-use Somnambulist\Domain\Doctrine\TypeBootstrapper;
+use Somnambulist\Components\Domain\Doctrine\TypeBootstrapper;
 use Symfony\Component\Dotenv\Dotenv;
 
 (new Dotenv)->loadEnv(dirname(__DIR__, 2) . '/.env');

@@ -68,7 +68,7 @@ final class ModelIdentityMap
      * @param string $target
      * @param mixed  $targetId
      */
-    public function registerRelationship(string $source, $sourceId, string $target, $targetId): void
+    public function registerRelationship(string $source, mixed $sourceId, string $target, mixed $targetId): void
     {
         $this->relationships[$source][(string)$sourceId][$target][(string)$targetId] = (string)$targetId;
     }

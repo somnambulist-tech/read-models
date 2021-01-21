@@ -3,7 +3,7 @@
 namespace Somnambulist\Components\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
-use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\Components\Collection\MutableCollection as Collection;
 use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
 use function is_string;
 

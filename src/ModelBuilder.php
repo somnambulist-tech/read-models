@@ -9,9 +9,9 @@ use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 use RuntimeException;
-use Somnambulist\Collection\Contracts\Arrayable;
-use Somnambulist\Collection\Contracts\Collection;
-use Somnambulist\Collection\MutableCollection;
+use Somnambulist\Components\Collection\Contracts\Arrayable;
+use Somnambulist\Components\Collection\Contracts\Collection;
+use Somnambulist\Components\Collection\MutableCollection;
 use Somnambulist\Components\ReadModels\Contracts\Queryable;
 use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\Components\ReadModels\Exceptions\NoResultsException;
@@ -28,9 +28,9 @@ use function in_array;
 use function is_callable;
 use function method_exists;
 use function sprintf;
+use function str_contains;
 use function str_replace;
 use function strlen;
-use function strpos;
 use function substr;
 use function ucfirst;
 
@@ -277,7 +277,7 @@ class ModelBuilder implements Queryable
     private function eagerLoadRelationships(Collection $models): void
     {
         foreach ($this->eagerLoad as $name => $constraints) {
-            if (false === strpos($name, '.')) {
+            if (false === str_contains($name, '.')) {
                 /** @var AbstractRelationship $load */
                 $rel = $this->model->new()->getRelationship($name);
                 $rel
@@ -546,7 +546,7 @@ class ModelBuilder implements Queryable
      *
      * @return ModelBuilder
      */
-    public function whereColumn(string $column, string $operator, $value, string $andOr = 'and'): self
+    public function whereColumn(string $column, string $operator, mixed $value, string $andOr = 'and'): self
     {
         $key    = $this->createParameterPlaceholderKey($column);
         $method = $this->getAndOrWhereMethodName($andOr);
@@ -568,7 +568,7 @@ class ModelBuilder implements Queryable
      *
      * @return ModelBuilder
      */
-    public function orWhereColumn(string $column, string $operator, $value): self
+    public function orWhereColumn(string $column, string $operator, mixed $value): self
     {
         return $this->whereColumn($column, $operator, $value, 'or');
     }
@@ -621,7 +621,7 @@ class ModelBuilder implements Queryable
      *
      * @return ModelBuilder
      */
-    public function whereBetween(string $column, $start, $end, string $andOr = 'and', bool $not = false): self
+    public function whereBetween(string $column, mixed $start, mixed $end, string $andOr = 'and', bool $not = false): self
     {
         $method = $this->getAndOrWhereMethodName($andOr);
         $expr   = ($not ? 'NOT' : '') . ' BETWEEN';
@@ -635,17 +635,17 @@ class ModelBuilder implements Queryable
         return $this;
     }
 
-    public function whereNotBetween(string $column, $start, $end): self
+    public function whereNotBetween(string $column, mixed $start, mixed $end): self
     {
         return $this->whereBetween($column, $start, $end, 'and', true);
     }
 
-    public function orWhereBetween(string $column, $start, $end): self
+    public function orWhereBetween(string $column, mixed $start, mixed $end): self
     {
         return $this->whereBetween($column, $start, $end, 'or');
     }
 
-    public function orWhereNotBetween(string $column, $start, $end): self
+    public function orWhereNotBetween(string $column, mixed $start, mixed $end): self
     {
         return $this->whereBetween($column, $start, $end, 'or', true);
     }

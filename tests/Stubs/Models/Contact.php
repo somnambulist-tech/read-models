@@ -2,8 +2,8 @@
 
 namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
-use Somnambulist\Domain\Entities\Types\Identity\EmailAddress;
-use Somnambulist\Domain\Entities\Types\PhoneNumber;
+use Somnambulist\Components\Domain\Entities\Types\Identity\EmailAddress;
+use Somnambulist\Components\Domain\Entities\Types\PhoneNumber;
 
 /**
  * Class Contact

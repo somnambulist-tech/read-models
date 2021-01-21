@@ -2,7 +2,7 @@
 
 namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
-use Somnambulist\Collection\MutableCollection;
+use Somnambulist\Components\Collection\MutableCollection;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\Relationships\BelongsToMany;
 

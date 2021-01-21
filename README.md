@@ -40,7 +40,7 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
 
 ## Requirements
 
- * PHP 7.4+
+ * PHP 8.0+
  * mb_string
  * doctrine/dbal
  * somnambulist/collection
@@ -192,6 +192,7 @@ somnambulist/collection project and must have `extract()` and `add()` methods.
 ## More Reading
 
  * [Upgrading from 1.X to 2.0](docs/upgrading_1.X_to_2.0.md)
+ * [Upgrading from 2.X to 3.0](docs/upgrading_2.X_to_3.0.md)
  * [Setting up Symfony](docs/setup_symfony.md)
  * [Querying Data](docs/querying.md)
  * [Casting Attributes](docs/casting.md)

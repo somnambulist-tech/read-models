@@ -4,8 +4,8 @@ namespace Somnambulist\Components\ReadModels;
 
 use Closure;
 use IlluminateAgnostic\Str\Support\Str;
-use Somnambulist\Collection\Contracts\Jsonable;
-use Somnambulist\Collection\MutableCollection as Collection;
+use Somnambulist\Components\Collection\Contracts\Jsonable;
+use Somnambulist\Components\Collection\MutableCollection as Collection;
 use Somnambulist\Components\ReadModels\Exceptions\JsonEncodingException;
 use function count;
 use function explode;
@@ -130,7 +130,7 @@ final class ModelExporter implements Jsonable
 
         foreach ($attributes as $key => $value) {
             if ($this->shouldExtractAttribute($key)) {
-                $key = Str::snake($this->getAttributeExtractionKey($key), '_');
+                $key = Str::snake($this->getAttributeExtractionKey($key));
 
                 if (is_object($value)) {
                     $attrs[$key] = $this->extractPropertiesFrom($value);

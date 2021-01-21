@@ -4,7 +4,7 @@ namespace Somnambulist\Components\ReadModels\Tests;
 
 use Pagerfanta\Pagerfanta;
 use PHPUnit\Framework\TestCase;
-use Somnambulist\Collection\Contracts\Collection;
+use Somnambulist\Components\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\Components\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\Components\ReadModels\Model;
@@ -14,7 +14,7 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserContact;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
-use Somnambulist\Domain\Entities\Types\DateTime\DateTime;
+use Somnambulist\Components\Domain\Entities\Types\DateTime\DateTime;
 
 /**
  * Class ModelBuilderTest

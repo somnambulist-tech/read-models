@@ -1,8 +1,14 @@
 Change Log
 ==========
 
-2020-12-18
+2021-01-21
 ----------
+
+ * require PHP 8
+ * update to collection 5.0, domain 4.0
+
+2020-12-18 - 2.2.0
+------------------
 
  * add bound parameter count check on relationships to prevent running queries without bound args 
 

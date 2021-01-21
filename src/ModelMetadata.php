@@ -91,7 +91,7 @@ final class ModelMetadata
      */
     public function foreignKey(): string
     {
-        $key = sprintf('%s_%s', Str::snake(ClassHelpers::getObjectShortClassName($this->model), '_'), $this->primaryKeyName());
+        $key = sprintf('%s_%s', Str::snake(ClassHelpers::getObjectShortClassName($this->model)), $this->primaryKeyName());
 
         return $this->foreignKey ?? $key;
     }

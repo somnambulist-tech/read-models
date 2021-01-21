@@ -22,7 +22,7 @@ final class ConnectionManager
         $this->forAll($connections);
     }
 
-    public function forAll(array $connections)
+    public function forAll(array $connections): void
     {
         foreach ($connections as $model => $connection) {
             $this->add($connection, $model);
