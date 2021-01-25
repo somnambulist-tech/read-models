@@ -27,7 +27,7 @@ services:
             $casters: !tagged_iterator somnambulist.read_models.caster
 
     Somnambulist\Components\ReadModels\TypeCasters\:
-        resource: '../vendor/somanmbulist/read-models/src/TypeCasters/'
+        resource: '../vendor/somnambulist/read-models/src/TypeCasters/'
         tags: ['somnambulist.read_models.caster']
 
     App\Models\TypeCasters\:

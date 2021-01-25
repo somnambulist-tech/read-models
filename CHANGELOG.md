@@ -1,8 +1,13 @@
 Change Log
 ==========
 
-2021-01-21
+2021-01-25
 ----------
+
+ * fix spelling error
+
+2021-01-21 - 3.0.0
+------------------
 
  * require PHP 8
  * update to collection 5.0, domain 4.0
