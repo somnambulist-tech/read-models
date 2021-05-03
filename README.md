@@ -1,6 +1,10 @@
 # Read-Models
 
-[![GitHub Actions Build Status](https://github.com/somnambulist-tech/read-models/workflows/tests/badge.svg)](https://github.com/somnambulist-tech/read-models/actions?query=workflow%3Atests)
+[![GitHub Actions Build Status](https://img.shields.io/github/workflow/status/somnambulist-tech/read-models/tests?logo=github)](https://github.com/somnambulist-tech/read-models/actions?query=workflow%3Atests)
+[![Issues](https://img.shields.io/github/issues/somnambulist-tech/read-models?logo=github)](https://github.com/somnambulist-tech/read-models/issues)
+[![License](https://img.shields.io/github/license/somnambulist-tech/read-models?logo=github)](https://github.com/somnambulist-tech/read-models/blob/master/LICENSE)
+[![PHP Version](https://img.shields.io/packagist/php-v/somnambulist/read-models?logo=php&logoColor=white)](https://packagist.org/packages/somnambulist/read-models)
+[![Current Version](https://img.shields.io/packagist/v/somnambulist/read-models?logo=packagist&logoColor=white)](https://packagist.org/packages/somnambulist/read-models)
 
 Read-Models are a companion resource to a Doctrine ORM entity based project. They
 provide an active-record style data access layer, designed for presentational
