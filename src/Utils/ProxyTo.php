@@ -20,7 +20,6 @@ use function sprintf;
  */
 class ProxyTo
 {
-
     /**
      * Proxy a call into the specified object, collecting error information if it fails
      *

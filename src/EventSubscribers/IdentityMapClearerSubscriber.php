@@ -21,12 +21,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class IdentityMapClearerSubscriber implements EventSubscriberInterface
 {
-
-    private Manager $manager;
-
-    public function __construct(Manager $manager)
+    public function __construct(private Manager $manager)
     {
-        $this->manager = $manager;
     }
 
     public static function getSubscribedEvents()

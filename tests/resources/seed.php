@@ -85,16 +85,16 @@ $app->addCommands([
             try {
                 $output->writeln('<error>Deleting</error> all records in configured test db');
 
-                $this->conn->exec('delete from roles');
-                $this->conn->exec('delete from users');
-                $this->conn->exec('delete from permissions');
-                $this->conn->exec('delete from role_permissions');
-                $this->conn->exec('delete from user_addresses');
-                $this->conn->exec('delete from user_contacts');
-                $this->conn->exec('delete from user_profiles');
-                $this->conn->exec('delete from user_relations');
-                $this->conn->exec('delete from user_roles');
-                $this->conn->exec('vacuum');
+                $this->conn->executeStatement('delete from roles');
+                $this->conn->executeStatement('delete from users');
+                $this->conn->executeStatement('delete from permissions');
+                $this->conn->executeStatement('delete from role_permissions');
+                $this->conn->executeStatement('delete from user_addresses');
+                $this->conn->executeStatement('delete from user_contacts');
+                $this->conn->executeStatement('delete from user_profiles');
+                $this->conn->executeStatement('delete from user_relations');
+                $this->conn->executeStatement('delete from user_roles');
+                $this->conn->executeStatement('vacuum');
 
                 $output->writeln('<info>Done</info>');
             } catch (Exception $e) {
@@ -133,7 +133,7 @@ $app->addCommands([
             try {
                 $output->writeln('Creating tables and indexes for db');
 
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS roles (
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         name varchar(100) NOT NULL,
@@ -141,7 +141,7 @@ $app->addCommands([
                         updated_at datetime NOT NULL
                     )
                 ');
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS permissions (
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         name varchar(100) NOT NULL,
@@ -149,7 +149,7 @@ $app->addCommands([
                         updated_at datetime NOT NULL
                     )
                 ');
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS role_permissions (
                         role_id integer NOT NULL,
                         permission_id integer NOT NULL,
@@ -159,7 +159,7 @@ $app->addCommands([
                     )
                 ');
 
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS users (
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         uuid char(36) NOT NULL,
@@ -171,7 +171,7 @@ $app->addCommands([
                         password varchar(255) NOT NULL
                     )
                 ');
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS user_addresses (
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         user_id integer NOT NULL,
@@ -187,7 +187,7 @@ $app->addCommands([
                         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                     )
                 ');
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS user_contacts (
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         user_id integer NOT NULL,
@@ -200,7 +200,7 @@ $app->addCommands([
                         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                     )
                 ');
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS user_relations (
                         user_source integer NOT NULL,
                         user_target integer NOT NULL,
@@ -209,7 +209,7 @@ $app->addCommands([
                         PRIMARY KEY(user_source, user_target)
                     )
                 ');
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS user_roles (
                         user_id integer NOT NULL,
                         role_id integer NOT NULL,
@@ -218,7 +218,7 @@ $app->addCommands([
                         PRIMARY KEY(user_id, role_id)
                     )
                 ');
-                $this->conn->exec('
+                $this->conn->executeStatement('
                     CREATE TABLE IF NOT EXISTS user_profiles (
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         user_uuid varchar(36) NOT NULL,
@@ -229,19 +229,19 @@ $app->addCommands([
                     )
                 ');
 
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_roles_name ON roles (name ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_permissions_name ON permissions (name ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_role_permissions_role_id_permission_id ON role_permissions (role_id ASC, permission_id ASC)');
-                $this->conn->exec('CREATE INDEX IF NOT EXISTS idx_user_addresses_type ON user_addresses (type ASC)');
-                $this->conn->exec('CREATE INDEX IF NOT EXISTS idx_users_is_active ON users (is_active ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_users_email ON users (email ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_users_uuid ON users (uuid ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_addresses_user_id_type ON user_addresses (user_id ASC, type ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_contacts_user_id_type ON user_contacts (user_id ASC, type ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_relations_user_relationship ON user_relations (user_source ASC, user_target ASC)');
-                $this->conn->exec('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_roles_user_id_role_id ON user_roles (user_id ASC, role_id ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS idx_roles_name ON roles (name ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_permissions_name ON permissions (name ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_role_permissions_role_id_permission_id ON role_permissions (role_id ASC, permission_id ASC)');
+                $this->conn->executeStatement('CREATE INDEX IF NOT EXISTS idx_user_addresses_type ON user_addresses (type ASC)');
+                $this->conn->executeStatement('CREATE INDEX IF NOT EXISTS idx_users_is_active ON users (is_active ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_users_email ON users (email ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_users_uuid ON users (uuid ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_addresses_user_id_type ON user_addresses (user_id ASC, type ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_contacts_user_id_type ON user_contacts (user_id ASC, type ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_relations_user_relationship ON user_relations (user_source ASC, user_target ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_roles_user_id_role_id ON user_roles (user_id ASC, role_id ASC)');
 
-                $this->conn->exec('vacuum');
+                $this->conn->executeStatement('vacuum');
 
                 $output->writeln('<info>Done</info>');
             } catch (Exception $e) {

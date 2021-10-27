@@ -17,7 +17,6 @@ use function get_class;
  */
 final class ModelIdentityMap
 {
-
     private array $identityMap = [];
     private array $aliases = [];
     private array $relationships = [];

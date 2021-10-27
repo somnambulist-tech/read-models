@@ -19,7 +19,6 @@ use function str_replace;
  */
 class BelongsToMany extends AbstractRelationship
 {
-
     private string $joinTable;
     private string $joinTableSourceKey;
     private string $joinTableTargetKey;

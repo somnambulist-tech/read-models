@@ -10,6 +10,7 @@ use function explode;
 use function implode;
 use function is_array;
 use function is_numeric;
+use function trigger_deprecation;
 
 /**
  * Class GenerateRelationshipsToEagerLoad
@@ -24,19 +25,19 @@ use function is_numeric;
  */
 final class GenerateRelationshipsToEagerLoad
 {
-
     /**
      * Set the relationships that should be eager loaded
      *
      * @param array $toEagerLoad The default eager loads defined on the model
-     * @param mixed $relations   Strings of relationship names, or an array
+     * @param mixed $relations   Strings of relationship names
      *
      * @return array
      */
     public function __invoke(array $toEagerLoad = [], ...$relations): array
     {
-        if (is_array($relations[0])) {
+        if (count($relations) > 0 && is_array($relations[0])) {
             // if an array is passed, it will be the first arg and wont unpack
+            trigger_deprecation('somnambulist/read-models', '3.1.0', 'Passing an array as argument is deprecated, use multiple string arguments');
             $relations = $relations[0];
         }
 

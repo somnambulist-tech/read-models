@@ -19,7 +19,6 @@ use function is_array;
  */
 final class ModelExporter implements Jsonable
 {
-
     private Model $model;
     private array $attributes;
     private array $relationships;

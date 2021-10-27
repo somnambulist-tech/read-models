@@ -31,7 +31,6 @@ use function sprintf;
  */
 abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonSerializable
 {
-
     /**
      * The table associated with the model
      */

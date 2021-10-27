@@ -14,7 +14,6 @@ use function array_key_exists;
  */
 final class ConnectionManager
 {
-
     private array $connections = [];
 
     public function __construct(array $connections)

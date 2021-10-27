@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+2021-10-27 - 3.1.0
+------------------
+
+ * fix bug in `GenerateRelationshipsToEagerLoad`
+
+2021-10-05
+----------
+
+ * deprecate passing an array as first argument on `with()`s
+ * use more PHP8 syntax in classes
+
 2021-01-25
 ----------
 

@@ -17,7 +17,6 @@ use function get_class;
  */
 class HasOne extends HasOneOrMany
 {
-
     private bool $nullOnNotFound;
 
     public function __construct(ModelBuilder $builder, Model $parent, string $foreignKey, string $localKey, bool $nullOnNotFound = true)

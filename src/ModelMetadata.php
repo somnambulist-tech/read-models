@@ -17,7 +17,6 @@ use function stripos;
  */
 final class ModelMetadata
 {
-
     private Model $model;
     private string $table;
     private string $primaryKey;

@@ -13,10 +13,10 @@
         "php": ">=8.0",
         "ext-json":  "*",
         "doctrine/dbal": "~2.11",
-        "pagerfanta/pagerfanta": "~2.4",
+        "pagerfanta/pagerfanta": "~2.6",
         "pragmarx/ia-str": "^7.0",
         "somnambulist/attribute-model": "~2.0",
-        "somnambulist/collection": "~5.0"
+        "somnambulist/collection": "~5.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.5",

@@ -14,7 +14,6 @@ use function sprintf;
  */
 final class PaginatorAdapter implements AdapterInterface
 {
-
     private ModelBuilder $builder;
 
     public function __construct(ModelBuilder $queryBuilder)

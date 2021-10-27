@@ -62,7 +62,6 @@ use function ucfirst;
  */
 class ModelBuilder implements Queryable
 {
-
     private Model $model;
     private ModelMetadata $meta;
     private QueryBuilder $query;
@@ -258,7 +257,7 @@ class ModelBuilder implements Queryable
     /**
      * Set the relationships that should be eager loaded
      *
-     * @param mixed $relations Strings of relationship names, or an array
+     * @param mixed $relations Strings of relationship names
      *
      * @return $this
      */
@@ -472,6 +471,12 @@ class ModelBuilder implements Queryable
      */
     public function orWhere($expression, array $values = []): self
     {
+        if (is_callable($expression)) {
+            $expression($this);
+
+            return $this;
+        }
+
         $this->query->orWhere($expression);
 
         foreach ($values as $key => $value) {

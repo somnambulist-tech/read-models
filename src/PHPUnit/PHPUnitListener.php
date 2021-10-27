@@ -26,7 +26,6 @@ use Somnambulist\Components\ReadModels\Manager;
  */
 class PHPUnitListener implements BeforeTestHook, AfterTestHook
 {
-
     public function executeAfterTest(string $test, float $time): void
     {
         Manager::clear();

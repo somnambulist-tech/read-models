@@ -15,7 +15,6 @@ use function is_string;
  */
 final class FilterGeneratedKeysFromCollection
 {
-
     /**
      * Filters out library generated keys from the set of attributes
      *

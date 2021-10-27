@@ -16,7 +16,6 @@ use function sprintf;
  */
 final class Manager
 {
-
     private static ?Manager $instance = null;
     private ConnectionManager $connections;
     private AttributeCaster $caster;

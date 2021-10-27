@@ -14,7 +14,6 @@ use Somnambulist\Components\ReadModels\ModelBuilder;
  */
 abstract class HasOneOrMany extends AbstractRelationship
 {
-
     protected string $foreignKey;
     protected string $localKey;
 

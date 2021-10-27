@@ -20,12 +20,8 @@ use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
  */
 class IdentityMapClearerMessengerSubscriber implements EventSubscriberInterface
 {
-
-    private Manager $manager;
-
-    public function __construct(Manager $manager)
+    public function __construct(private Manager $manager)
     {
-        $this->manager = $manager;
     }
 
     public static function getSubscribedEvents()

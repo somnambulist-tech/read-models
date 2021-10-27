@@ -84,7 +84,7 @@ class ClassHelpers
      *
      * @return object
      */
-    public static function set(object $object, string $property, mixed $value, mixed $scope = null)
+    public static function set(object $object, string $property, mixed $value, mixed $scope = null): object
     {
         Closure::bind(function () use ($property, $value) {
             $this->{$property} = $value;
@@ -106,7 +106,7 @@ class ClassHelpers
      *
      * @return object
      */
-    public static function setPropertyArrayKey(object $object, string $property, string $key, mixed $value, mixed $scope = null)
+    public static function setPropertyArrayKey(object $object, string $property, string $key, mixed $value, mixed $scope = null): object
     {
         Closure::bind(function () use ($property, $key, $value) {
             $this->{$property}[$key] = $value;

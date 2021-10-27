@@ -17,7 +17,6 @@ use function get_class;
  */
 class HasOneToMany extends HasOneOrMany
 {
-
     protected ?string $indexBy;
 
     public function __construct(ModelBuilder $builder, Model $parent, string $foreignKey, string $localKey, ?string $indexBy = null)

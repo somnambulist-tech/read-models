@@ -17,7 +17,6 @@ use function is_null;
  */
 class BelongsTo extends AbstractRelationship
 {
-
     protected string $foreignKey;
     protected string $ownerKey;
     protected bool $nullOnNotFound;

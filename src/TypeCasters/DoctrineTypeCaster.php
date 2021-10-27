@@ -19,12 +19,8 @@ use function is_null;
  */
 final class DoctrineTypeCaster implements AttributeCasterInterface
 {
-
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function types(): array

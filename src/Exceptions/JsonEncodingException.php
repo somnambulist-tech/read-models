@@ -15,7 +15,6 @@ use function sprintf;
  */
 class JsonEncodingException extends RuntimeException
 {
-
     public static function failedToConvertModel(Model $model, string $error): JsonEncodingException
     {
         return new self(

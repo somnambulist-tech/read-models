@@ -14,7 +14,6 @@ use function sprintf;
  */
 class NoResultsException extends Exception
 {
-
     private QueryBuilder $query;
 
     public function __construct(string $class, QueryBuilder $queryBuilder)
