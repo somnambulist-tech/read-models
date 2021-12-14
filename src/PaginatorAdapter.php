@@ -50,7 +50,7 @@ final class PaginatorAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function getNbResults()
+    public function getNbResults(): int
     {
         return (int)$this->prepareCountQueryBuilder()->getQueryBuilder()->execute()->fetchOne();
     }
@@ -58,7 +58,7 @@ final class PaginatorAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function getSlice($offset, $length)
+    public function getSlice($offset, $length): iterable
     {
         $qb = clone $this->builder;
 
