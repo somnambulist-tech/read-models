@@ -224,7 +224,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
     public function newQuery(): ModelBuilder
     {
         $builder = new ModelBuilder($this);
-        $builder->with($this->with);
+        $builder->with(...$this->with);
 
         return $builder;
     }

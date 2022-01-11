@@ -5,3 +5,5 @@ framework:
     php_errors:
         log: false
 
+    router:
+        utf8: true

@@ -280,7 +280,7 @@ class ModelBuilder implements Queryable
                 /** @var AbstractRelationship $load */
                 $rel = $this->model->new()->getRelationship($name);
                 $rel
-                    ->with($this->findNestedRelationshipsFor($name))
+                    ->with(...$this->findNestedRelationshipsFor($name))
                     ->addConstraints($models)
                     ->addConstraintCallbackToQuery($constraints)
                     ->addRelationshipResultsToModels($models, $name)

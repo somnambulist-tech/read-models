@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2022-01-11 - 3.2.1
+------------------
+
+ * fix issues where calling methods in a deprecated way
+
 2021-12-14 - 3.2.0
 ------------------
 
