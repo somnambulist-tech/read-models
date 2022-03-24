@@ -34,6 +34,10 @@ trait GetRandomUserIdWithRelationship
             ->setMaxResults(1)
         ;
 
-        return $qb->executeQuery()->fetchOne();
+        if (method_exists($qb, 'executeQuery')) {
+            return $qb->executeQuery()->fetchOne();
+        }
+
+        return $qb->execute()->fetchOne();
     }
 }

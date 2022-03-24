@@ -168,20 +168,24 @@ class ModelBuilder implements Queryable
         $map = Manager::instance()->map();
         $map->registerAlias($this->model);
 
-        if ($result = $this->query->executeQuery()) {
-            foreach ($result->iterateAssociative() as $row) {
-                $map->inferRelationshipFromAttributes($this->model, $row);
+        if (method_exists($this->query, 'executeQuery')) {
+            $result = $this->query->executeQuery();
+        } else {
+            $result = $this->query->execute();
+        }
 
-                if (null === $model = $map->get(get_class($this->model), $row[$this->meta->primaryKeyName()])) {
-                    $map->add($model = $this->model->new($row));
-                }
+        foreach ($result->iterateAssociative() as $row) {
+            $map->inferRelationshipFromAttributes($this->model, $row);
 
-                $models->add($model);
+            if (null === $model = $map->get(get_class($this->model), $row[$this->meta->primaryKeyName()])) {
+                $map->add($model = $this->model->new($row));
             }
 
-            if ($models->count() > 0) {
-                $this->eagerLoadRelationships($models);
-            }
+            $models->add($model);
+        }
+
+        if ($models->count() > 0) {
+            $this->eagerLoadRelationships($models);
         }
 
         return $models;
@@ -223,15 +227,18 @@ class ModelBuilder implements Queryable
             }
         }
 
-        $result = $query
+        $query
             ->select($new)
             ->addSelect(sprintf('COUNT(DISTINCT %s) AS total_results', $this->meta->primaryKeyNameWithAlias()))
             ->setMaxResults(1)
             ->setFirstResult(0)
-            ->executeQuery()
         ;
 
-        return (int)$result->fetchOne();
+        if (method_exists($this->query, 'executeQuery')) {
+            return (int)$this->query->executeQuery()->fetchOne();
+        }
+
+        return (int)$this->query->execute()->fetchOne();
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels;
 
 use Pagerfanta\Adapter\AdapterInterface;
 use function count;
+use function method_exists;
 use function sprintf;
 
 /**
@@ -52,7 +53,13 @@ final class PaginatorAdapter implements AdapterInterface
      */
     public function getNbResults(): int
     {
-        return (int)$this->prepareCountQueryBuilder()->getQueryBuilder()->executeQuery()->fetchOne();
+        $qb = $this->prepareCountQueryBuilder()->getQueryBuilder();
+
+        if (method_exists($qb, 'executeQuery')) {
+            return (int) $qb->executeQuery()->fetchOne();
+        }
+
+        return (int)$qb->execute()->fetchOne();
     }
 
     /**
