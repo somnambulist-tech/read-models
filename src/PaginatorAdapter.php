@@ -52,7 +52,7 @@ final class PaginatorAdapter implements AdapterInterface
      */
     public function getNbResults(): int
     {
-        return (int)$this->prepareCountQueryBuilder()->getQueryBuilder()->execute()->fetchOne();
+        return (int)$this->prepareCountQueryBuilder()->getQueryBuilder()->executeQuery()->fetchOne();
     }
 
     /**

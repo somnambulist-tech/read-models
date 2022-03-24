@@ -34,6 +34,6 @@ trait GetRandomUserIdWithRelationship
             ->setMaxResults(1)
         ;
 
-        return $qb->execute()->fetchColumn();
+        return $qb->executeQuery()->fetchOne();
     }
 }

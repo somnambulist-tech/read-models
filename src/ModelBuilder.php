@@ -30,6 +30,7 @@ use function method_exists;
 use function sprintf;
 use function str_contains;
 use function str_replace;
+use function str_starts_with;
 use function strlen;
 use function substr;
 use function ucfirst;
@@ -50,7 +51,6 @@ use function ucfirst;
  * @method ModelBuilder innerJoin(string $fromAlias, string $join, string $alias, $conditions)
  * @method ModelBuilder leftJoin(string $fromAlias, string $join, string $alias, $conditions)
  * @method ModelBuilder rightJoin(string $fromAlias, string $join, string $alias, $conditions)
- * @method ModelBuilder setParameter(string|int $key, mixed $value, $type = null)
  * @method ModelBuilder setParameters(array $parameters)
  * @method mixed getParameter(string|int $key)
  * @method array getParameters()
@@ -168,8 +168,8 @@ class ModelBuilder implements Queryable
         $map = Manager::instance()->map();
         $map->registerAlias($this->model);
 
-        if ($stmt = $this->query->execute()) {
-            foreach ($stmt as $row) {
+        if ($result = $this->query->executeQuery()) {
+            foreach ($result->iterateAssociative() as $row) {
                 $map->inferRelationshipFromAttributes($this->model, $row);
 
                 if (null === $model = $map->get(get_class($this->model), $row[$this->meta->primaryKeyName()])) {
@@ -223,19 +223,15 @@ class ModelBuilder implements Queryable
             }
         }
 
-        $stmt = $query
+        $result = $query
             ->select($new)
             ->addSelect(sprintf('COUNT(DISTINCT %s) AS total_results', $this->meta->primaryKeyNameWithAlias()))
             ->setMaxResults(1)
             ->setFirstResult(0)
-            ->execute()
+            ->executeQuery()
         ;
 
-        if ($stmt) {
-            return $stmt->fetchAllAssociative()[0]['total_results'] ?? 0;
-        }
-
-        return 0;
+        return (int)$result->fetchOne();
     }
 
     /**
@@ -319,7 +315,9 @@ class ModelBuilder implements Queryable
 
     private function mergeParameters(array $parameters): void
     {
-        $this->query->setParameters(array_merge($this->query->getParameters(), $parameters));
+        foreach (array_merge($this->query->getParameters(), $parameters) as $key => $value) {
+            $this->setParameter($key, $value);
+        }
     }
 
     public function expression(): ExpressionBuilder
@@ -453,7 +451,7 @@ class ModelBuilder implements Queryable
                 throw new InvalidArgumentException(sprintf('WHERE condition must use named placeholders not ?'));
             }
 
-            $this->query->setParameter($key, $value);
+            $this->setParameter($key, $value);
         }
 
         return $this;
@@ -484,7 +482,7 @@ class ModelBuilder implements Queryable
                 throw new InvalidArgumentException(sprintf('WHERE condition must use named placeholders not ?'));
             }
 
-            $this->query->setParameter($key, $value);
+            $this->setParameter($key, $value);
         }
 
         return $this;
@@ -511,7 +509,7 @@ class ModelBuilder implements Queryable
 
         $placeholders = MutableCollection::collect($values)
             ->map(function ($value) use ($column) {
-                $this->query->setParameter($key = $this->createParameterPlaceholderKey($column), $value);
+                $this->setParameter($key = $this->createParameterPlaceholderKey($column), $value);
 
                 return $key;
             })
@@ -556,10 +554,8 @@ class ModelBuilder implements Queryable
         $key    = $this->createParameterPlaceholderKey($column);
         $method = $this->getAndOrWhereMethodName($andOr);
 
-        $this->query
-            ->{$method}($this->expression()->comparison($this->prefixColumnWithTableAlias($column), $operator, $key))
-            ->setParameter($key, $value)
-        ;
+        $this->query->{$method}($this->expression()->comparison($this->prefixColumnWithTableAlias($column), $operator, $key));
+        $this->setParameter($key, $value);
 
         return $this;
     }
@@ -634,8 +630,8 @@ class ModelBuilder implements Queryable
         $key2   = $this->createParameterPlaceholderKey($column);
 
         $this->query->{$method}(sprintf('%s %s %s AND %s', $this->prefixColumnWithTableAlias($column), $expr, $key1, $key2));
-        $this->query->setParameter($key1, $start);
-        $this->query->setParameter($key2, $end);
+        $this->setParameter($key1, $start);
+        $this->setParameter($key2, $end);
 
         return $this;
     }
@@ -693,6 +689,17 @@ class ModelBuilder implements Queryable
         return $this;
     }
 
+    public function setParameter(string|int $key, mixed $value, $type = null): self
+    {
+        if (!is_numeric($key) && str_starts_with($key, ':')) {
+            $key = substr($key, 1);
+        }
+
+        $this->query->setParameter($key, $value, $type);
+
+        return $this;
+    }
+
     /**
      * Gets the underlying DBAL query builder
      *
@@ -737,7 +744,7 @@ class ModelBuilder implements Queryable
             return (new ProxyTo())($this->query, $name, $arguments);
         }
 
-        if (in_array($name, ['setParameter', 'join', 'innerJoin', 'leftJoin', 'rightJoin', 'having', 'andHaving', 'orHaving'])) {
+        if (in_array($name, ['join', 'innerJoin', 'leftJoin', 'rightJoin', 'having', 'andHaving', 'orHaving'])) {
             (new ProxyTo())($this->query, $name, $arguments);
 
             return $this;

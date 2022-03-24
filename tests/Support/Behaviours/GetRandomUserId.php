@@ -16,6 +16,6 @@ trait GetRandomUserId
         // hacky...
         global $connection;
 
-        return $connection->fetchColumn('SELECT id FROM users ORDER BY RANDOM() LIMIT 1');
+        return $connection->fetchOne('SELECT id FROM users ORDER BY RANDOM() LIMIT 1');
     }
 }

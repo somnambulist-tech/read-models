@@ -12,7 +12,7 @@
     "require": {
         "php": ">=8.0",
         "ext-json":  "*",
-        "doctrine/dbal": "~2.11",
+        "doctrine/dbal": "^2.11|^3.0",
         "pagerfanta/pagerfanta": "^3.5",
         "pragmarx/ia-str": "^7.3",
         "somnambulist/attribute-model": "^2.0",
@@ -21,19 +21,19 @@
     "require-dev": {
         "phpunit/phpunit": "~9.5",
         "creof/doctrine2-spatial": "~1.2",
-        "doctrine/doctrine-bundle": "~2.0",
-        "doctrine/orm": "^2.8",
-        "fakerphp/faker": "^1.13",
-        "somnambulist/domain": "~4.0",
-        "symfony/dotenv": "^5.4",
-        "symfony/framework-bundle": "^5.4",
-        "symfony/messenger": "^5.4",
-        "symfony/phpunit-bridge": "^5.4",
-        "symfony/stopwatch": "^5.4",
-        "symfony/var-dumper": "^5.4",
+        "doctrine/doctrine-bundle": "~2.5",
+        "doctrine/orm": "^2.11",
+        "fakerphp/faker": "^1.19",
+        "somnambulist/domain": "~4.3",
+        "symfony/dotenv": "^6.0",
+        "symfony/framework-bundle": "^6.0",
+        "symfony/messenger": "^6.0",
+        "symfony/phpunit-bridge": "^6.0",
+        "symfony/stopwatch": "^6.0",
+        "symfony/var-dumper": "^6.0",
         "victorjonsson/markdowndocs": "^1.3",
-        "symfony/yaml": "^5.4",
-        "vimeo/psalm": "^3.4"
+        "symfony/yaml": "^6.0",
+        "vimeo/psalm": "^3.18"
     },
     "autoload": {
         "psr-4": {

@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+2022-03-24 - 3.3.0
+------------------
+
+ * add support for doctrine/dbal 3.0+
+ * add `ModelBuilder::setParameter()` to ensure any leading `:` is stripped from placeholders
+ * fix compatibility issues with dbal 3.0
+ * remove deprecated method calls to dbal
+
 2022-01-11 - 3.2.1
 ------------------
 

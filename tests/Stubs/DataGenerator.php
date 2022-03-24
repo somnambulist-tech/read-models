@@ -29,7 +29,7 @@ class DataGenerator
 
     public function init(): void
     {
-        $res = $this->connection->fetchColumn('SELECT id FROM roles LIMIT 1');
+        $res = $this->connection->fetchOne('SELECT id FROM roles LIMIT 1');
 
         if ($res) {
             return;
@@ -97,10 +97,10 @@ class DataGenerator
     {
         $this->connection->beginTransaction();
 
-        $userRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['user'])->fetchColumn();
-        $adminRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['admin'])->fetchColumn();
-        $managerRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['manager'])->fetchColumn();
-        $switchRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['switch_user'])->fetchColumn();
+        $userRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['user'])->fetchOne();
+        $adminRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['admin'])->fetchOne();
+        $managerRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['manager'])->fetchOne();
+        $switchRoleId = $this->connection->executeQuery('SELECT id FROM roles WHERE name = ?', ['switch_user'])->fetchOne();
 
         for ($i=1; $i<=$records; $i++) {
             $this->connection->insert('users', [
@@ -113,7 +113,7 @@ class DataGenerator
                 'password' => password_hash($this->faker->sha1, PASSWORD_DEFAULT),
             ]);
 
-            $userId = $this->connection->executeQuery('SELECT id FROM users WHERE uuid = ?', [$uuid])->fetchColumn();
+            $userId = $this->connection->executeQuery('SELECT id FROM users WHERE uuid = ?', [$uuid])->fetchOne();
 
             $this->connection->insert('user_roles', ['role_id' => $userRoleId, 'user_id' => $userId]);
 
@@ -190,8 +190,8 @@ class DataGenerator
 
         $this->connection->commit();
 
-        $ids1 = $this->connection->fetchAll('SELECT id FROM users ORDER BY RANDOM() LIMIT ' . $cnt = rand(1, (int)$records));
-        $ids2 = $this->connection->fetchAll('SELECT id FROM users ORDER BY RANDOM() LIMIT ' . $cnt);
+        $ids1 = $this->connection->fetchAllAssociative('SELECT id FROM users ORDER BY RANDOM() LIMIT ' . $cnt = rand(1, (int)$records));
+        $ids2 = $this->connection->fetchAllAssociative('SELECT id FROM users ORDER BY RANDOM() LIMIT ' . $cnt);
 
         $rels = array_combine(array_column($ids1, 'id'), array_column($ids2, 'id'));
 
@@ -202,7 +202,7 @@ class DataGenerator
                 continue;
             }
 
-            $hasRel = $this->connection->fetchColumn('SELECT COUNT(*) AS cnt FROM user_relations WHERE user_source = ? AND user_target = ?', [
+            $hasRel = $this->connection->fetchOne('SELECT COUNT(*) AS cnt FROM user_relations WHERE user_source = ? AND user_target = ?', [
                 $rel1, $rel2
             ]);
 
