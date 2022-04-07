@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+2022-04-07 - 3.3.2
+------------------
+
+ * fix bug introduced in DBAL changes in count() method, not using the cloned query
+
 2022-03-24 - 3.3.1
 ------------------
 

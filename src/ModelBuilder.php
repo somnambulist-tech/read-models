@@ -234,11 +234,11 @@ class ModelBuilder implements Queryable
             ->setFirstResult(0)
         ;
 
-        if (method_exists($this->query, 'executeQuery')) {
-            return (int)$this->query->executeQuery()->fetchOne();
+        if (method_exists($query, 'executeQuery')) {
+            return (int)$query->executeQuery()->fetchOne();
         }
 
-        return (int)$this->query->execute()->fetchOne();
+        return (int)$query->execute()->fetchOne();
     }
 
     /**
