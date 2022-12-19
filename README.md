@@ -1,6 +1,6 @@
 # Read-Models
 
-[![GitHub Actions Build Status](https://img.shields.io/github/workflow/status/somnambulist-tech/read-models/tests?logo=github)](https://github.com/somnambulist-tech/read-models/actions?query=workflow%3Atests)
+[![GitHub Actions Build Status](https://img.shields.io/github/actions/workflow/status/somnambulist-tech/read-models/tests.yml?logo=github&branch=master)](https://github.com/somnambulist-tech/read-models/actions?query=workflow%3Atests)
 [![Issues](https://img.shields.io/github/issues/somnambulist-tech/read-models?logo=github)](https://github.com/somnambulist-tech/read-models/issues)
 [![License](https://img.shields.io/github/license/somnambulist-tech/read-models?logo=github)](https://github.com/somnambulist-tech/read-models/blob/master/LICENSE)
 [![PHP Version](https://img.shields.io/packagist/php-v/somnambulist/read-models?logo=php&logoColor=white)](https://packagist.org/packages/somnambulist/read-models)
