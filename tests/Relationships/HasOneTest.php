@@ -13,11 +13,6 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAlt;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserProfile;
 
 /**
- * Class HasOneTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\HasOneTest
- *
  * @group relationships
  * @group relationships-has-one
  */

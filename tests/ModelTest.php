@@ -14,11 +14,6 @@ use function date;
 use function password_hash;
 
 /**
- * Class ModelTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\ModelTest
- *
  * @group model
  */
 class ModelTest extends TestCase

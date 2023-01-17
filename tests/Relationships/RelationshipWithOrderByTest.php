@@ -6,11 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Role;
 
 /**
- * Class RelationshipViaExternalKeyTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Relationships
- * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\RelationshipViaExternalKeyTest
- *
  * @group relationships
  * @group relationships-orderby
  */

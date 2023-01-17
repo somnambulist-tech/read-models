@@ -5,12 +5,6 @@ namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 use Somnambulist\Components\Domain\Entities\Types\Identity\EmailAddress;
 use Somnambulist\Components\Domain\Entities\Types\PhoneNumber;
 
-/**
- * Class Contact
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\Contact
- */
 class Contact
 {
 

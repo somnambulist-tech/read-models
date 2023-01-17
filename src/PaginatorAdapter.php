@@ -7,12 +7,6 @@ use function count;
 use function method_exists;
 use function sprintf;
 
-/**
- * Class PaginatorAdapter
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\PaginatorAdapter
- */
 final class PaginatorAdapter implements AdapterInterface
 {
     private ModelBuilder $builder;

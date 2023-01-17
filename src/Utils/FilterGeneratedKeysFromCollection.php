@@ -7,12 +7,6 @@ use Somnambulist\Components\Collection\MutableCollection as Collection;
 use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
 use function is_string;
 
-/**
- * Class FilterGeneratedAttributesAndKeysFromCollection
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\FilterGeneratedAttributesAndKeysFromCollection
- */
 final class FilterGeneratedKeysFromCollection
 {
     /**

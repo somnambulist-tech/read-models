@@ -4,12 +4,6 @@ namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
 use Somnambulist\Components\ReadModels\Model;
 
-/**
- * Class UserAddress
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress
- */
 class UserAddress extends Model
 {
 

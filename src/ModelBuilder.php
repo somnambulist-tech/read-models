@@ -36,12 +36,12 @@ use function substr;
 use function ucfirst;
 
 /**
- * Class ModelBuilder
+ * Allows building queries that will return model instances.
  *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\ModelBuilder
+ * Supports eager loading related models via `with()`.
  *
- * These methods pass through to the underlying QueryBuilder instance.
+ * Query building is performed internally via DBAL QueryBuilder. Many methods are proxy'd through
+ * to the builder instance allowing for method chaining.
  *
  * @property-read ModelMetadata $meta
  * @property-read Model         $model

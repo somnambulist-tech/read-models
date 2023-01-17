@@ -5,14 +5,9 @@ namespace Somnambulist\Components\ReadModels\Contracts;
 use Doctrine\Common\Collections\ExpressionBuilder;
 
 /**
- * Interface Queryable
- *
  * Tags an object as supporting or allowing pass through into the Builder
  * object. This allows for type completion and hints where they might not
  * otherwise exist.
- *
- * @package    Somnambulist\Components\ReadModels\Contracts
- * @subpackage Somnambulist\Components\ReadModels\Contracts\Queryable
  *
  * @method ExpressionBuilder expression()
  * @method Queryable andHaving(string $expression)

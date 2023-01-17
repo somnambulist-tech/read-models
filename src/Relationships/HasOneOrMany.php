@@ -6,12 +6,6 @@ use Somnambulist\Components\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
 
-/**
- * Class HasOneOrMany
- *
- * @package    Somnambulist\Components\ReadModels\Relationships
- * @subpackage Somnambulist\Components\ReadModels\Relationships\HasOneOrMany
- */
 abstract class HasOneOrMany extends AbstractRelationship
 {
     protected string $foreignKey;

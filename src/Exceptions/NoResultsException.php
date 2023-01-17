@@ -6,12 +6,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use function sprintf;
 
-/**
- * Class NoResultsException
- *
- * @package    Somnambulist\Components\ReadModels\Exceptions
- * @subpackage Somnambulist\Components\ReadModels\Exceptions\NoResultsException
- */
 class NoResultsException extends Exception
 {
     private QueryBuilder $query;

@@ -2,12 +2,6 @@
 
 namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
-/**
- * Class Address
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\Address
- */
 class Address
 {
 

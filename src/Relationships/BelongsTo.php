@@ -9,12 +9,6 @@ use Somnambulist\Components\ReadModels\ModelBuilder;
 use function get_class;
 use function is_null;
 
-/**
- * Class BelongsTo
- *
- * @package    Somnambulist\Components\ReadModels\Relationships
- * @subpackage Somnambulist\Components\ReadModels\Relationships\BelongsTo
- */
 class BelongsTo extends AbstractRelationship
 {
     protected string $foreignKey;

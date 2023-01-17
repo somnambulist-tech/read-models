@@ -10,11 +10,6 @@ use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
 /**
- * Class ModelIdentityMapTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\ModelIdentityMapTest
- *
  * @group model
  * @group model-identity-map
  */

@@ -10,11 +10,6 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 
 /**
- * Class BelongsToTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\BelongsToTest
- *
  * @group relationships
  * @group relationships-belongs-to
  */

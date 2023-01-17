@@ -8,11 +8,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class KernelTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\KernelTest
- *
  * @group kernel
  */
 class KernelTest extends KernelTestCase

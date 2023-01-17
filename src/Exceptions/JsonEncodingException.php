@@ -7,12 +7,6 @@ use Somnambulist\Components\ReadModels\Model;
 use function get_class;
 use function sprintf;
 
-/**
- * Class JsonEncodingException
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\JsonEncodingException
- */
 class JsonEncodingException extends RuntimeException
 {
     public static function failedToConvertModel(Model $model, string $error): JsonEncodingException

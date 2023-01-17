@@ -5,12 +5,6 @@ namespace Somnambulist\Components\ReadModels\Exceptions;
 use Exception;
 use function sprintf;
 
-/**
- * Class EntityNotFoundException
- *
- * @package    Somnambulist\Components\ReadModels\Exceptions
- * @subpackage Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException
- */
 class EntityNotFoundException extends Exception
 {
     public static function noMatchingRecordFor(string $class, string $key, $id): self

@@ -2,12 +2,6 @@
 
 namespace Somnambulist\Components\ReadModels\Tests\Support\Behaviours;
 
-/**
- * Trait GetRandomUserIdByCriteria
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Support\Behaviours
- * @subpackage Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdByCriteria
- */
 trait GetRandomUserIdByCriteria
 {
 

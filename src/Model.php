@@ -23,12 +23,6 @@ use function is_null;
 use function method_exists;
 use function sprintf;
 
-/**
- * Class Model
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\Model
- */
 abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonSerializable
 {
     /**

@@ -6,12 +6,6 @@ use Somnambulist\Components\AttributeModel\Contracts\AttributeCasterInterface;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Address;
 use function in_array;
 
-/**
- * Class AddressCaster
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Casters
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Casters\AddressCaster
- */
 class AddressCaster implements AttributeCasterInterface
 {
     public function types(): array

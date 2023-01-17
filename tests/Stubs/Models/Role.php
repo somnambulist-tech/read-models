@@ -7,11 +7,6 @@ use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\Relationships\BelongsToMany;
 
 /**
- * Class Role
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\Role
- *
  * @property-read MutableCollection permissions
  */
 class Role extends Model

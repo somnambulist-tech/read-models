@@ -6,12 +6,6 @@ use Doctrine\DBAL\Connection;
 use Somnambulist\Components\ReadModels\Exceptions\ConnectionManagerException;
 use function array_key_exists;
 
-/**
- * Class ConnectionManager
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\ConnectionManager
- */
 final class ConnectionManager
 {
     private array $connections = [];

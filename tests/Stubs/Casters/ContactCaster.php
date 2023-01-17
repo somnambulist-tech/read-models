@@ -7,12 +7,6 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Contact;
 use Somnambulist\Components\Domain\Entities\Types\Identity\EmailAddress;
 use Somnambulist\Components\Domain\Entities\Types\PhoneNumber;
 
-/**
- * Class ContactCaster
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Casters
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Casters\ContactCaster
- */
 class ContactCaster implements AttributeCasterInterface
 {
     public function types(): array

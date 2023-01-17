@@ -9,12 +9,6 @@ use function explode;
 use function sprintf;
 use function stripos;
 
-/**
- * Class ModelMetadata
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\ModelMetadata
- */
 final class ModelMetadata
 {
     private Model $model;

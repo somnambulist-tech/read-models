@@ -8,16 +8,11 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class IdentityMapClearerSubscriber
- *
  * Kernel subscriber that clears the identity map onRequest start, exception or
  * terminate ensuring that the identity map is fresh for each request. When
  * running under php-fpm this should not be needed; however if you use a PHP
  * application server, that does not terminate, then the identity map will not
  * be cleared between request (e.g. PHP-PM).
- *
- * @package    Somnambulist\Components\ReadModels\EventSubscribers
- * @subpackage Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerSubscriber
  */
 class IdentityMapClearerSubscriber implements EventSubscriberInterface
 {

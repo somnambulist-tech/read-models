@@ -9,12 +9,6 @@ use Somnambulist\Components\ReadModels\ModelBuilder;
 use function count;
 use function get_class;
 
-/**
- * Class HasMany
- *
- * @package    Somnambulist\Components\ReadModels\Relationships
- * @subpackage Somnambulist\Components\ReadModels\Relationships\HasMany
- */
 class HasOneToMany extends HasOneOrMany
 {
     protected ?string $indexBy;

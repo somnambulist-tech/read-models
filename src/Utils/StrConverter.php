@@ -6,12 +6,6 @@ use function fopen;
 use function fwrite;
 use function rewind;
 
-/**
- * Class StrConverter
- *
- * @package    Somnambulist\Components\ReadModels\Utils
- * @subpackage Somnambulist\Components\ReadModels\Utils\StrConverter
- */
 class StrConverter
 {
     private function __construct() {}

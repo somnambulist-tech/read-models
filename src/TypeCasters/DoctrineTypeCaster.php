@@ -11,12 +11,6 @@ use function array_key_exists;
 use function array_keys;
 use function is_null;
 
-/**
- * Class DoctrineTypeCaster
- *
- * @package    Somnambulist\Components\ReadModels\Hydrators
- * @subpackage Somnambulist\Components\ReadModels\TypeCasters\DoctrineTypeCaster
- */
 final class DoctrineTypeCaster implements AttributeCasterInterface
 {
     public function __construct(private Connection $connection)

@@ -13,10 +13,9 @@ use Somnambulist\Components\ReadModels\ModelBuilder;
 use Somnambulist\Components\ReadModels\Utils\ProxyTo;
 
 /**
- * Class AbstractRelationship
+ * Represents a relationship between models.
  *
- * @package    Somnambulist\Components\ReadModels\Relationships
- * @subpackage Somnambulist\Components\ReadModels\Relationships\AbstractRelationship
+ * Relationships can be queried separately.
  *
  * Supports proxying calls to the Builder class
  *

@@ -7,8 +7,6 @@ use PHPUnit\Runner\BeforeTestHook;
 use Somnambulist\Components\ReadModels\Manager;
 
 /**
- * Class PHPUnitListener
- *
  * Ensures that the identity map is cleared before and after every test case is run.
  * If this is not used, then the identity map will persist across tests, giving false
  * results.
@@ -20,9 +18,6 @@ use Somnambulist\Components\ReadModels\Manager;
  *         <extension class="Somnambulist\Components\ReadModels\PHPUnit\PHPUnitListener" />
  *     </extensions>
  * </code>
- *
- * @package    Somnambulist\Components\ReadModels\PHPUnit
- * @subpackage Somnambulist\Components\ReadModels\PHPUnit\PHPUnitListener
  */
 class PHPUnitListener implements BeforeTestHook, AfterTestHook
 {

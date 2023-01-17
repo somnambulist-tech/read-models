@@ -9,14 +9,9 @@ use function preg_match;
 use function sprintf;
 
 /**
- * Class ProxyTo
- *
  * Based on the Laravel trait ForwardsCalls
  *
  * @link https://github.com/laravel/framework/blob/5.8/src/Illuminate/Support/Traits/ForwardsCalls.php
- *
- * @package    Somnambulist\Components\ReadModels\Utils
- * @subpackage Somnambulist\Components\ReadModels\Utils\ProxyTo
  */
 class ProxyTo
 {

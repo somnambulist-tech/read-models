@@ -11,12 +11,6 @@ use function count;
 use function explode;
 use function is_array;
 
-/**
- * Class ModelExporter
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\ModelExporter
- */
 final class ModelExporter implements Jsonable
 {
     private Model $model;

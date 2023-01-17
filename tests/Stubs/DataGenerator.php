@@ -9,12 +9,6 @@ use function array_combine;
 use function date;
 use function password_hash;
 
-/**
- * Class DataGenerator
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\DataGenerator
- */
 class DataGenerator
 {
 

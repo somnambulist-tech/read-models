@@ -17,11 +17,6 @@ use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 use Somnambulist\Components\Domain\Entities\Types\DateTime\DateTime;
 
 /**
- * Class ModelBuilderTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\ModelBuilderTest
- *
  * @group model-builder
  */
 class ModelBuilderTest extends TestCase

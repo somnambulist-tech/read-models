@@ -7,11 +7,6 @@ use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 
 /**
- * Class ModelTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\ModelTest
- *
  * @group model
  * @group model-scope
  */

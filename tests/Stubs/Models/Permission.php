@@ -4,12 +4,6 @@ namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 
 use Somnambulist\Components\ReadModels\Model;
 
-/**
- * Class Permission
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\Permission
- */
 class Permission extends Model
 {
 

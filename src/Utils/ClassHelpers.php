@@ -9,12 +9,7 @@ use function debug_backtrace;
 use function is_null;
 
 /**
- * Class ClassHelpers
- *
  * Assorted helpers, scoped to prevent global functions.
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\Utils\ClassHelpers
  */
 class ClassHelpers
 {

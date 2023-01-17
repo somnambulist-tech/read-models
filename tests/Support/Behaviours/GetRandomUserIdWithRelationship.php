@@ -2,12 +2,6 @@
 
 namespace Somnambulist\Components\ReadModels\Tests\Support\Behaviours;
 
-/**
- * Trait GetRandomUserIdWithRelationship
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Support\Behaviours
- * @subpackage Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship
- */
 trait GetRandomUserIdWithRelationship
 {
 

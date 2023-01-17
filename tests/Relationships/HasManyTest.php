@@ -13,11 +13,6 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
 /**
- * Class HasManyTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\HasManyTest
- *
  * @package relationships
  * @package relationships-has-many
  */

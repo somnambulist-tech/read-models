@@ -9,12 +9,6 @@ use Somnambulist\Components\ReadModels\ModelBuilder;
 use function count;
 use function get_class;
 
-/**
- * Class HasOne
- *
- * @package    Somnambulist\Components\ReadModels\Relationships
- * @subpackage Somnambulist\Components\ReadModels\Relationships\HasOne
- */
 class HasOne extends HasOneOrMany
 {
     private bool $nullOnNotFound;

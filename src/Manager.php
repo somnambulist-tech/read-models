@@ -8,12 +8,6 @@ use Somnambulist\Components\AttributeModel\AttributeCaster;
 use function get_class;
 use function sprintf;
 
-/**
- * Class ModelRegistry
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\ModelRegistry
- */
 final class Manager
 {
     private static ?Manager $instance = null;

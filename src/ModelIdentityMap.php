@@ -9,12 +9,6 @@ use function array_map;
 use function explode;
 use function get_class;
 
-/**
- * Class ModelIdentityMap
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\ModelIdentityMap
- */
 final class ModelIdentityMap
 {
     private array $identityMap = [];

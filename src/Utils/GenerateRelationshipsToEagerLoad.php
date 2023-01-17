@@ -13,15 +13,10 @@ use function is_numeric;
 use function trigger_deprecation;
 
 /**
- * Class GenerateRelationshipsToEagerLoad
- *
  * Encapsulates the logic for generating eager loaded relationships.
  *
  * Based on the eager loading strategy deployed in Laravel Eloquent.
  * @link https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Builder.php
- *
- * @package    Somnambulist\Components\ReadModels
- * @subpackage Somnambulist\Components\ReadModels\Utils\GenerateRelationshipsToEagerLoad
  */
 final class GenerateRelationshipsToEagerLoad
 {

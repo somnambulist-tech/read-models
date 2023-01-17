@@ -8,15 +8,10 @@ use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
 
 /**
- * Class IdentityMapClearerMessengerSubscriber
- *
  * Clears the read-model identity map when being used in Messenger to avoid stale
  * data after a command has been executed.
  *
  * Based on DoctrineBridge::DoctrineClearEntityManagerWorkerSubscriber
- *
- * @package    Somnambulist\Components\ReadModels\EventSubscribers
- * @subpackage Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerMessengerSubscriber
  */
 class IdentityMapClearerMessengerSubscriber implements EventSubscriberInterface
 {

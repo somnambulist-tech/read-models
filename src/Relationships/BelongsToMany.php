@@ -11,12 +11,6 @@ use function get_class;
 use function sprintf;
 use function str_replace;
 
-/**
- * Class BelongsToMany
- *
- * @package    Somnambulist\Components\ReadModels\Relationships
- * @subpackage Somnambulist\Components\ReadModels\Relationships\BelongsToMany
- */
 class BelongsToMany extends AbstractRelationship
 {
     private string $joinTable;

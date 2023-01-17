@@ -5,11 +5,6 @@ namespace Somnambulist\Components\ReadModels\Tests\Stubs\Models;
 use Somnambulist\Components\ReadModels\Model;
 
 /**
- * Class UserProfile
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserProfile
- *
  * @property-read User $user
  */
 class UserProfile extends Model

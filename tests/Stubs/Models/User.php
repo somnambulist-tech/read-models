@@ -6,12 +6,6 @@ use Somnambulist\Components\ReadModels\Manager;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
 
-/**
- * Class User
- *
- * @package    Somnambulist\Components\ReadModels\Tests\Stubs\Models
- * @subpackage Somnambulist\Components\ReadModels\Tests\Stubs\Models\User
- */
 class User extends Model
 {
 

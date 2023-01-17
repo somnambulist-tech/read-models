@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+2023-01-16
+----------
+
+ * required PHP 8.1
+ * strip unnecessary docblocks
+
 2022-04-07 - 3.3.2
 ------------------
 

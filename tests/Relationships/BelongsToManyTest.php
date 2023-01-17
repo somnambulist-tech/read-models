@@ -11,11 +11,6 @@ use Somnambulist\Components\ReadModels\Relationships\BelongsToMany;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 
 /**
- * Class BelongsToManyTest
- *
- * @package    Somnambulist\Components\ReadModels\Tests
- * @subpackage Somnambulist\Components\ReadModels\Tests\Relationships\BelongsToManyTest
- *
  * @group relationships
  * @group relationships-belongs-to-many
  */
