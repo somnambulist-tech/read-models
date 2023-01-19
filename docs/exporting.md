@@ -42,7 +42,7 @@ to all Models in that collection.
 For example:
 
 ```php
-User::find(1)->export()->with('roles:name.permissions:name')->toArray();
+User::find(1)->export()->include('roles:name.permissions:name')->toArray();
 ```
 
 This will export the User with all roles but only the name and all permissions per role but

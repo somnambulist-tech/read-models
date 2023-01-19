@@ -7,7 +7,6 @@ For example: A User has many Roles:
 ```php
 class User extends Models
 {
-
     public function roles()
     {
         return $this->hasMany(Role:class);
@@ -72,14 +71,14 @@ As read-models is based on Eloquent and how that operates, you can eager load mo
 same way! Either define the property to always load data, or start with a `with` call.
 
 ```php
-$users = User::with('roles.permissions')->whereColumn('name', 'LIKE', '%bob')->limit(3)->fetch();
+$users = User::include('roles.permissions')->whereColumn('name', 'LIKE', '%bob')->limit(3)->fetch();
 ```
 
 Will fetch the users, the roles and the permissions for the roles. And just like Eloquent you
 can also specify specific fields:
 
 ```php
-$users = User::with('roles:name.permissions:name')->whereColumn('name', 'LIKE', '%bob')->limit(3)->fetch();
+$users = User::include('roles:name.permissions:name')->whereColumn('name', 'LIKE', '%bob')->limit(3)->fetch();
 ```
 
 Will only load the name of the role and the permission... except! Read-Models will ensure that

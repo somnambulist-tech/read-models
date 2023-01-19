@@ -118,7 +118,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
     /**
      * Set what can be exported, or not by attribute and relationship name
      *
-     * By default ALL attributes are exported; to export specific attributes, set
+     * By default, ALL attributes are exported; to export specific attributes, set
      * them in the attributes array.
      *
      * <code>

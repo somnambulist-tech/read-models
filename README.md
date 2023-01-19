@@ -22,7 +22,7 @@ with objects / query builders for use in the presentation layer.
 A lot of the internal arrangement is heavily inspired by Laravels Eloquent and other
 active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and others.
 
-### Current Features
+### Supported Features
 
  * active-record query model
  * read-only - no ability to change your db through the built-in methods
@@ -30,17 +30,10 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
  * support for attribute casting
  * support for embedded objects via attribute casting
  * support for exporting as JSON / Array data (configurable)
+ * eager loading of relationships including batch loading
  * relationships (1:1, 1:m, m:m, 1:m reversed)
  * identity map
  * pluggable attribute casting / cast to value-objects
-
-### Thinking About...
-
- * doctrine metadata component to use the already available metadata
- * refactor identity map (improve object tracking to prevent stale data / SQL fetches)
- * prevent running / building insert, update, delete queries
- * support composite primary keys?
- * re-implement the query builder engine to allow more complex queries
 
 ## Requirements
 
@@ -83,7 +76,6 @@ Extend `Somnambulist\Components\ReadModels\Model` and add casts, define relation
 ```php
 class User extends Model
 {
-
     protected string $table = 'users';
 }
 ```
@@ -94,11 +86,9 @@ can be overridden by defining the property:
 ```php
 class User extends Model
 {
-
     protected string $table = 'tbl_users';
     protected ?string $tableAlias = 'u';
     protected string $primaryKey = 'uuid';
-
 }
 ```
 
@@ -130,7 +120,6 @@ You can define attribute mutators in the same way as Laravels Eloquent:
 ```php
 class User extends Model
 {
-
     protected function getUsernameAttribute($username)
     {
         return Str::capitalize($username);
@@ -150,7 +139,6 @@ Or create virtual properties, that exist at run time:
 ```php
 class User extends Model
 {
-
     protected function getAnniversayDayAttribute()
     {
         return $this->created_at->format('l');
@@ -168,7 +156,6 @@ Or for micro-optimizations, add the method directly:
 ```php
 class User extends Model
 {
-
     public function anniversayDay()
     {
         return $this->created_at->format('l');
@@ -197,6 +184,7 @@ somnambulist/collection project and must have `extract()` and `add()` methods.
 
  * [Upgrading from 1.X to 2.0](docs/upgrading_1.X_to_2.0.md)
  * [Upgrading from 2.X to 3.0](docs/upgrading_2.X_to_3.0.md)
+ * [Upgrading from 3.X to 4.0](docs/upgrading_3.X_to_4.0.md)
  * [Setting up Symfony](docs/setup_symfony.md)
  * [Querying Data](docs/querying.md)
  * [Casting Attributes](docs/casting.md)

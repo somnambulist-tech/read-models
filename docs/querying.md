@@ -6,7 +6,7 @@ query can be accessed to allow for even more complex queries, however you should
 using straight SQL at that point to fetch the primary ID's and then loading models from those
 IDs after the fact.
 
-All queries will start with either: `with()` or `query()`. The following methods are available:
+All queries will start with either: `include()` or `query()`. The following methods are available:
 
  * `andHaving`
  * `count` returns the count of the query at this point
@@ -102,7 +102,7 @@ that you have sufficient tests for any data fetches.
 
 ## Model Scopes
 
-From 2.0.0 local scopes can be defined on the Model. A scope provides a convenient way to add
+From 2.0 local scopes can be defined on the Model. A scope provides a convenient way to add
 re-usable query parts. To add a scope create a method that starts with `scope`. It will be
 passed a `ModelBuilder` instance and then arguments that are needed. For example; on a `User`
 model it may be useful to have quick methods for fetching only active users:
@@ -112,7 +112,6 @@ model it may be useful to have quick methods for fetching only active users:
 
 class User extends Model
 {
-
     public function scopeOnlyActive(ModelBuilder $builder)
     {
         $builder->whereColumn('is_active', '=', 1);
@@ -133,7 +132,6 @@ Arguments can be passed in as well and type hinted:
 
 class User extends Model
 {
-
     public function scopeActiveIs(ModelBuilder $builder, bool $state)
     {
         $builder->whereColumn('is_active', '=', (int)$state);
