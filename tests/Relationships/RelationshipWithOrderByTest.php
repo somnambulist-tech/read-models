@@ -17,7 +17,7 @@ class RelationshipWithOrderByTest extends TestCase
      */
     public function testRelationshipCanBeOrdered()
     {
-        $role = Role::with('permissions2')->limit(1)->fetchFirstOrFail();
+        $role = Role::include('permissions2')->limit(1)->fetchFirstOrFail();
 
         $this->assertInstanceOf(Role::class, $role);
 

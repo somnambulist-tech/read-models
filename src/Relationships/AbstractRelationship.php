@@ -63,7 +63,7 @@ use Somnambulist\Components\ReadModels\Utils\ProxyTo;
  * @method AbstractRelationship whereNotNull(string $column)
  * @method AbstractRelationship whereNull(string $column)
  * @method AbstractRelationship wherePrimaryKey(int|string $id)
- * @method AbstractRelationship with(...$relationships)
+ * @method AbstractRelationship include(...$relationships)
  */
 abstract class AbstractRelationship implements Queryable
 {

@@ -9,9 +9,7 @@ use function array_merge;
 use function count;
 use function explode;
 use function implode;
-use function is_array;
 use function is_numeric;
-use function trigger_deprecation;
 
 /**
  * Encapsulates the logic for generating eager loaded relationships.
@@ -31,12 +29,6 @@ final class GenerateRelationshipsToEagerLoad
      */
     public function __invoke(array $toEagerLoad = [], ...$relations): array
     {
-        if (count($relations) > 0 && isset($relations[0]) && is_array($relations[0])) {
-            // if an array is passed, it will be the first arg and wont unpack
-            trigger_deprecation('somnambulist/read-models', '3.1.0', 'Passing an array as argument is deprecated, use multiple string arguments');
-            $relations = $relations[0];
-        }
-
         if (count($relations) > 0) {
             $eagerLoad = $this->parseWithRelationships($relations);
 

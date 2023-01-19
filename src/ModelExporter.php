@@ -10,7 +10,6 @@ use Somnambulist\Components\ReadModels\Exceptions\JsonEncodingException;
 
 use function count;
 use function explode;
-use function is_array;
 
 final class ModelExporter implements Jsonable
 {
@@ -34,12 +33,8 @@ final class ModelExporter implements Jsonable
      *
      * @return ModelExporter
      */
-    public function attributes(...$attributes): self
+    public function attributes(string ...$attributes): self
     {
-        if (count($attributes) === 1 && is_array($attributes[0])) {
-            $attributes = $attributes[0];
-        }
-
         $this->attributes = $attributes;
 
         return $this;
@@ -52,12 +47,8 @@ final class ModelExporter implements Jsonable
      *
      * @return ModelExporter
      */
-    public function with(...$relationship): self
+    public function include(string ...$relationship): self
     {
-        if (count($relationship) === 1 && is_array($relationship[0])) {
-            $relationship = $relationship[0];
-        }
-
         $this->relationships = $relationship;
 
         return $this;
@@ -94,19 +85,19 @@ final class ModelExporter implements Jsonable
 
             if ($items instanceof Collection) {
                 $arr = $items->map(function (Model $model) use ($nested, $attributes) {
-                    $export = $model->export()->with(...(array)$nested);
+                    $export = $model->export()->include(...(array)$nested);
 
                     if (count($attributes) > 0) {
-                        $export->attributes($attributes);
+                        $export->attributes(...$attributes);
                     }
 
                     return $export->toArray();
                 })->toArray();
             } elseif ($items instanceof Model) {
-                $export = $items->export()->with(...(array)$nested);
+                $export = $items->export()->include(...(array)$nested);
 
                 if (count($attributes) > 0) {
-                    $export->attributes($attributes);
+                    $export->attributes(...$attributes);
                 }
 
                 $arr = $export->toArray();

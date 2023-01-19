@@ -15,18 +15,17 @@ use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdW
  */
 class ModelEagerLoadingTest extends TestCase
 {
-
     use GetRandomUserId;
     use GetRandomUserIdWithRelationship;
 
     /**
      * @group with
      */
-    public function testWith()
+    public function testInclude()
     {
         $userId = $this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id');
 
-        $user = User::with('addresses')->find($userId);
+        $user = User::include('addresses')->find($userId);
 
         $this->assertNotNull($user);
         $this->assertNotCount(0, $user->addresses);
@@ -36,9 +35,9 @@ class ModelEagerLoadingTest extends TestCase
     /**
      * @group with
      */
-    public function testWithForBelongsTo()
+    public function testIncludeForBelongsTo()
     {
-        $user = UserAddress::with('user')->limit(1)->fetch()->first();
+        $user = UserAddress::include('user')->limit(1)->fetch()->first();
 
         $this->assertNotNull($user);
         $this->assertInstanceOf(User::class, $user->user);
@@ -47,11 +46,11 @@ class ModelEagerLoadingTest extends TestCase
     /**
      * @group with
      */
-    public function testWithNestedLoading()
+    public function testIncludeNestedLoading()
     {
         $userId = $this->getRandomUserIdWithRelationship('user_roles', 'r', 'r.user_id = u.id AND r.role_id = (select id from roles where name = \'admin\')');
 
-        $user = User::with('roles.permissions')->find($userId);
+        $user = User::include('roles.permissions')->find($userId);
 
         $this->assertNotNull($user);
         $this->assertNotCount(0, $user->roles);

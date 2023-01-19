@@ -52,11 +52,11 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      * The primary key used for external references
      *
      * Where the {@see Model::$primaryKey} is the internal database key, this is the
-     * key that is used outside of the scope of the database i.e. the actual entity
-     * key. Typically this will be a UUID or GUID - a globally unique identifier that
+     * key that is used outside the scope of the database i.e. the actual entity
+     * key. Typically, this will be a UUID or GUID - a globally unique identifier that
      * can be used across databases, APIs etc.
      *
-     * By default this is not set, however if a column name is used, then the model
+     * By default, this is not set, however if a column name is used, then the model
      * will be registered in the identity map with this key, along with the primary
      * key, allowing reverse lookups by UUID as well as the table id key.
      *
@@ -64,7 +64,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      * not be linked. For example: using the Users UUID as the foreign key in a
      * separate Blog table instead of the internal integer ID.
      *
-     * Typically this would be used on a BelongsTo relationship. See the example in the
+     * Typically, this would be used on a BelongsTo relationship. See the example in the
      * tests of a User having a profile that is linked by UUID.
      */
     protected ?string $externalPrimaryKey = null;
@@ -195,15 +195,15 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
     /**
      * Eager load the specified relationships on this model
      *
-     * Allows dot notation to load related.related objects.
+     * Allows dot notation to load `related.related` objects.
      *
      * @param string ...$relations
      *
      * @return ModelBuilder
      */
-    public static function with(...$relations): ModelBuilder
+    public static function include(...$relations): ModelBuilder
     {
-        return static::query()->with(...$relations);
+        return static::query()->include(...$relations);
     }
 
     /**
@@ -219,7 +219,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
     public function newQuery(): ModelBuilder
     {
         $builder = new ModelBuilder($this);
-        $builder->with(...$this->with);
+        $builder->include(...$this->with);
 
         return $builder;
     }

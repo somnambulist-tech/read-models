@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+2023-01-19
+----------
+
+ * replace `with()` with `include()` for consistency across libraries (and `with` is an SQL keyword for CTEs)
+ * remove deprecated code
+ * remove calling certain methods with array args, use multiple strings instead
+
 2023-01-16
 ----------
 

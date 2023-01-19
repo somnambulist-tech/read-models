@@ -14,7 +14,6 @@ use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdW
  */
 class ModelExporterTest extends TestCase
 {
-
     use GetRandomUserId;
     use GetRandomUserIdWithRelationship;
 
@@ -38,7 +37,7 @@ class ModelExporterTest extends TestCase
     {
         $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
 
-        $array = $user->export()->with('addresses')->toArray();
+        $array = $user->export()->include('addresses')->toArray();
 
         $this->assertArrayHasKey('id', $array);
         $this->assertArrayHasKey('name', $array);
@@ -80,7 +79,7 @@ class ModelExporterTest extends TestCase
     {
         $user = User::find($this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id'));
 
-        $array = $user->export()->attributes(['id', 'name'])->toArray();
+        $array = $user->export()->attributes('id', 'name')->toArray();
 
         $this->assertArrayHasKey('id', $array);
         $this->assertArrayHasKey('name', $array);
@@ -96,7 +95,7 @@ class ModelExporterTest extends TestCase
     {
         $user = User::find($this->getRandomUserId());
 
-        $array = $user->export()->with('roles.permissions')->toArray();
+        $array = $user->export()->include('roles.permissions')->toArray();
 
         $this->assertArrayHasKey('roles', $array);
         $this->assertNotCount(0, $array['roles']);
@@ -107,7 +106,7 @@ class ModelExporterTest extends TestCase
     {
         $user = User::find($this->getRandomUserId());
 
-        $array = $user->export()->with('roles.permissions:name')->toArray();
+        $array = $user->export()->include('roles.permissions:name')->toArray();
 
         $this->assertArrayHasKey('roles', $array);
         $this->assertNotCount(0, $array['roles']);
@@ -122,7 +121,7 @@ class ModelExporterTest extends TestCase
     {
         $user = User::find($this->getRandomUserId());
 
-        $array = $user->export()->with('roles:name.permissions:name')->toArray();
+        $array = $user->export()->include('roles:name.permissions:name')->toArray();
 
         $this->assertArrayHasKey('roles', $array);
         $this->assertNotCount(0, $array['roles']);
@@ -140,7 +139,7 @@ class ModelExporterTest extends TestCase
     {
         $user = UserAlt::find($this->getRandomUserIdWithRelationship('user_addresses', 'ua', 'ua.user_id = u.id'));
 
-        $array = $user->export()->with('address')->toArray();
+        $array = $user->export()->include('address')->toArray();
 
         $this->assertArrayHasKey('address', $array);
         $this->assertArrayHasKey('address_line_1', $array['address']);

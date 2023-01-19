@@ -39,7 +39,7 @@ use function ucfirst;
 /**
  * Allows building queries that will return model instances.
  *
- * Supports eager loading related models via `with()`.
+ * Supports eager loading related models via `include()`.
  *
  * Query building is performed internally via DBAL QueryBuilder. Many methods are proxy'd through
  * to the builder instance allowing for method chaining.
@@ -265,7 +265,7 @@ class ModelBuilder implements Queryable
      *
      * @return $this
      */
-    public function with(...$relations): self
+    public function include(...$relations): self
     {
         $this->eagerLoad = (new GenerateRelationshipsToEagerLoad())($this->eagerLoad, ...$relations);
 
@@ -284,7 +284,7 @@ class ModelBuilder implements Queryable
                 /** @var AbstractRelationship $load */
                 $rel = $this->model->new()->getRelationship($name);
                 $rel
-                    ->with(...$this->findNestedRelationshipsFor($name))
+                    ->include(...$this->findNestedRelationshipsFor($name))
                     ->addConstraints($models)
                     ->addConstraintCallbackToQuery($constraints)
                     ->addRelationshipResultsToModels($models, $name)

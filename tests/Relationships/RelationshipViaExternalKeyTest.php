@@ -17,7 +17,7 @@ class RelationshipViaExternalKeyTest extends TestCase
      */
     public function testExternalPrimaryKey()
     {
-        $profile = UserProfile::with('user')->limit(1)->fetch()->first();
+        $profile = UserProfile::include('user')->limit(1)->fetch()->first();
 
         $this->assertInstanceOf(User::class, $profile->user);
         $this->assertEquals($profile->user_uuid, $profile->user->uuid);
@@ -30,7 +30,7 @@ class RelationshipViaExternalKeyTest extends TestCase
     {
         $profile = UserProfile::query()->limit(1)->fetchFirstOrNull();
 
-        $user = User::with('profile')->whereColumn('uuid', '=', $profile->user_uuid)->limit(1)->fetchFirstOrNull();
+        $user = User::include('profile')->whereColumn('uuid', '=', $profile->user_uuid)->limit(1)->fetchFirstOrNull();
 
         $this->assertInstanceOf(UserProfile::class, $user->profile);
         $this->assertEquals($user->uuid, $user->profile->user_uuid);
@@ -41,9 +41,9 @@ class RelationshipViaExternalKeyTest extends TestCase
      */
     public function testExternalPrimaryKeyUsesIdentityMap()
     {
-        $profile = UserProfile::with('user')->limit(1)->fetch()->first();
+        $profile = UserProfile::include('user')->limit(1)->fetch()->first();
 
-        $profile2 = UserProfile::with('user')->find($profile->id);
+        $profile2 = UserProfile::include('user')->find($profile->id);
 
         $this->assertSame($profile->user, $profile2->user);
     }

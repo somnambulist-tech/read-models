@@ -72,13 +72,13 @@ class ModelIdentityMapTest extends TestCase
     {
         $userId = $this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id');
 
-        $user = User::with('addresses')->find($userId);
+        $user = User::include('addresses')->find($userId);
 
         $this->assertNotNull($user);
         $this->assertNotCount(0, $user->addresses);
         $this->assertInstanceOf(UserAddress::class, $user->addresses->first());
 
-        $user2 = User::with('addresses')->find($userId);
+        $user2 = User::include('addresses')->find($userId);
 
         $this->assertSame($user->addresses->first(), $user2->addresses->first());
     }
@@ -90,12 +90,12 @@ class ModelIdentityMapTest extends TestCase
     {
         $userId = $this->getRandomUserIdWithRelationship('user_roles', 'r', 'r.user_id = u.id AND r.role_id = (select id from roles where name = \'admin\')');
 
-        $user = User::with('roles.permissions')->find($userId);
+        $user = User::include('roles.permissions')->find($userId);
 
         $this->assertNotNull($user);
         $this->assertNotCount(0, $user->roles);
 
-        $user2 = User::with('roles.permissions')->find($userId);
+        $user2 = User::include('roles.permissions')->find($userId);
 
         $perm1 = $user->roles
             ->find(function ($item) { return $item->name == 'admin'; })
