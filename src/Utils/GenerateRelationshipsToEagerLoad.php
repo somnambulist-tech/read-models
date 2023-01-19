@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels\Utils;
 
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\ReadModels\Contracts\Queryable;
+
 use function array_merge;
 use function count;
 use function explode;

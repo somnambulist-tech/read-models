@@ -7,6 +7,7 @@ use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\Collection\Contracts\Jsonable;
 use Somnambulist\Components\Collection\MutableCollection as Collection;
 use Somnambulist\Components\ReadModels\Exceptions\JsonEncodingException;
+
 use function count;
 use function explode;
 use function is_array;

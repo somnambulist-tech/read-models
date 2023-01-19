@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels\Exceptions;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
+
 use function sprintf;
 
 class NoResultsException extends Exception

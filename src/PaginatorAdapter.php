@@ -3,6 +3,7 @@
 namespace Somnambulist\Components\ReadModels;
 
 use Pagerfanta\Adapter\AdapterInterface;
+
 use function count;
 use function method_exists;
 use function sprintf;

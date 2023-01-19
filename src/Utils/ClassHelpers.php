@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels\Utils;
 
 use Closure;
 use ReflectionObject;
+
 use function count;
 use function debug_backtrace;
 use function is_null;

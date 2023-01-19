@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels;
 
 use Doctrine\DBAL\Connection;
 use Somnambulist\Components\ReadModels\Exceptions\ConnectionManagerException;
+
 use function array_key_exists;
 
 final class ConnectionManager

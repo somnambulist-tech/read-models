@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels\Tests\Stubs\Casters;
 
 use Somnambulist\Components\AttributeModel\Contracts\AttributeCasterInterface;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Address;
+
 use function in_array;
 
 class AddressCaster implements AttributeCasterInterface

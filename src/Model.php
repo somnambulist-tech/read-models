@@ -18,6 +18,7 @@ use Somnambulist\Components\ReadModels\Relationships\HasOne;
 use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use Somnambulist\Components\ReadModels\Utils\FilterGeneratedKeysFromCollection;
+
 use function array_key_exists;
 use function is_null;
 use function method_exists;
@@ -254,7 +255,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * @return mixed|null
      */
-    public function getAttribute(string $name)
+    public function getAttribute(string $name): mixed
     {
         if (null !== $attr = parent::getAttribute($name)) {
             return $attr;
@@ -268,7 +269,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * @return mixed|null
      */
-    public function getPrimaryKey()
+    public function getPrimaryKey(): mixed
     {
         return $this->attributes[$this->meta()->primaryKeyName()] ?? null;
     }
@@ -278,7 +279,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      *
      * @return mixed|null
      */
-    public function getExternalPrimaryKey()
+    public function getExternalPrimaryKey(): mixed
     {
         return $this->attributes[$this->meta()->externalKeyName()] ?? null;
     }

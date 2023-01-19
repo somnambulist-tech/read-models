@@ -6,6 +6,7 @@ use Somnambulist\Components\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Manager;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
+
 use function count;
 use function get_class;
 

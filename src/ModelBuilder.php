@@ -19,6 +19,7 @@ use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
 use Somnambulist\Components\ReadModels\Utils\FilterGeneratedKeysFromCollection;
 use Somnambulist\Components\ReadModels\Utils\GenerateRelationshipsToEagerLoad;
 use Somnambulist\Components\ReadModels\Utils\ProxyTo;
+
 use function array_map;
 use function array_merge;
 use function array_unique;

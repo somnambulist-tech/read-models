@@ -3,6 +3,7 @@
 namespace Somnambulist\Components\ReadModels\Exceptions;
 
 use Exception;
+
 use function sprintf;
 
 class ConnectionManagerException extends Exception

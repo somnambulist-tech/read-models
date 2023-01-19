@@ -4,6 +4,7 @@ namespace Somnambulist\Components\ReadModels\Utils;
 
 use BadMethodCallException;
 use Error;
+
 use function get_class;
 use function preg_match;
 use function sprintf;
