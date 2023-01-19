@@ -33,7 +33,7 @@
         "symfony/var-dumper": "^6.0",
         "victorjonsson/markdowndocs": "dev-master",
         "symfony/yaml": "^6.0",
-        "vimeo/psalm": "^3.18"
+        "vimeo/psalm": "^5.4"
     },
     "autoload": {
         "psr-4": {
