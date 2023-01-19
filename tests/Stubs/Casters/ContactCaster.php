@@ -4,8 +4,8 @@ namespace Somnambulist\Components\ReadModels\Tests\Stubs\Casters;
 
 use Somnambulist\Components\AttributeModel\Contracts\AttributeCasterInterface;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Contact;
-use Somnambulist\Components\Domain\Entities\Types\Identity\EmailAddress;
-use Somnambulist\Components\Domain\Entities\Types\PhoneNumber;
+use Somnambulist\Components\Models\Types\Identity\EmailAddress;
+use Somnambulist\Components\Models\Types\PhoneNumber;
 
 class ContactCaster implements AttributeCasterInterface
 {

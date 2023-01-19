@@ -14,7 +14,7 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserContact;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
-use Somnambulist\Components\Domain\Entities\Types\DateTime\DateTime;
+use Somnambulist\Components\Models\Types\DateTime\DateTime;
 
 /**
  * @group model-builder

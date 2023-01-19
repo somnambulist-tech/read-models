@@ -9,7 +9,7 @@ use Somnambulist\Components\ReadModels\ModelBuilder;
 use Somnambulist\Components\ReadModels\ModelExporter;
 use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
-use Somnambulist\Components\Domain\Entities\Types\DateTime\DateTime;
+use Somnambulist\Components\Models\Types\DateTime\DateTime;
 use function date;
 use function password_hash;
 
