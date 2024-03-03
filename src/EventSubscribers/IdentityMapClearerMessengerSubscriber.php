@@ -27,17 +27,17 @@ class IdentityMapClearerMessengerSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onWorkerMessageHandled()
+    public function onWorkerMessageHandled(): void
     {
         $this->clearIdentityMap();
     }
 
-    public function onWorkerMessageFailed()
+    public function onWorkerMessageFailed(): void
     {
         $this->clearIdentityMap();
     }
 
-    private function clearIdentityMap()
+    private function clearIdentityMap(): void
     {
         $this->manager->map()->clear();
     }

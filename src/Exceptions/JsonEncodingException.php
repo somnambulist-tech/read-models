@@ -4,7 +4,6 @@ namespace Somnambulist\Components\ReadModels\Exceptions;
 
 use RuntimeException;
 use Somnambulist\Components\ReadModels\Model;
-
 use function get_class;
 use function sprintf;
 

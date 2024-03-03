@@ -6,7 +6,7 @@ use Somnambulist\Components\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Manager;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
-
+use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use function count;
 use function get_class;
 
@@ -23,7 +23,7 @@ class HasOne extends HasOneOrMany
 
     public function addRelationshipResultsToModels(Collection $models, string $relationship): AbstractRelationship
     {
-        if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->foreignKey)) {
+        if (ClassHelpers::countPart($this->getQueryBuilder(), 'select') > 0 && !$this->hasSelectExpression($this->foreignKey)) {
             $this->query->select($this->foreignKey);
         }
         if (count($this->getQueryBuilder()->getParameters()) > 0) {

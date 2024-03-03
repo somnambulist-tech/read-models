@@ -5,7 +5,6 @@ namespace Somnambulist\Components\ReadModels;
 use Doctrine\DBAL\Connection;
 use RuntimeException;
 use Somnambulist\Components\AttributeModel\AttributeCaster;
-
 use function get_class;
 use function sprintf;
 

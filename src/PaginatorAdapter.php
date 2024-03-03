@@ -2,10 +2,9 @@
 
 namespace Somnambulist\Components\ReadModels;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Adapter\AdapterInterface;
-
-use function count;
-use function method_exists;
+use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use function sprintf;
 
 final class PaginatorAdapter implements AdapterInterface
@@ -17,24 +16,22 @@ final class PaginatorAdapter implements AdapterInterface
         $this->builder = clone $queryBuilder;
     }
 
-    private function prepareCountQueryBuilder(): ModelBuilder
+    private function prepareCountQueryBuilder(): QueryBuilder
     {
         $query = clone $this->builder;
 
         $qb = $query->getQueryBuilder();
-        $qb->resetQueryPart('orderBy');
+        $qb->resetOrderBy();
 
-        if (count($qb->getQueryPart('select')) == 0) {
+        if (0 === ClassHelpers::countPart($qb, 'select')) {
             $qb->select($query->model->meta()->primaryKeyNameWithAlias());
         }
-        if (count($qb->getQueryPart('groupBy')) > 0) {
-            $qb->select($qb->getQueryPart('groupBy'));
+        if (ClassHelpers::countPart($qb, 'groupBy') > 0) {
+            $qb->select(...ClassHelpers::get($qb, 'groupBy'));
         }
 
-        $counter = $query->newQuery();
+        $counter = new QueryBuilder(Manager::instance()->connect($this->builder->getModel()));
         $counter
-            ->getQueryBuilder()
-            ->resetQueryParts()
             ->select('COUNT(*) AS total_results')
             ->from(sprintf('(%s)', $qb->getSQL()), 't1')
             ->setParameters($qb->getParameters())
@@ -48,13 +45,9 @@ final class PaginatorAdapter implements AdapterInterface
      */
     public function getNbResults(): int
     {
-        $qb = $this->prepareCountQueryBuilder()->getQueryBuilder();
+        $qb = $this->prepareCountQueryBuilder();
 
-        if (method_exists($qb, 'executeQuery')) {
-            return (int) $qb->executeQuery()->fetchOne();
-        }
-
-        return (int)$qb->execute()->fetchOne();
+        return (int)$qb->executeQuery()->fetchOne();
     }
 
     /**

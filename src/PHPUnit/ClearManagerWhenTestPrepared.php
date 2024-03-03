@@ -2,8 +2,8 @@
 
 namespace Somnambulist\Components\ReadModels\PHPUnit;
 
-use PHPUnit\Runner\AfterTestHook;
-use PHPUnit\Runner\BeforeTestHook;
+use PHPUnit\Event\Test\Prepared;
+use PHPUnit\Event\Test\PreparedSubscriber;
 use Somnambulist\Components\ReadModels\Manager;
 
 /**
@@ -15,18 +15,13 @@ use Somnambulist\Components\ReadModels\Manager;
  *
  * <code>
  *     <extensions>
- *         <extension class="Somnambulist\Components\ReadModels\PHPUnit\PHPUnitListener" />
+ *         <bootstrap class="Somnambulist\Components\ReadModels\PHPUnit\ReadModelExtension" />
  *     </extensions>
  * </code>
  */
-class PHPUnitListener implements BeforeTestHook, AfterTestHook
+class ClearManagerWhenTestPrepared implements PreparedSubscriber
 {
-    public function executeAfterTest(string $test, float $time): void
-    {
-        Manager::clear();
-    }
-
-    public function executeBeforeTest(string $test): void
+    public function notify(Prepared $event): void
     {
         Manager::clear();
     }

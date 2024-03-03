@@ -3,10 +3,13 @@
 namespace Somnambulist\Components\ReadModels\Utils;
 
 use Closure;
+use Doctrine\DBAL\Query\QueryBuilder;
+use InvalidArgumentException;
 use ReflectionObject;
-
 use function count;
 use function debug_backtrace;
+use function implode;
+use function in_array;
 use function is_null;
 
 /**
@@ -69,6 +72,20 @@ class ClassHelpers
     }
 
     /**
+     * Helper to allow getting protected/private properties, returns the property value
+     *
+     * @param object             $object
+     * @param string             $property
+     * @param null|string|object $scope
+     *
+     * @return mixed
+     */
+    public static function get(object $object, string $property, mixed $scope = null): mixed
+    {
+        return Closure::bind(fn () => $this->{$property}, $object, !is_null($scope) ? $scope : $object)();
+    }
+
+    /**
      * Set the property in object to value
      *
      * If scope is set to a parent class, private properties can be updated.
@@ -109,5 +126,18 @@ class ClassHelpers
         }, $object, !is_null($scope) ? $scope : 'static')();
 
         return $object;
+    }
+
+    public static function countPart(QueryBuilder $builder, string $part): int
+    {
+        $parts = ['select', 'from', 'groupBy', 'orderBy'];
+
+        if (!in_array($part, $parts)) {
+            throw new InvalidArgumentException(
+                sprintf('"%s" is not a valid part, must be one of: "%s"', $part, implode(', ', $parts))
+            );
+        }
+
+        return count(ClassHelpers::get($builder, $part));
     }
 }

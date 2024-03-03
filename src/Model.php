@@ -18,7 +18,6 @@ use Somnambulist\Components\ReadModels\Relationships\HasOne;
 use Somnambulist\Components\ReadModels\Relationships\HasOneToMany;
 use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use Somnambulist\Components\ReadModels\Utils\FilterGeneratedKeysFromCollection;
-
 use function array_key_exists;
 use function is_null;
 use function method_exists;

@@ -1,8 +1,16 @@
 Change Log
 ==========
 
-2023-01-19
-----------
+2024-03-02 - 4.1.0
+------------------
+
+ * updated to Doctrine DBAL 4: note DBAL 3.X is no longer compatible due to the internal changes in DBAL QueryBuilder
+ * updated to PHPUnit 10.5
+ * replaced unit test listener with extension + event subscriber
+ * remove all previous DBAL method calls
+
+2023-01-19 - 4.0.0
+------------------
 
  * replace `with()` with `include()` for consistency across libraries (and `with` is an SQL keyword for CTEs)
  * remove deprecated code

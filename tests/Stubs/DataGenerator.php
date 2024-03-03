@@ -4,7 +4,6 @@ namespace Somnambulist\Components\ReadModels\Tests\Stubs;
 
 use Doctrine\DBAL\Connection;
 use Faker\Generator;
-
 use function array_column;
 use function array_combine;
 use function date;

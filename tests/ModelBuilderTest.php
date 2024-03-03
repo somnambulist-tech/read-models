@@ -21,7 +21,6 @@ use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
  */
 class ModelBuilderTest extends TestCase
 {
-
     use GetRandomUserId;
 
     /**

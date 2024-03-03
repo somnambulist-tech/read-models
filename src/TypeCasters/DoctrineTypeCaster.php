@@ -7,7 +7,6 @@ use Doctrine\DBAL\Types\Type;
 use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\AttributeModel\Contracts\AttributeCasterInterface;
 use Somnambulist\Components\ReadModels\Utils\StrConverter;
-
 use function array_key_exists;
 use function array_keys;
 use function is_null;

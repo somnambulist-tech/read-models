@@ -3,6 +3,7 @@
 namespace Somnambulist\Components\ReadModels;
 
 use BadMethodCallException;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use IlluminateAgnostic\Str\Support\Str;
@@ -16,10 +17,10 @@ use Somnambulist\Components\ReadModels\Contracts\Queryable;
 use Somnambulist\Components\ReadModels\Exceptions\EntityNotFoundException;
 use Somnambulist\Components\ReadModels\Exceptions\NoResultsException;
 use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
+use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use Somnambulist\Components\ReadModels\Utils\FilterGeneratedKeysFromCollection;
 use Somnambulist\Components\ReadModels\Utils\GenerateRelationshipsToEagerLoad;
 use Somnambulist\Components\ReadModels\Utils\ProxyTo;
-
 use function array_map;
 use function array_merge;
 use function array_unique;
@@ -160,7 +161,7 @@ class ModelBuilder implements Queryable
     public function fetch(): Collection
     {
         $models  = $this->model->getCollection();
-        $selects = (new FilterGeneratedKeysFromCollection())($this->query->getQueryPart('select'));
+        $selects = (new FilterGeneratedKeysFromCollection())(ClassHelpers::get($this->query, 'select'));
 
         if (count($selects) < 1) {
             $this->select('*');
@@ -169,11 +170,7 @@ class ModelBuilder implements Queryable
         $map = Manager::instance()->map();
         $map->registerAlias($this->model);
 
-        if (method_exists($this->query, 'executeQuery')) {
-            $result = $this->query->executeQuery();
-        } else {
-            $result = $this->query->execute();
-        }
+        $result = $this->query->executeQuery();
 
         foreach ($result->iterateAssociative() as $row) {
             $map->inferRelationshipFromAttributes($this->model, $row);
@@ -216,8 +213,8 @@ class ModelBuilder implements Queryable
     public function count(): int
     {
         $query   = clone $this->query;
-        $groupBy = $query->getQueryPart('groupBy');
-        $selects = $query->getQueryPart('select');
+        $groupBy = ClassHelpers::get($query, 'groupBy');
+        $selects = ClassHelpers::get($query, 'select');
         $new     = [];
 
         foreach ($groupBy as $item) {
@@ -229,17 +226,13 @@ class ModelBuilder implements Queryable
         }
 
         $query
-            ->select($new)
+            ->select(...$new)
             ->addSelect(sprintf('COUNT(DISTINCT %s) AS total_results', $this->meta->primaryKeyNameWithAlias()))
             ->setMaxResults(1)
             ->setFirstResult(0)
         ;
 
-        if (method_exists($query, 'executeQuery')) {
-            return (int)$query->executeQuery()->fetchOne();
-        }
-
-        return (int)$query->execute()->fetchOne();
+        return (int)$query->executeQuery()->fetchOne();
     }
 
     /**
@@ -343,7 +336,7 @@ class ModelBuilder implements Queryable
      * instance, the second parameter is the `AS ...` for the result. If not set, the sub-select
      * will be `AS sub_select_[n+1]`.
      *
-     * @param string ...$columns
+     * @param string|callable|ModelBuilder ...$columns
      *
      * @return ModelBuilder
      */
@@ -371,7 +364,7 @@ class ModelBuilder implements Queryable
 
         $columns = array_map(fn ($column) => $this->prefixColumnWithTableAlias($column), $columns);
 
-        $this->query->select(array_unique(array_merge($this->query->getQueryPart('select'), $columns)));
+        $this->query->addSelect(...array_unique($columns));
 
         return $this;
     }
@@ -392,7 +385,7 @@ class ModelBuilder implements Queryable
      */
     public function hasSelectExpression(string $expression): bool
     {
-        foreach ($this->query->getQueryPart('select') as $select) {
+        foreach (ClassHelpers::get($this->query, 'select') as $select) {
             if (Str::contains($select, $expression)) {
                 return true;
             }
@@ -697,7 +690,7 @@ class ModelBuilder implements Queryable
         return $this;
     }
 
-    public function setParameter(string|int $key, mixed $value, $type = null): self
+    public function setParameter(string|int $key, mixed $value, $type = ParameterType::STRING): self
     {
         if (!is_numeric($key) && str_starts_with($key, ':')) {
             $key = substr($key, 1);

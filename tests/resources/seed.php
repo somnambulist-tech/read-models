@@ -12,7 +12,7 @@ include_once __DIR__ . '/../../vendor/autoload.php';
 include_once __DIR__ . '/bootstrap.php';
 
 $app = new Application('DB Seeder', '1.0.0');
-$app->addCommands([
+$app->addCommands(commands: [
     new class($connection, $faker) extends Symfony\Component\Console\Command\Command
     {
         private $conn;
@@ -175,7 +175,7 @@ $app->addCommands([
                     CREATE TABLE IF NOT EXISTS user_addresses (
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         user_id integer NOT NULL,
-                        type varchar(100) NOT NULL,
+                        "type" varchar(100) NOT NULL,
                         created_at datetime NOT NULL,
                         updated_at datetime NOT NULL,
                         address_line_1 varchar(255) DEFAULT(NULL),
@@ -192,7 +192,7 @@ $app->addCommands([
                         id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                         user_id integer NOT NULL,
                         name varchar(100) NOT NULL,
-                        type varchar(100) NOT NULL,
+                        "type" varchar(100) NOT NULL,
                         created_at datetime NOT NULL,
                         updated_at datetime NOT NULL,
                         contact_phone varchar(20) DEFAULT(NULL),
@@ -232,12 +232,12 @@ $app->addCommands([
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS idx_roles_name ON roles (name ASC)');
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_permissions_name ON permissions (name ASC)');
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_role_permissions_role_id_permission_id ON role_permissions (role_id ASC, permission_id ASC)');
-                $this->conn->executeStatement('CREATE INDEX IF NOT EXISTS idx_user_addresses_type ON user_addresses (type ASC)');
+                $this->conn->executeStatement('CREATE INDEX IF NOT EXISTS idx_user_addresses_type ON user_addresses ("type" ASC)');
                 $this->conn->executeStatement('CREATE INDEX IF NOT EXISTS idx_users_is_active ON users (is_active ASC)');
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_users_email ON users (email ASC)');
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_users_uuid ON users (uuid ASC)');
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_addresses_user_id_type ON user_addresses (user_id ASC, type ASC)');
-                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_contacts_user_id_type ON user_contacts (user_id ASC, type ASC)');
+                $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_contacts_user_id_type ON user_contacts (user_id ASC, "type" ASC)');
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_relations_user_relationship ON user_relations (user_source ASC, user_target ASC)');
                 $this->conn->executeStatement('CREATE UNIQUE INDEX IF NOT EXISTS uniq_user_roles_user_id_role_id ON user_roles (user_id ASC, role_id ASC)');
 

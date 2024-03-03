@@ -3,7 +3,6 @@
 namespace Somnambulist\Components\ReadModels;
 
 use IlluminateAgnostic\Str\Support\Str;
-
 use function array_intersect_key;
 use function array_key_exists;
 use function array_map;

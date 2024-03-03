@@ -6,7 +6,7 @@ use Somnambulist\Components\Collection\Contracts\Collection;
 use Somnambulist\Components\ReadModels\Manager;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
-
+use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use function get_class;
 use function is_null;
 
@@ -38,7 +38,7 @@ class BelongsTo extends AbstractRelationship
 
     public function addRelationshipResultsToModels(Collection $models, string $relationship): AbstractRelationship
     {
-        if (count($this->getQueryBuilder()->getQueryPart('select')) > 0 && !$this->hasSelectExpression($this->ownerKey)) {
+        if (ClassHelpers::countPart($this->getQueryBuilder(), 'select') > 0 && !$this->hasSelectExpression($this->ownerKey)) {
             $this->query->select($this->ownerKey);
         }
         if (count($this->getQueryBuilder()->getParameters()) > 0) {
