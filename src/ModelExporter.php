@@ -3,12 +3,12 @@
 namespace Somnambulist\Components\ReadModels;
 
 use Closure;
-use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\Collection\Contracts\Jsonable;
 use Somnambulist\Components\Collection\MutableCollection as Collection;
 use Somnambulist\Components\ReadModels\Exceptions\JsonEncodingException;
 use function count;
 use function explode;
+use function Symfony\Component\String\u;
 
 final class ModelExporter implements Jsonable
 {
@@ -70,11 +70,13 @@ final class ModelExporter implements Jsonable
 
         foreach ($this->relationships as $relationship) {
             $nested = $attributes = [];
+            $test = u($relationship);
 
-            if (Str::contains($relationship, '.')) {
+            if ($test->containsAny('.')) {
                 [$relationship, $nested] = explode('.', $relationship, 2);
+                $test = u($relationship);
             }
-            if (Str::contains($relationship, ':')) {
+            if ($test->containsAny(':')) {
                 [$relationship, $attributes] = explode(':', $relationship, 2);
                 $attributes = explode(',', $attributes);
             }
@@ -114,7 +116,7 @@ final class ModelExporter implements Jsonable
 
         foreach ($attributes as $key => $value) {
             if ($this->shouldExtractAttribute($key)) {
-                $key = Str::snake($this->getAttributeExtractionKey($key));
+                $key = $this->getAttributeExtractionKey($key);
 
                 if (is_object($value)) {
                     $attrs[$key] = $this->extractPropertiesFrom($value);

@@ -3,11 +3,11 @@
 namespace Somnambulist\Components\ReadModels;
 
 use IlluminateAgnostic\Str\Support\Arr;
-use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\ReadModels\Utils\ClassHelpers;
 use function explode;
 use function sprintf;
 use function stripos;
+use function Symfony\Component\String\u;
 
 final class ModelMetadata
 {
@@ -84,7 +84,7 @@ final class ModelMetadata
      */
     public function foreignKey(): string
     {
-        $key = sprintf('%s_%s', Str::snake(ClassHelpers::getObjectShortClassName($this->model)), $this->primaryKeyName());
+        $key = sprintf('%s_%s', u(ClassHelpers::getObjectShortClassName($this->model))->snake(), $this->primaryKeyName());
 
         return $this->foreignKey ?? $key;
     }

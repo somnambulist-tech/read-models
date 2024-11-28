@@ -2,7 +2,6 @@
 
 namespace Somnambulist\Components\ReadModels;
 
-use IlluminateAgnostic\Str\Support\Str;
 use JsonSerializable;
 use LogicException;
 use Somnambulist\Components\AttributeModel\AbstractModel;
@@ -22,6 +21,7 @@ use function array_key_exists;
 use function is_null;
 use function method_exists;
 use function sprintf;
+use function Symfony\Component\String\u;
 
 abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonSerializable
 {
@@ -438,7 +438,7 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
         /** @var Model $instance */
         $instance   = new $class();
         $relation   = $relation ?: ClassHelpers::getCallingMethod();
-        $foreignKey = $foreignKey ?: sprintf('%s_%s', Str::snake($relation), $instance->meta()->primaryKeyName());
+        $foreignKey = $foreignKey ?: sprintf('%s_%s', u($relation)->snake()->toString(), $instance->meta()->primaryKeyName());
         $ownerKey   = $ownerKey ?: $instance->meta()->primaryKeyName();
 
         return new BelongsTo($instance->newQuery(), $this, $foreignKey, $ownerKey, $nullOnNotFound);

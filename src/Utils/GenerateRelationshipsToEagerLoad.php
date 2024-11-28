@@ -2,13 +2,13 @@
 
 namespace Somnambulist\Components\ReadModels\Utils;
 
-use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\ReadModels\Contracts\Queryable;
 use function array_merge;
 use function count;
 use function explode;
 use function implode;
 use function is_numeric;
+use function Symfony\Component\String\u;
 
 /**
  * Encapsulates the logic for generating eager loaded relationships.
@@ -55,7 +55,7 @@ final class GenerateRelationshipsToEagerLoad
             if (is_numeric($name)) {
                 $name = $constraints;
 
-                [$name, $constraints] = Str::contains($name, ':')
+                [$name, $constraints] = u($name)->containsAny(':')
                     ? $this->createSelectWithConstraint($name)
                     : [
                         $name, function () {

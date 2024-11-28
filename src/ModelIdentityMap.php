@@ -2,12 +2,12 @@
 
 namespace Somnambulist\Components\ReadModels;
 
-use IlluminateAgnostic\Str\Support\Str;
 use function array_intersect_key;
 use function array_key_exists;
 use function array_map;
 use function explode;
 use function get_class;
+use function Symfony\Component\String\u;
 
 final class ModelIdentityMap
 {
@@ -87,7 +87,7 @@ final class ModelIdentityMap
         foreach ($attributes as $key => $value) {
             $ref = null;
 
-            if (Str::startsWith($key, Relationships\AbstractRelationship::RELATIONSHIP_SOURCE_MODEL_REF)) {
+            if (u($key)->startsWith(Relationships\AbstractRelationship::RELATIONSHIP_SOURCE_MODEL_REF)) {
                 $ref = array_values(array_slice(explode('__', $key), -1))[0];
                 unset($attributes[$key]);
             } elseif ($model->meta()->foreignKey() === $key || $model->getOwningKey() === $key) {

@@ -4,12 +4,12 @@ namespace Somnambulist\Components\ReadModels\TypeCasters;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
-use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\AttributeModel\Contracts\AttributeCasterInterface;
 use Somnambulist\Components\ReadModels\Utils\StrConverter;
 use function array_key_exists;
 use function array_keys;
 use function is_null;
+use function Symfony\Component\String\u;
 
 final class DoctrineTypeCaster implements AttributeCasterInterface
 {
@@ -24,7 +24,7 @@ final class DoctrineTypeCaster implements AttributeCasterInterface
 
     public function supports(string $type): bool
     {
-        return in_array($type, $this->types()) || Str::startsWith($type, 'resource:');
+        return in_array($type, $this->types()) || u($type)->startsWith('resource:');
     }
 
     public function cast(array &$attributes, $attribute, string $type): void
@@ -35,9 +35,9 @@ final class DoctrineTypeCaster implements AttributeCasterInterface
         
         $value = $attributes[$attribute];
 
-        if (Str::startsWith($type, 'resource:')) {
+        if (u($type)->startsWith('resource:')) {
             $value = is_null($value) ? null : StrConverter::toResource($value);
-            $type  = Str::replaceFirst('resource:', '', $type);
+            $type  = u($type)->replace('resource:', '')->toString();
         }
 
         $attributes[$attribute] = Type::getType($type)->convertToPHPValue($value, $this->connection->getDatabasePlatform());

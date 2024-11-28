@@ -11,7 +11,7 @@ class Address
     private ?string $county;
     private ?string $postcode;
 
-    public function __construct(string $line1 = null, string $line2 = null, string $town = null, string $county = null, string $postcode = null)
+    public function __construct(?string $line1 = null, ?string $line2 = null, ?string $town = null, ?string $county = null, ?string $postcode = null)
     {
         $this->line1    = $line1;
         $this->line2    = $line2;

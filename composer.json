@@ -14,7 +14,7 @@
         "ext-json":  "*",
         "doctrine/dbal": "^4.0",
         "pagerfanta/pagerfanta": "^4.3",
-        "pragmarx/ia-str": "^7.3",
+        "symfony/string": "^6.4|^7.0",
         "somnambulist/attribute-model": "^3.0",
         "somnambulist/collection": "^5.3"
     },
@@ -32,8 +32,7 @@
         "symfony/stopwatch": "^6.4",
         "symfony/var-dumper": "^6.4",
         "victorjonsson/markdowndocs": "dev-master",
-        "symfony/yaml": "^6.4",
-        "vimeo/psalm": "^5.4"
+        "symfony/yaml": "^6.4"
     },
     "autoload": {
         "psr-4": {

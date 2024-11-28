@@ -6,7 +6,6 @@ use BadMethodCallException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use IlluminateAgnostic\Str\Support\Str;
 use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 use RuntimeException;
@@ -31,10 +30,9 @@ use function is_callable;
 use function method_exists;
 use function sprintf;
 use function str_contains;
-use function str_replace;
 use function str_starts_with;
-use function strlen;
 use function substr;
+use function Symfony\Component\String\u;
 use function ucfirst;
 
 /**
@@ -108,7 +106,7 @@ class ModelBuilder implements Queryable
      *
      * @return Collection
      */
-    public function findBy(array $criteria, array $orderBy = [], int $limit = null, int $offset = null): Collection
+    public function findBy(array $criteria, array $orderBy = [], ?int $limit = null, ?int $offset = null): Collection
     {
         foreach ($criteria as $field => $value) {
             $this->whereColumn($field, '=', $value);
@@ -219,7 +217,7 @@ class ModelBuilder implements Queryable
 
         foreach ($groupBy as $item) {
             foreach ($selects as $select) {
-                if (Str::contains($select, $item)) {
+                if (u($select)->containsAny($item)) {
                     $new[] = $select;
                 }
             }
@@ -301,8 +299,10 @@ class ModelBuilder implements Queryable
         // the given top-level relationship. We will just check for any relations
         // that start with the given top relations and add them to our arrays.
         foreach ($this->eagerLoad as $name => $constraints) {
-            if (Str::contains($name, '.') && Str::startsWith($name, $relation . '.')) {
-                $nested[substr($name, strlen($relation . '.'))] = $constraints;
+            $name = u($name);
+
+            if ($name->containsAny('.') && $name->startsWith($relation . '.')) {
+                $nested[$name->after($relation . '.')->toString()] = $constraints;
             }
         }
 
@@ -386,7 +386,7 @@ class ModelBuilder implements Queryable
     public function hasSelectExpression(string $expression): bool
     {
         foreach (ClassHelpers::get($this->query, 'select') as $select) {
-            if (Str::contains($select, $expression)) {
+            if (u($select)->containsAny($expression)) {
                 return true;
             }
         }
@@ -412,7 +412,7 @@ class ModelBuilder implements Queryable
         // placeholder name can only be ascii with underscores, hyphens and dots are not allowed
         return sprintf(
             ':bind_%s_%s',
-            Str::slug(str_replace(['.', '-'], '_', $this->prefixColumnWithTableAlias($column)), '_'),
+            u($this->prefixColumnWithTableAlias($column))->snake(),
             ++$index
         );
     }

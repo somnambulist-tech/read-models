@@ -2,10 +2,10 @@
 
 namespace Somnambulist\Components\ReadModels\Utils;
 
-use IlluminateAgnostic\Str\Support\Str;
 use Somnambulist\Components\Collection\MutableCollection as Collection;
 use Somnambulist\Components\ReadModels\Relationships\AbstractRelationship;
 use function is_string;
+use function Symfony\Component\String\u;
 
 final class FilterGeneratedKeysFromCollection
 {
@@ -22,11 +22,12 @@ final class FilterGeneratedKeysFromCollection
             Collection::collect($attributes)
                 ->filter(function ($value, $key) {
                     $ignorable =
-                        Str::contains($key, [AbstractRelationship::INTERNAL_KEY_PREFIX])
+                        is_string($key) && u($key)->containsAny([AbstractRelationship::INTERNAL_KEY_PREFIX])
                         ||
                         (
-                            is_string($value) && Str::contains($value, [
-                                AbstractRelationship::RELATIONSHIP_SOURCE_MODEL_REF, AbstractRelationship::RELATIONSHIP_TARGET_MODEL_REF
+                            is_string($value) && u($value)->containsAny([
+                                AbstractRelationship::RELATIONSHIP_SOURCE_MODEL_REF,
+                                AbstractRelationship::RELATIONSHIP_TARGET_MODEL_REF,
                             ])
                         )
                     ;
