@@ -96,7 +96,7 @@ instance and that instance is the first loaded instance. If you only load a coup
 then you may have issues later on. Additionally: some logic may require or be dependent on the
 full model being loaded e.g.: virtual properties.
 
-For relationships, the required keys to setup and query that relationship will be automatically
+For relationships, the required keys to set up and query that relationship will be automatically
 added to any query to ensure it can still function. This may not work in all cases, so ensure
 that you have sufficient tests for any data fetches.
 
@@ -139,4 +139,28 @@ class User extends Model
 }
 
 $users = User::query()->activeIs(false)->fetch();
+```
+
+Alternatively, from 5.0, `tap()` can be used to separate scopes into discrete classes to allow for much better
+reuse of query pieces. For example:
+
+```php
+use Somnambulist\Components\ReadModels\ModelBuilder;
+
+class DateIsBetween
+{
+    public function __construct(private DateTimeInterface $start, private DateTimeInterface $end)
+    {}
+    
+    public function __invoke(ModelBuilder $query): void
+    {
+        $query->whereBetween('the_date', $this->start->format('Y-m-d'), $this->end->format('Y-m-d'));
+    }
+}
+```
+
+Then to use the query components:
+
+```php
+User::query()->tap(new DateIsBetween(new DateTimeImmutable(), new DateTimeImmutable()));
 ```

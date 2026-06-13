@@ -2,14 +2,13 @@
 
 namespace Somnambulist\Components\ReadModels\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 
-/**
- * @group model
- * @group model-scope
- */
+#[Group("model")]
+#[Group("model-scope")]
 class ModelScopeTest extends TestCase
 {
 

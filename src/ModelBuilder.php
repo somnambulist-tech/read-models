@@ -701,6 +701,13 @@ class ModelBuilder implements Queryable
         return $this;
     }
 
+    public function tap(callable $callback): self
+    {
+        $callback($this);
+
+        return $this;
+    }
+
     /**
      * Gets the underlying DBAL query builder
      *

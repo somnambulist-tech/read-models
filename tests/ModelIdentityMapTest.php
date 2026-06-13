@@ -2,6 +2,7 @@
 
 namespace Somnambulist\Components\ReadModels\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
@@ -9,19 +10,15 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAlt;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
-/**
- * @group model
- * @group model-identity-map
- */
+#[Group("model")]
+#[Group("model-identity-map")]
 class ModelIdentityMapTest extends TestCase
 {
 
     use GetRandomUserId;
     use GetRandomUserIdWithRelationship;
 
-    /**
-     * @group eager-loading
-     */
+    #[Group("eager-loading")]
     public function testFindSameUserReturnsSameObject()
     {
         $userId = $this->getRandomUserId();
@@ -35,9 +32,7 @@ class ModelIdentityMapTest extends TestCase
         $this->assertSame($user1, $user2);
     }
 
-    /**
-     * @group eager-loading
-     */
+    #[Group("eager-loading")]
     public function testSameObjectOnOneToOne()
     {
         $userId = $this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id');
@@ -51,9 +46,7 @@ class ModelIdentityMapTest extends TestCase
         $this->assertSame($user1->address, $user2->address);
     }
 
-    /**
-     * @group eager-loading
-     */
+    #[Group("eager-loading")]
     public function testSameObjectOnBelongsTo()
     {
         $obj1 = UserAddress::query()->limit(1)->fetch()->first();
@@ -65,9 +58,7 @@ class ModelIdentityMapTest extends TestCase
         $this->assertSame($obj1->user, $obj2->user);
     }
 
-    /**
-     * @group eager-loading
-     */
+    #[Group("eager-loading")]
     public function testEagerLoadingReturnsSameObject()
     {
         $userId = $this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id');
@@ -83,9 +74,7 @@ class ModelIdentityMapTest extends TestCase
         $this->assertSame($user->addresses->first(), $user2->addresses->first());
     }
 
-    /**
-     * @group eager-loading
-     */
+    #[Group("eager-loading")]
     public function testEagerNestedLoadingReturnsSameObject()
     {
         $userId = $this->getRandomUserIdWithRelationship('user_roles', 'r', 'r.user_id = u.id AND r.role_id = (select id from roles where name = \'admin\')');

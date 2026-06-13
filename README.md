@@ -37,7 +37,7 @@ active-record projects including GranadaORM (IdiORM), PHP ActiveRecord and other
 
 ## Requirements
 
- * PHP 8.1+
+ * PHP 8.4+
  * mb_string
  * doctrine/dbal
  * somnambulist/collection

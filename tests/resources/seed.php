@@ -26,7 +26,7 @@ $app->addCommands(commands: [
             parent::__construct();
         }
 
-        protected function configure()
+        protected function configure(): void
         {
             $this
                 ->setName('db:seed')
@@ -35,7 +35,7 @@ $app->addCommands(commands: [
             ;
         }
 
-        protected function execute(InputInterface $input, OutputInterface $output)
+        protected function execute(InputInterface $input, OutputInterface $output): int
         {
             $generator = new DataGenerator($this->conn, $this->faker);
 
@@ -72,7 +72,7 @@ $app->addCommands(commands: [
         }
 
 
-        protected function configure()
+        protected function configure(): void
         {
             $this
                 ->setName('db:destroy')
@@ -80,7 +80,7 @@ $app->addCommands(commands: [
             ;
         }
 
-        protected function execute(InputInterface $input, OutputInterface $output)
+        protected function execute(InputInterface $input, OutputInterface $output): int
         {
             try {
                 $output->writeln('<error>Deleting</error> all records in configured test db');
@@ -120,7 +120,7 @@ $app->addCommands(commands: [
         }
 
 
-        protected function configure()
+        protected function configure(): void
         {
             $this
                 ->setName('db:create')
@@ -128,7 +128,7 @@ $app->addCommands(commands: [
             ;
         }
 
-        protected function execute(InputInterface $input, OutputInterface $output)
+        protected function execute(InputInterface $input, OutputInterface $output): int
         {
             try {
                 $output->writeln('Creating tables and indexes for db');

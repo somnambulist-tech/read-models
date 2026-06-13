@@ -3,6 +3,7 @@
 namespace Somnambulist\Components\ReadModels\Tests;
 
 use Pagerfanta\Pagerfanta;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\Collection\Contracts\Collection;
 use Somnambulist\Components\Models\Types\DateTime\DateTime;
@@ -16,16 +17,12 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserContact;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 
-/**
- * @group model-builder
- */
+#[Group("model-builder")]
 class ModelBuilderTest extends TestCase
 {
     use GetRandomUserId;
 
-    /**
-     * @group find
-     */
+    #[Group("find")]
     public function testFind()
     {
         $userId = $this->getRandomUserId();
@@ -38,17 +35,13 @@ class ModelBuilderTest extends TestCase
         $this->assertEquals($userId, $user->id());
     }
 
-    /**
-     * @group find
-     */
+    #[Group("find")]
     public function testFindReturnsNull()
     {
         $this->assertNull(User::find(999999999999));
     }
 
-    /**
-     * @group find
-     */
+    #[Group("find")]
     public function testFindBy()
     {
         $results = User::query()->findBy(['is_active' => 1], [], 10);
@@ -57,9 +50,7 @@ class ModelBuilderTest extends TestCase
         $this->assertCount(10, $results);
     }
 
-    /**
-     * @group find
-     */
+    #[Group("find")]
     public function testFindByOrdersResults()
     {
         $results = User::query()->findBy([], ['name' => 'ASC'], 10);
@@ -68,9 +59,7 @@ class ModelBuilderTest extends TestCase
         $this->assertCount(10, $results);
     }
 
-    /**
-     * @group find
-     */
+    #[Group("find")]
     public function testFindOneBy()
     {
         $result = User::query()->findOneBy(['is_active' => 1]);
@@ -78,9 +67,7 @@ class ModelBuilderTest extends TestCase
         $this->assertInstanceOf(Model::class, $result);
     }
 
-    /**
-     * @group find
-     */
+    #[Group("find")]
     public function testFindOrFail()
     {
         $this->expectException(EntityNotFoundException::class);
@@ -89,9 +76,7 @@ class ModelBuilderTest extends TestCase
         User::findOrFail(999999999999);
     }
 
-    /**
-     * @group fetch
-     */
+    #[Group("fetch")]
     public function testFetchOrFail()
     {
         $this->expectException(NoResultsException::class);
@@ -99,17 +84,13 @@ class ModelBuilderTest extends TestCase
         User::query()->where('users.is_active = 5')->fetchFirstOrFail();
     }
 
-    /**
-     * @group fetch
-     */
+    #[Group("fetch")]
     public function testFetchOrNull()
     {
         $this->assertNull(User::query()->where('users.is_active = 5')->fetchFirstOrNull());
     }
 
-    /**
-     * @group paginate
-     */
+    #[Group("paginate")]
     public function testPaginate()
     {
         $pager = User::query()->where('users.is_active = 0')->paginate();
@@ -119,9 +100,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotCount(0, $pager->getCurrentPageResults());
     }
 
-    /**
-     * @group paginate
-     */
+    #[Group("paginate")]
     public function testPaginateFetchPages()
     {
         // expects at least 3 records in the test data
@@ -132,9 +111,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotCount(0, $pager->getCurrentPageResults());
     }
 
-    /**
-     * @group paginate
-     */
+    #[Group("paginate")]
     public function testPaginateWithOrderBy()
     {
         // expects at least 3 records in the test data
@@ -145,9 +122,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotCount(0, $pager->getCurrentPageResults());
     }
 
-    /**
-     * @group paginate
-     */
+    #[Group("paginate")]
     public function testPaginateWithGroupBy()
     {
         $pager = User::query()
@@ -165,9 +140,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEquals(0, $pager->getNbResults());
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhere()
     {
         $user = User::query()->where('users.is_active = 0')->fetch()->first();
@@ -177,9 +150,7 @@ class ModelBuilderTest extends TestCase
         $this->assertFalse($user->isActive());
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereWithCallback()
     {
         $user = User::query()->where(function (ModelBuilder $builder) {
@@ -191,9 +162,7 @@ class ModelBuilderTest extends TestCase
         $this->assertFalse($user->isActive());
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereColumn()
     {
         $user = User::query()->whereColumn('email', 'like', '%gmail.com')->fetch()->first();
@@ -202,9 +171,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEmpty($user->email);
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereBetween()
     {
         $user = User::query()->whereBetween('created_at', DateTime::parseUtc('-4 weeks'), DateTime::now())->fetch()->first();
@@ -213,9 +180,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEmpty($user->email);
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereNotBetween()
     {
         $user = User::query()->whereNotBetween('created_at', DateTime::parseUtc('-1 weeks'), DateTime::now())->fetch()->first();
@@ -224,9 +189,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEmpty($user->email);
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereIn()
     {
         $user = UserAddress::query()->whereIn('type', ['default', 'home', 'work'])->fetch()->first();
@@ -235,9 +198,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEmpty($user->id);
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereNotIn()
     {
         $user = UserAddress::query()->whereNotIn('type', ['default'])->fetch()->first();
@@ -246,9 +207,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEmpty($user->id);
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereNull()
     {
         $user = UserContact::query()->whereNull('contact_email')->fetch()->first();
@@ -258,9 +217,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEmpty($user->id);
     }
 
-    /**
-     * @group where
-     */
+    #[Group("where")]
     public function testWhereNotNull()
     {
         $user = UserContact::query()->whereNotNull('contact_email')->fetch()->first();
@@ -270,9 +227,7 @@ class ModelBuilderTest extends TestCase
         $this->assertNotEmpty($user->id);
     }
 
-    /**
-     * @group select
-     */
+    #[Group("select")]
     public function testSelectCallable()
     {
         $user = User::query()->select(function (ModelBuilder $builder) {
@@ -283,9 +238,7 @@ class ModelBuilderTest extends TestCase
         $this->assertEquals('bob', $user->field);
     }
 
-    /**
-     * @group select
-     */
+    #[Group("select")]
     public function testSelectModelBuilder()
     {
         $groups = Role::query()->select('GROUP_CONCAT(r.name)')->innerJoin('r', 'user_roles', 'g', 'g.role_id = r.id')->where('g.user_id = users.id');
@@ -296,5 +249,14 @@ class ModelBuilderTest extends TestCase
             $this->assertNotNull($user);
             $this->assertNotEmpty($user->groups);
         });
+    }
+
+    public function testTap()
+    {
+        $qb = Role::query()->select('1')->tap(fn (ModelBuilder $q) => $q->whereColumn('id', '>', 1));
+
+        $sql = $qb->query->getSQL();
+
+        $this->assertStringContainsString('SELECT r.1 FROM roles r WHERE r.id > :bind_r_id', $sql);
     }
 }

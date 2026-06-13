@@ -3,16 +3,15 @@
 namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\Relationships\BelongsTo;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 
-/**
- * @group relationships
- * @group relationships-belongs-to
- */
+#[Group("relationships")]
+#[Group("relationships-belongs-to")]
 class BelongsToTest extends TestCase
 {
 

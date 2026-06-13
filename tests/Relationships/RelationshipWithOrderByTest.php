@@ -2,19 +2,16 @@
 
 namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Role;
 
-/**
- * @group relationships
- * @group relationships-orderby
- */
+#[Group("relationships")]
+#[Group("relationships-orderby")]
 class RelationshipWithOrderByTest extends TestCase
 {
 
-    /**
-     * @group relationship-order-by
-     */
+    #[Group("relationship-order-by")]
     public function testRelationshipCanBeOrdered()
     {
         $role = Role::include('permissions2')->limit(1)->fetchFirstOrFail();
@@ -24,9 +21,7 @@ class RelationshipWithOrderByTest extends TestCase
         $this->assertLessThan($role->permissions2->first()->id(), $role->permissions2->last()->id());
     }
 
-    /**
-     * @group relationship-order-by
-     */
+    #[Group("relationship-order-by")]
     public function testRelationshipCanBeOrderedAndFiltered()
     {
         $role = Role::query()->limit(1)->fetchFirstOrFail();

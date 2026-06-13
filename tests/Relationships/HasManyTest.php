@@ -3,6 +3,7 @@
 namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\Collection\MutableCollection;
 use Somnambulist\Components\ReadModels\Model;
@@ -12,10 +13,8 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
-/**
- * @package relationships
- * @package relationships-has-many
- */
+#[Group("relationships")]
+#[Group("relationships-has-many")]
 class HasManyTest extends TestCase
 {
 

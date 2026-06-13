@@ -2,14 +2,13 @@
 
 namespace Somnambulist\Components\ReadModels\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use Somnambulist\Components\ReadModels\EventSubscribers\IdentityMapClearerSubscriber;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-/**
- * @group kernel
- */
+#[Group("kernel")]
 class KernelTest extends KernelTestCase
 {
 

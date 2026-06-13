@@ -3,6 +3,7 @@
 namespace Somnambulist\Components\ReadModels\Tests\Relationships;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Model;
 use Somnambulist\Components\ReadModels\ModelBuilder;
@@ -12,10 +13,8 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAlt;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserProfile;
 
-/**
- * @group relationships
- * @group relationships-has-one
- */
+#[Group("relationships")]
+#[Group("relationships-has-one")]
 class HasOneTest extends TestCase
 {
 

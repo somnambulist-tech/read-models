@@ -6,8 +6,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class MyBundle extends Bundle
 {
-
-    public function boot()
+    public function boot(): void
     {
 
     }

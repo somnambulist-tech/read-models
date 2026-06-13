@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+2026-06-13
+----------
+
+ * require PHP 8.4+
+ * update to PHPUnit 12.4
+ * add support for `tap()` for extracting reusable query components 
+
 2024-11-28 - 4.2.0
 ------------------
 

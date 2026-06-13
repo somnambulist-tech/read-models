@@ -9,8 +9,11 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Casters\ContactCaster;
 use Somnambulist\Components\ReadModels\Tests\Stubs\DataGenerator;
 use Somnambulist\Components\ReadModels\TypeCasters\DoctrineTypeCaster;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\ErrorHandler\ErrorHandler;
 
 (new Dotenv)->loadEnv(dirname(__DIR__, 2) . '/.env');
+
+ErrorHandler::register(null, false);
 
 global $connection, $faker;
 $connection = DriverManager::getConnection((new DsnParser())->parse($_ENV['TEST_CONNECTION']));

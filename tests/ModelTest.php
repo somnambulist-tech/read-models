@@ -3,6 +3,7 @@
 namespace Somnambulist\Components\ReadModels\Tests;
 
 use BadMethodCallException;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\Collection\MutableCollection;
 use Somnambulist\Components\Models\Types\DateTime\DateTime;
@@ -13,9 +14,7 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use function date;
 use function password_hash;
 
-/**
- * @group model
- */
+#[Group("model")]
 class ModelTest extends TestCase
 {
 
@@ -43,9 +42,7 @@ class ModelTest extends TestCase
         $user->newQuery()->foobar();
     }
 
-    /**
-     * @group attributes
-     */
+    #[Group("attributes")]
     public function testAttributeAccessors()
     {
         $user = new User([
@@ -66,9 +63,7 @@ class ModelTest extends TestCase
         $this->assertInstanceOf(DateTime::class, $user->updated_at);
     }
 
-    /**
-     * @group attributes
-     */
+    #[Group("attributes")]
     public function testAttributeExistence()
     {
         $user = new User([
@@ -87,9 +82,7 @@ class ModelTest extends TestCase
         $this->assertFalse(isset($user->contact));
     }
 
-    /**
-     * @group attributes
-     */
+    #[Group("attributes")]
     public function testRelationshipAccessors()
     {
         $user = new User([
@@ -107,10 +100,8 @@ class ModelTest extends TestCase
         $this->assertInstanceOf(HasOneToMany::class, $user->getRelationship('contacts'));
     }
 
-    /**
-     * @group attributes
-     * @group virtual-attributes
-     */
+    #[Group("attributes")]
+    #[Group("virtual-attributes")]
     public function testAccessingVirtualAttributes()
     {
         $user = new User([

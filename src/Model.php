@@ -280,6 +280,10 @@ abstract class Model extends AbstractModel implements Arrayable, Jsonable, JsonS
      */
     public function getExternalPrimaryKey(): mixed
     {
+        if (is_null($this->meta()->externalKeyName())) {
+            return null;
+        }
+
         return $this->attributes[$this->meta()->externalKeyName()] ?? null;
     }
 

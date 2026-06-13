@@ -2,16 +2,15 @@
 
 namespace Somnambulist\Components\ReadModels\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAlt;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
-/**
- * @group model
- * @group model-exporter
- */
+#[Group("model")]
+#[Group("model-exporter")]
 class ModelExporterTest extends TestCase
 {
     use GetRandomUserId;

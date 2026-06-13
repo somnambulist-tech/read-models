@@ -2,6 +2,7 @@
 
 namespace Somnambulist\Components\ReadModels\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\Role;
 use Somnambulist\Components\ReadModels\Tests\Stubs\Models\User;
@@ -9,18 +10,14 @@ use Somnambulist\Components\ReadModels\Tests\Stubs\Models\UserAddress;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserId;
 use Somnambulist\Components\ReadModels\Tests\Support\Behaviours\GetRandomUserIdWithRelationship;
 
-/**
- * @group model
- * @group model-loading
- */
+#[Group("model")]
+#[Group("model-loading")]
 class ModelEagerLoadingTest extends TestCase
 {
     use GetRandomUserId;
     use GetRandomUserIdWithRelationship;
 
-    /**
-     * @group with
-     */
+    #[Group("with")]
     public function testInclude()
     {
         $userId = $this->getRandomUserIdWithRelationship('user_addresses', 'a', 'a.user_id = u.id');
@@ -32,9 +29,7 @@ class ModelEagerLoadingTest extends TestCase
         $this->assertInstanceOf(UserAddress::class, $user->addresses->first());
     }
 
-    /**
-     * @group with
-     */
+    #[Group("with")]
     public function testIncludeForBelongsTo()
     {
         $user = UserAddress::include('user')->limit(1)->fetch()->first();
@@ -43,9 +38,7 @@ class ModelEagerLoadingTest extends TestCase
         $this->assertInstanceOf(User::class, $user->user);
     }
 
-    /**
-     * @group with
-     */
+    #[Group("with")]
     public function testIncludeNestedLoading()
     {
         $userId = $this->getRandomUserIdWithRelationship('user_roles', 'r', 'r.user_id = u.id AND r.role_id = (select id from roles where name = \'admin\')');
